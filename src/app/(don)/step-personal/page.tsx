@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useFormContext } from "react-hook-form";
 import { useRouter } from "next/navigation";
 import { RotateCcw, ArrowRight, CreditCard } from "lucide-react";
-import { AppBar, Stepper, Input, Checkbox, SummaryRow, CollapsibleStepCard, SideMenu, ProductHeader, MosqueSelectorModal } from "@/components/ui";
+import { AppBar, Stepper, Input, Checkbox, SummaryRow, SideMenu, ProductHeader, MosqueSelectorModal } from "@/components/ui";
 import { DonationFormValues } from "@/lib/schema";
 
 export default function StepPersonalPage() {
@@ -41,24 +41,11 @@ export default function StepPersonalPage() {
       />
       <Stepper activeStep={1} />
       <div className="app-container">
-        <div className="space-y-[14px]">
-          <CollapsibleStepCard
-            title="How much would you like to give?"
-            summaryValue={hasAmount ? `€${values.amount}${values.frequency === "Weekly" ? "/week" : values.frequency === "Monthly" ? "/month" : ""}` : "Add"}
-            isActive={false}
-            isCompleted={hasAmount}
-            delay={100}
-          >
-            <div>Amount form (collapsed)</div>
-          </CollapsibleStepCard>
-          
-          <CollapsibleStepCard
-            title="Personal Information"
-            summaryValue={hasPersonalInfo ? `${values.firstName} ${values.lastName}` : "Add"}
-            isActive={true}
-            isCompleted={hasPersonalInfo}
-            delay={200}
-          >
+        {/* Carte principale Personal Information */}
+        <div className="app-card">
+          <div className="space-y-4">
+            <div className="app-title line-clamp-2">Personal Information</div>
+            
             <div className="space-y-3">
               <div className="grid grid-cols-2 gap-3">
                 <Input
@@ -93,20 +80,12 @@ export default function StepPersonalPage() {
                 onChange={(v: boolean) => form.setValue("wantsReceipt", v, { shouldDirty: true })}
               />
             </div>
-          </CollapsibleStepCard>
-          
-          <CollapsibleStepCard
-            title="Payment"
-            summaryValue={hasPaymentInfo ? "Card ending ****" : "Add"}
-            isActive={false}
-            isCompleted={hasPaymentInfo}
-            delay={300}
-          >
-            <div>Payment form will appear here</div>
-          </CollapsibleStepCard>
+          </div>
         </div>
+      </div>
         
-        <div className="docked-actions">
+      <div className="docked-actions">
+        <div className="container">
           <div className="grid gap-3">
             <button
               onClick={() => router.push("/step-amount")}
@@ -126,6 +105,9 @@ export default function StepPersonalPage() {
           </div>
         </div>
       </div>
+      
+      {/* Espaceur pour la barre Safari */}
+      <div className="safari-spacer"></div>
     </>
   );
 }

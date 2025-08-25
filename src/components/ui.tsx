@@ -19,9 +19,9 @@ export function AppBar({ title = "Neena", onMenu }: { title?: string; onMenu?: (
     <div className="app-header">
       <div className="header-content">
         {/* Titre Apple-style */}
-        <div className="font-[800] text-[22px] leading-[28px] tracking-[-0.3px] text-[var(--text)]">
-          {title}
-        </div>
+                  <div className="font-[800] text-[20px] leading-[24px] tracking-[-0.3px] text-[var(--text)]">
+            {title}
+          </div>
 
         {/* Burger Menu Apple-style */}
         <button
@@ -501,15 +501,33 @@ export function SegmentedControl({
       <div
         className="segmented-thumb"
         style={{
-          left: `${activeIndex * thumbWidth}%`,
-          width: `${thumbWidth}%`,
+          left: `calc(${activeIndex * thumbWidth}% + ${activeIndex * 2}px)`,
+          width: `calc(${thumbWidth}% - 2px)`,
         }}
       />
-      {options.map((option) => (
+      {options.map((option, index) => (
         <button
           key={option}
           className={cn("segmented-option", option === value && "active")}
-          onClick={() => onChange(option)}
+          onClick={() => {
+            // Vibration tactile subtile pour iOS-like feedback
+            if (navigator.vibrate && option !== value) {
+              navigator.vibrate(3);
+            }
+            onChange(option);
+          }}
+          onMouseDown={(e) => {
+            // Effet de pression subtile
+            e.currentTarget.style.transform = 'scale(0.97)';
+          }}
+          onMouseUp={(e) => {
+            // Retour à la normale
+            e.currentTarget.style.transform = 'scale(1)';
+          }}
+          onMouseLeave={(e) => {
+            // Retour à la normale si on sort
+            e.currentTarget.style.transform = 'scale(1)';
+          }}
         >
           {option}
         </button>
@@ -744,6 +762,30 @@ export function SummaryRow({
       <span className="flex items-center gap-2 text-[var(--text-soft)] font-[600] text-[16px]">
         {value}
         {onClick && <ChevronRight size={18} className="text-[var(--text-soft)]" />}
+      </span>
+    </button>
+  );
+}
+
+export function CompactSummaryRow({
+  label,
+  value,
+  onClick,
+}: {
+  label: string;
+  value: string;
+  onClick?: () => void;
+}) {
+  return (
+    <button
+      className="compact-summary-row w-full text-[15px]"
+      onClick={onClick}
+      aria-label={`${label} ${value}`}
+    >
+      <span className="text-[var(--text-muted)] font-[600] text-[15px]">{label}</span>
+      <span className="flex items-center gap-2 text-[var(--text-soft)] font-[600] text-[15px]">
+        {value}
+        {onClick && <ChevronRight size={16} className="text-[var(--text-soft)]" />}
       </span>
     </button>
   );
