@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import { AppBar, SideMenu } from "@/components/ui";
 import { useRouter } from "next/navigation";
@@ -32,7 +32,7 @@ function saveFeed(feed: DuaaPost[]) {
   } catch {}
 }
 
-export default function DuaaPage() {
+function DuaaContent() {
   const params = useSearchParams();
   const router = useRouter();
   const [feed, setFeed] = useState<DuaaPost[]>([]);
@@ -255,5 +255,11 @@ export default function DuaaPage() {
   );
 }
 
-// Comments removed for MVP; keep hooks import for future
+export default function DuaaPage() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <DuaaContent />
+    </Suspense>
+  );
+}
 
