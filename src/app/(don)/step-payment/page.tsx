@@ -10,6 +10,7 @@ import { buildDonationSummary } from "@/features/donation/summary";
 import { useDonationFlow } from "@/features/donation/useDonationFlow";
 import { DonationFormValues } from "@/lib/schema";
 import { Calendar, Shield } from "lucide-react";
+import { formatEuro } from "@/lib/currency";
 
 export default function StepPaymentPage() {
   const form = useFormContext<DonationFormValues>();
@@ -90,11 +91,11 @@ export default function StepPaymentPage() {
         {/* Carte principale Payment Method */}
         <div className="app-card">
           <div className="space-y-4">
-            <div className="app-title line-clamp-2">Payment Method</div>
+            <div className="app-title line-clamp-2">Paiement sécurisé</div>
             
             <div className="space-y-3">
               <Input
-                label="Card Number"
+                label="Numéro de carte"
                 value={values.cardNumber}
                 onChange={(v: string) => form.setValue("cardNumber", v, { shouldDirty: true })}
                 autoComplete="cc-number"
@@ -103,7 +104,7 @@ export default function StepPaymentPage() {
               
               <div className="grid grid-cols-2 gap-3">
                 <Input
-                  label="Expiry"
+                  label="Expiration"
                   value={values.cardExp}
                   onChange={(v: string) => form.setValue("cardExp", v, { shouldDirty: true })}
                   placeholder="MM/YY"
@@ -119,15 +120,23 @@ export default function StepPaymentPage() {
               </div>
               
               <div className="h-[1px] bg-[var(--border)]"></div>
-              <div className="text-[13px] text-[var(--text-muted)]">Others</div>
+              <div className="text-[13px] text-[var(--text-muted)]">Autres méthodes</div>
               
-              <PayPalButton label="Pay Pal" />
+              <PayPalButton label="Payer avec PayPal" />
               
               <Checkbox
-                label="I'd like to add €0.62 to cover the bank fees so 100% of my donation goes to the mosque."
+                label="Je couvre les frais pour que 100% de mon don aille à la mosquée."
                 checked={values.coverFees}
                 onChange={(v: boolean) => form.setValue("coverFees", v, { shouldDirty: true })}
               />
+
+              <div className="flex items-center gap-2 text-[12px] text-[var(--text-muted)]">
+                <span className="px-2 py-1 rounded-full border">3D Secure</span>
+                <span className="px-2 py-1 rounded-full border">SSL</span>
+              </div>
+              <div className="text-[12px] text-[var(--text-muted)]">
+                Nous ne stockons jamais votre carte. Données protégées (RGPD). Reçu fiscal par email.
+              </div>
             </div>
           </div>
         </div>
@@ -149,7 +158,7 @@ export default function StepPaymentPage() {
               ref={donateBtnRef}
               className="btn-primary pressable w-full text-[16px] font-[700] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--focus)] disabled:opacity-40 disabled:cursor-not-allowed flex items-center justify-center gap-2"
             >
-              Donate €{values.amount}
+              Faire un don de {formatEuro(values.amount)}
               <Heart size={18} />
             </button>
           </div>
