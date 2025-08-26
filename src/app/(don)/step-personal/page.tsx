@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { RotateCcw, CreditCard } from "lucide-react";
 import { AppBar, Stepper, Input, Checkbox, SideMenu, ProductHeader, MosqueSelectorModal, SegmentedControl } from "@/components/ui";
 import { DonationFormValues } from "@/lib/schema";
+import { useDonationFlow } from "@/features/donation/useDonationFlow";
 
 export default function StepPersonalPage() {
   const form = useFormContext<DonationFormValues>();
@@ -13,10 +14,11 @@ export default function StepPersonalPage() {
   const values = form.watch();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [showMosqueSelector, setShowMosqueSelector] = useState(false);
+  const { toPayment, canProceedFromPersonal } = useDonationFlow();
 
   const handleNext = () => {
-    if (values.firstName && values.lastName && values.email) {
-      router.push("/step-payment");
+    if (canProceedFromPersonal(values)) {
+      toPayment();
     }
   };
 

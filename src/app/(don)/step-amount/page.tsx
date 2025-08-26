@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { RotateCcw, ArrowRight } from "lucide-react";
 import { AppBar, Stepper, SegmentedControl, Input, Slider, AmountDisplay, SideMenu, ProductHeader, MosqueSelectorModal } from "@/components/ui";
 import { DonationFormValues } from "@/lib/schema";
+import { useDonationFlow } from "@/features/donation/useDonationFlow";
 
 export default function StepAmountPage() {
   const form = useFormContext<DonationFormValues>();
@@ -14,10 +15,11 @@ export default function StepAmountPage() {
   const [otherAmountInput, setOtherAmountInput] = useState("");
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [showMosqueSelector, setShowMosqueSelector] = useState(false);
+  const { toPersonal, canProceedFromAmount } = useDonationFlow();
 
   const handleNext = () => {
-    if (values.amount > 0 && values.mosqueName) {
-      router.push("/step-personal");
+    if (canProceedFromAmount(values)) {
+      toPersonal();
     }
   };
 
