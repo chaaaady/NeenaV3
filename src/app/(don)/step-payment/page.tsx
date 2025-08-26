@@ -79,28 +79,9 @@ export default function StepPaymentPage() {
             <div className="space-y-3">
               <div className="space-y-2">
                 <div className="text-[14px] font-[700] text-[var(--text-muted)]">Résumé du don</div>
-                <div className="summary-row">
-                  <span className="text-[var(--text-muted)] font-[700] text-[16px]">Montant</span>
-                  <span className="text-[var(--text-soft)] font-[600] text-[16px]">{formatEuro(values.amount)}</span>
+                <div className="text-[15px] text-[var(--text)] leading-relaxed">
+                  {summarySentence}
                 </div>
-                <div className="summary-row">
-                  <span className="text-[var(--text-muted)] font-[700] text-[16px]">Fréquence</span>
-                  <span className="text-[var(--text-soft)] font-[600] text-[16px]">{values.frequency}</span>
-                </div>
-                <div className="summary-row">
-                  <span className="text-[var(--text-muted)] font-[700] text-[16px]">Type</span>
-                  <span className="text-[var(--text-soft)] font-[600] text-[16px]">{values.donationType}</span>
-                </div>
-                <div className="summary-row">
-                  <span className="text-[var(--text-muted)] font-[700] text-[16px]">Mosquée</span>
-                  <span className="text-[var(--text-soft)] font-[600] text-[16px]">{values.mosqueName}</span>
-                </div>
-                {values.tributeName && (
-                  <div className="summary-row">
-                    <span className="text-[var(--text-muted)] font-[700] text-[16px]">En hommage à</span>
-                    <span className="text-[var(--text-soft)] font-[600] text-[16px]">{values.tributeName}</span>
-                  </div>
-                )}
               </div>
               
               <div className="space-y-2">
