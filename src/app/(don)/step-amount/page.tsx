@@ -43,17 +43,19 @@ export default function StepAmountPage() {
         currentMosque={values.mosqueName}
         onMosqueSelect={(mosque) => form.setValue("mosqueName", mosque, { shouldDirty: true })}
       />
-      <Stepper 
-        steps={[
-          { label: "Montant", status: "active" },
-          { label: "Info", status: "pending" },
-          { label: "Payment", status: "pending" }
-        ]} 
-      />
       <div className="app-container">
         <div className="app-card">
           <div className="space-y-4">
-            <div className="app-title">Quel montant souhaites-tu donner ?</div>
+            <div className="flex items-center justify-between">
+              <div className="app-title">Quel montant souhaites-tu donner ?</div>
+              <Stepper 
+                steps={[
+                  { label: "Montant", status: "active" },
+                  { label: "Info", status: "pending" },
+                  { label: "Payment", status: "pending" }
+                ]} 
+              />
+            </div>
             
             <div className="space-y-3">
               <div className="space-y-2">

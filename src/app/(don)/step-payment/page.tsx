@@ -63,13 +63,6 @@ export default function StepPaymentPage() {
         currentMosque={values.mosqueName}
         onMosqueSelect={(mosque) => form.setValue("mosqueName", mosque, { shouldDirty: true })}
       />
-      <Stepper 
-        steps={[
-          { label: "Montant", status: "completed" },
-          { label: "Info", status: "completed" },
-          { label: "Payment", status: "active" }
-        ]} 
-      />
       <div className="app-container">
         {/* Mini carte pour le résumé */}
         <div className="app-card mb-3">
@@ -81,7 +74,16 @@ export default function StepPaymentPage() {
         {/* Carte principale pour le paiement */}
         <div className="app-card">
           <div className="space-y-4">
-            <div className="app-title">Paiement sécurisé</div>
+            <div className="flex items-center justify-between">
+              <div className="app-title">Paiement sécurisé</div>
+              <Stepper 
+                steps={[
+                  { label: "Montant", status: "completed" },
+                  { label: "Info", status: "completed" },
+                  { label: "Payment", status: "active" }
+                ]} 
+              />
+            </div>
             
             <div className="space-y-3">
               <div className="space-y-2">

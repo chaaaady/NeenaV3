@@ -36,17 +36,19 @@ export default function StepPersonalPage() {
         currentMosque={values.mosqueName}
         onMosqueSelect={(mosque) => form.setValue("mosqueName", mosque, { shouldDirty: true })}
       />
-      <Stepper 
-        steps={[
-          { label: "Montant", status: "completed" },
-          { label: "Info", status: "active" },
-          { label: "Payment", status: "pending" }
-        ]} 
-      />
       <div className="app-container">
         <div className="app-card">
           <div className="space-y-4">
-            <div className="app-title">Personal Information</div>
+            <div className="flex items-center justify-between">
+              <div className="app-title">Personal Information</div>
+              <Stepper 
+                steps={[
+                  { label: "Montant", status: "completed" },
+                  { label: "Info", status: "active" },
+                  { label: "Payment", status: "pending" }
+                ]} 
+              />
+            </div>
             
             <div className="space-y-3">
               <div className="grid grid-cols-2 gap-3">

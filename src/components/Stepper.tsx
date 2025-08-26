@@ -12,8 +12,8 @@ export function Stepper({ steps }: { steps: Step[] }) {
   const totalSteps = steps.length;
 
   return (
-    <div className="stepper-container">
-      <div className="flex items-center justify-center gap-2">
+    <div className="flex items-center gap-2">
+      <div className="flex items-center gap-1">
         {steps.map((step, index) => (
           <div key={step.label} className="stepper-item">
             <div className={cn(
@@ -24,7 +24,7 @@ export function Stepper({ steps }: { steps: Step[] }) {
           </div>
         ))}
       </div>
-      <div className="text-[12px] text-[var(--text-muted)] font-[600] text-center mt-1">
+      <div className="text-[11px] text-[var(--text-muted)] font-[600]">
         {currentStep}/{totalSteps}
       </div>
     </div>
