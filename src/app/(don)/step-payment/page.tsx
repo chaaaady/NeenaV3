@@ -4,7 +4,7 @@ import { useState, useMemo, useRef } from "react";
 import { useFormContext } from "react-hook-form";
 import { useRouter } from "next/navigation";
 import { RotateCcw, Heart, CreditCard, Calendar, Shield } from "lucide-react";
-import { AppBar, Stepper, Checkbox, PayPalButton, SideMenu, ProductHeader, MosqueSelectorModal, Input } from "@/components";
+import { AppBar, Stepper, Checkbox, PayPalButton, SideMenu, MosqueSelectorModal, Input } from "@/components";
 import { DonateOverlay } from "@/components/DonateOverlay";
 import { buildDonationSummary } from "@/features/donation/summary";
 import { useDonationFlow } from "@/features/donation/useDonationFlow";
@@ -51,11 +51,10 @@ export default function StepPaymentPage() {
         values={values}
         onClose={() => setIsOverlayOpen(false)}
       />
-      <AppBar onMenu={() => setIsMenuOpen(true)} />
-      <ProductHeader 
+      <AppBar 
+        onMenu={() => setIsMenuOpen(true)} 
         currentMosque={values.mosqueName}
         onMosqueSelect={() => setShowMosqueSelector(true)}
-        onInfoNavigation={() => window.open('https://neena.fr', '_blank')}
       />
       <SideMenu isOpen={isMenuOpen} onClose={() => setIsMenuOpen(false)} />
       <MosqueSelectorModal 

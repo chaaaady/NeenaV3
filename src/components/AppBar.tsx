@@ -3,7 +3,19 @@
 import { useState } from "react";
 import { cn } from "@/lib/cn";
 
-export function AppBar({ title = "Neena", onMenu, onTitleClick }: { title?: string; onMenu?: () => void; onTitleClick?: () => void }) {
+export function AppBar({ 
+  title = "Neena", 
+  onMenu, 
+  onTitleClick,
+  currentMosque,
+  onMosqueSelect
+}: { 
+  title?: string; 
+  onMenu?: () => void; 
+  onTitleClick?: () => void;
+  currentMosque?: string;
+  onMosqueSelect?: () => void;
+}) {
   const [isMenuPressed, setIsMenuPressed] = useState(false);
 
   const handleMenuClick = (e: React.MouseEvent) => {
@@ -17,6 +29,7 @@ export function AppBar({ title = "Neena", onMenu, onTitleClick }: { title?: stri
   return (
     <div className="app-header">
       <div className="header-content">
+        {/* Logo/Titre à gauche */}
         {onTitleClick ? (
           <button
             onClick={(e) => { e.preventDefault(); e.stopPropagation(); onTitleClick(); }}
@@ -31,6 +44,19 @@ export function AppBar({ title = "Neena", onMenu, onTitleClick }: { title?: stri
           </div>
         )}
 
+        {/* Mosquée au centre */}
+        <div className="flex-1 flex justify-center">
+          <button
+            onClick={onMosqueSelect}
+            className="flex items-center gap-2 px-4 py-2 rounded-[var(--radius-pill)] hover:bg-[var(--surface-2)] transition-colors"
+          >
+            <span className="text-[15px] font-[600] text-[var(--text)]">
+              {currentMosque || "Sélectionner une mosquée"}
+            </span>
+          </button>
+        </div>
+
+        {/* Menu à droite */}
         <button
           aria-label="menu"
           onClick={handleMenuClick}

@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useFormContext } from "react-hook-form";
 import { useRouter } from "next/navigation";
 import { RotateCcw, ArrowRight } from "lucide-react";
-import { AppBar, Stepper, SegmentedControl, Input, Slider, AmountDisplay, SideMenu, ProductHeader, MosqueSelectorModal } from "@/components";
+import { AppBar, Stepper, SegmentedControl, Input, Slider, AmountDisplay, SideMenu, MosqueSelectorModal } from "@/components";
 import { formatEuro } from "@/lib/currency";
 import { DonationFormValues } from "@/lib/schema";
 import { useDonationFlow } from "@/features/donation/useDonationFlow";
@@ -31,11 +31,10 @@ export default function StepAmountPage() {
 
   return (
     <>
-      <AppBar onMenu={() => setIsMenuOpen(true)} />
-      <ProductHeader 
+      <AppBar 
+        onMenu={() => setIsMenuOpen(true)} 
         currentMosque={values.mosqueName}
         onMosqueSelect={() => setShowMosqueSelector(true)}
-        onInfoNavigation={() => window.open('https://neena.fr', '_blank')}
       />
       <SideMenu isOpen={isMenuOpen} onClose={() => setIsMenuOpen(false)} />
       <MosqueSelectorModal 

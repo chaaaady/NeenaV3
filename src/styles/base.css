@@ -69,8 +69,8 @@
     --ease-inout: cubic-bezier(0.2,0,0,1);
 
     /* Layout sizing */
-    --header-h: 48px;
-    --product-header-h: 48px;
+    --header-h: 56px;
+    --product-header-h: 0px;
     --stepper-h: 56px;
     --actions-h: 72px;
     --safari-ui-h: 60px;
@@ -155,33 +155,6 @@
       padding-left: max(24px, env(safe-area-inset-left)); 
       padding-right: max(24px, env(safe-area-inset-right)); 
     } 
-  }
-
-  .product-header { 
-    position: sticky; 
-    top: var(--header-h); 
-    left: 0; 
-    right: 0; 
-    z-index: 40; 
-    background: rgba(255, 255, 255, 0.85); 
-    backdrop-filter: blur(12px); 
-    -webkit-backdrop-filter: blur(12px); 
-    border-bottom: 0.5px solid rgba(0, 0, 0, 0.06); 
-    box-shadow: 0 6px 16px rgba(9, 17, 33, 0.06); 
-    width: 100%; 
-    height: var(--product-header-h); 
-    margin: 0; 
-    padding: 0; 
-    transition: all var(--motion-base) var(--ease-inout); 
-  }
-  .product-header-content { 
-    height: var(--product-header-h); 
-    display: grid; 
-    grid-template-columns: 1fr auto 1fr; 
-    align-items: center; 
-    padding-left: max(12px, env(safe-area-inset-left)); 
-    padding-right: max(12px, env(safe-area-inset-right)); 
-    width: 100%; 
   }
 
   /* Stepper */
