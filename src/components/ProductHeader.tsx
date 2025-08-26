@@ -15,7 +15,7 @@ export function ProductHeader({
   return (
     <div className="product-header">
       <div className="product-header-content">
-        <div className="w-20" />
+        <div className="flex-1" />
         <button
           onClick={onMosqueSelect}
           className="flex items-center gap-2 px-4 py-2 rounded-[var(--radius-pill)] hover:bg-[var(--surface-2)] transition-colors"
@@ -24,14 +24,17 @@ export function ProductHeader({
             {currentMosque || "Sélectionner une mosquée"}
           </span>
         </button>
-
-        <button
-          onClick={onInfoNavigation}
-          className="flex items-center gap-1.5 px-3 py-1.5 rounded-[var(--radius-pill)] bg-[var(--brand)] text-white text-[13px] font-[600] hover:bg-[var(--brand)]/90 transition-colors"
-        >
-          <Info size={14} />
-          Info
-        </button>
+        <div className="flex-1 flex justify-end">
+          <button
+            onClick={onInfoNavigation}
+            className="flex items-center gap-1 px-2 py-1 rounded-[var(--radius-pill)] hover:bg-[var(--surface-2)] transition-colors"
+          >
+            <Info size={12} className="text-[var(--text-soft)]" />
+            <span className="text-[11px] font-[500] text-[var(--text-soft)]">
+              Info
+            </span>
+          </button>
+        </div>
       </div>
     </div>
   );

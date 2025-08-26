@@ -50,8 +50,6 @@ export default function StepPaymentPage() {
     console.log("Payment submitted", values);
   };
 
-
-
   return (
     <>
       <DonateOverlay
@@ -76,7 +74,13 @@ export default function StepPaymentPage() {
         currentMosque={values.mosqueName}
         onMosqueSelect={(mosque) => form.setValue("mosqueName", mosque, { shouldDirty: true })}
       />
-      <Stepper activeStep={2} />
+      <Stepper 
+        steps={[
+          { label: "Montant", status: "completed" },
+          { label: "Info", status: "completed" },
+          { label: "Payment", status: "active" }
+        ]} 
+      />
       <div className="app-container">
         {/* Mini summary card */}
         <div className="app-card">
@@ -91,7 +95,7 @@ export default function StepPaymentPage() {
         {/* Carte principale Payment Method */}
         <div className="app-card">
           <div className="space-y-4">
-            <div className="app-title line-clamp-2">Paiement sécurisé</div>
+            <div className="app-title">Paiement sécurisé</div>
             
             <div className="space-y-3">
               <Input

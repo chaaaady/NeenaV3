@@ -22,8 +22,6 @@ export default function StepPersonalPage() {
     }
   };
 
-
-
   return (
     <>
       <AppBar onMenu={() => setIsMenuOpen(true)} />
@@ -39,12 +37,17 @@ export default function StepPersonalPage() {
         currentMosque={values.mosqueName}
         onMosqueSelect={(mosque) => form.setValue("mosqueName", mosque, { shouldDirty: true })}
       />
-      <Stepper activeStep={1} />
+      <Stepper 
+        steps={[
+          { label: "Montant", status: "completed" },
+          { label: "Info", status: "active" },
+          { label: "Payment", status: "pending" }
+        ]} 
+      />
       <div className="app-container">
-        {/* Carte principale Personal Information */}
         <div className="app-card">
           <div className="space-y-4">
-            <div className="app-title line-clamp-2">Personal Information</div>
+            <div className="app-title">Personal Information</div>
             
             <div className="space-y-3">
               {/* Donor type selector */}
