@@ -5,6 +5,8 @@ import { useFormContext } from "react-hook-form";
 import { useRouter } from "next/navigation";
 import { RotateCcw, ArrowRight } from "lucide-react";
 import { AppBar, Stepper, SegmentedControl, Input, Slider, AmountDisplay, SideMenu, ProductHeader, MosqueSelectorModal } from "@/components";
+import { LayoutNoScroll, ProgressHeader } from "@/components";
+import { formatEuro } from "@/lib/currency";
 import { DonationFormValues } from "@/lib/schema";
 import { useDonationFlow } from "@/features/donation/useDonationFlow";
 
@@ -27,12 +29,15 @@ export default function StepAmountPage() {
 
   return (
     <>
-      <AppBar onMenu={() => setIsMenuOpen(true)} />
-      <ProductHeader 
-        currentMosque={values.mosqueName}
-        onMosqueSelect={() => setShowMosqueSelector(true)}
-        onInfoNavigation={() => window.open('https://neena.fr', '_blank')}
-      />
+      <LayoutNoScroll title="Neena" onMenu={() => setIsMenuOpen(true)}>
+      <div className="app-container">
+        <ProgressHeader current={1} total={3} />
+        <div className="app-card">
+          <div className="space-y-3">
+            <div className="app-title">Quel montant souhaites-tu donner ?</div>
+            <div className="text-[15px] leading-[22px] text-[var(--text-muted)]">Estimation indicative, selon votre situation fiscale.</div>
+          </div>
+        </div>
       <SideMenu isOpen={isMenuOpen} onClose={() => setIsMenuOpen(false)} />
       <MosqueSelectorModal 
         isOpen={showMosqueSelector}
@@ -40,23 +45,25 @@ export default function StepAmountPage() {
         currentMosque={values.mosqueName}
         onMosqueSelect={(mosque) => form.setValue("mosqueName", mosque, { shouldDirty: true })}
       />
-      <Stepper activeStep={0} />
-      <div className="app-container">
-        {/* Carte principale Amount */}
         <div className="app-card">
           <div className="space-y-4">
-            <div className="app-title line-clamp-2">How much would you like to give?</div>
-            
-            {/* Section fréquence */}
+            <div className="card-title">Fréquence</div>
             <SegmentedControl
-              options={["One time", "Weekly", "Monthly"]}
+              options={["Ponctuel", "Hebdo", "Mensuel"]}
               value={values.frequency}
               onChange={(v: string) => form.setValue("frequency", v as "One time" | "Weekly" | "Monthly", { shouldDirty: true })}
             />
 
-            {/* Section montant principal */}
+            <div className="card-title">Montant</div>
             <div className="space-y-3">
               <AmountDisplay currency="€" amount={values.amount} frequency={values.frequency} />
+              <div className="grid grid-cols-4 gap-2">
+                {[5,25,50,100].map(p => (
+                  <button key={p} onClick={() => form.setValue("amount", p, { shouldDirty: true })} className="chip">
+                    € {p}
+                  </button>
+                ))}
+              </div>
               
               <Slider
                 min={5}
@@ -67,10 +74,9 @@ export default function StepAmountPage() {
               />
             </div>
 
-            {/* Section montant personnalisé */}
             <div className="space-y-3">
               <Input
-                label="Other Amount"
+                label="Autre montant"
                 value={otherAmountInput}
                 onChange={(v: string) => {
                   setOtherAmountInput(v);
@@ -79,17 +85,17 @@ export default function StepAmountPage() {
                     form.setValue("amount", num, { shouldDirty: true });
                   }
                 }}
-                placeholder="€ Enter your donation amount here"
+                placeholder="€ Entrez votre montant"
                 rightAccessory="€"
               />
               
               <div className="inline-note" role="note">
-                <span className="text-[14px] font-[700]">Your donation only costs you €{Math.round(values.amount * 0.34)} after tax deduction.</span>
+                <span className="text-[14px] font-[700]">Après déduction fiscale estimée: {formatEuro(Math.round(values.amount * 0.34))}</span>
               </div>
 
               {/* Donation type moved under note */}
               <div className="space-y-2">
-                <div className="text-[14px] font-[700] text-[var(--text-muted)]">Donation type</div>
+                <div className="text-[14px] font-[700] text-[var(--text-muted)]">Type de don</div>
                 <SegmentedControl
                   options={["Sadaqah", "Zakat"]}
                   value={values.donationType}
@@ -101,7 +107,7 @@ export default function StepAmountPage() {
         </div>
       </div>
         
-      <div className="docked-actions">
+        <div className="docked-actions">
         <div className="container">
           <div className="grid gap-3">
             <button
@@ -121,7 +127,8 @@ export default function StepAmountPage() {
             </button>
           </div>
         </div>
-      </div>
+        </div>
+      </LayoutNoScroll>
       
       {/* Espaceur pour la barre Safari */}
       <div className="safari-spacer"></div>
