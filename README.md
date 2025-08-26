@@ -1,5 +1,35 @@
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
+## Project structure (high level)
+
+- `src/components`: decoupled UI components (see `components/index.ts` for stable exports)
+- `src/features/donation`: flow/navigation guard and summary
+- `src/features/duaa`: Du’a feed hook and constants
+- `src/lib`: schema, shared constants, utilities
+- `src/styles`: tokens, layout, components, animations (imported from `app/globals.css`)
+
+## Key components
+
+- `AppBar(title?, onMenu?, onTitleClick?)`
+- `ProductHeader(currentMosque?, onMosqueSelect?, onInfoNavigation?)`
+- `Stepper(activeStep?)`
+- `SegmentedControl(options, value, onChange)`
+- `Input({ label, value, onChange, ... })`
+- `Checkbox({ label, checked, onChange })`
+- `Slider({ min, max, step?, value, onChange })`
+- `AmountDisplay({ currency?, amount, frequency? })`
+- `DonateOverlay({ open, cx, cy, background?, summary, values, onClose })`
+
+## Donation flow
+
+- `useDonationFlow()` exposes navigation helpers and guards
+- `buildDonationSummary(values)` returns a friendly confirmation sentence
+
+## Du’a
+
+- `useDuaaFeed()` → `{ sortedFeed, visibleCount, showMore, addPost, like, repost, addComment }`
+- `DUAA_INTRO`: welcoming intro text
+
 ## Getting Started
 
 First, run the development server:

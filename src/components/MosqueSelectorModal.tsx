@@ -54,6 +54,7 @@ export function MosqueSelectorModal({
   return (
     <div 
       id="mosque-selector-modal"
+      role="dialog" aria-modal="true" aria-label="Mosque selector"
       className={cn(
         "fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[90vw] max-w-md bg-white rounded-[var(--radius-all)] shadow-2xl z-50",
         "border border-[var(--border)]",
@@ -63,13 +64,14 @@ export function MosqueSelectorModal({
       onClick={(e) => e.stopPropagation()}
     >
         <div className="flex items-center justify-between p-6 border-b border-[var(--border)]">
-          <h2 className="text-[20px] font-[700] text-[var(--text)]">Sélectionner une mosquée</h2>
+          <h2 className="text-[20px] font-[700] text-[var(--text)]" id="mosque-modal-title">Sélectionner une mosquée</h2>
           <button
             onClick={(e) => {
               e.stopPropagation();
               onClose();
             }}
             className="w-10 h-10 rounded-[var(--radius-all)] flex items-center justify-center hover:bg-[var(--surface-2)] transition-colors"
+            aria-label="Close"
           >
             <X size={20} className="text-[var(--text-muted)]" />
           </button>

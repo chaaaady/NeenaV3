@@ -27,8 +27,8 @@ export function DonateOverlay({ open, cx, cy, background, summary, values, onClo
   };
 
   return (
-    <div className={`donate-overlay ${open ? "open" : ""}`} style={style} aria-hidden={!open}>
-      <div className="donate-overlay-content">
+    <div className={`donate-overlay ${open ? "open" : ""}`} style={style} aria-hidden={!open} role="dialog" aria-modal="true">
+      <div className="donate-overlay-content" role="document">
         <div className="text-[28px] font-[800] tracking-[-0.3px]">Thank you!</div>
         <div className="text-[15px] opacity-90 text-center max-w-sm">
           {summary}
