@@ -214,13 +214,9 @@
     background: var(--card); 
     border-radius: var(--radius-all); 
     box-shadow: var(--shadow-card); 
-    padding: 20px; 
+    padding: 16px; 
     min-height: 0; 
     transition: all var(--motion-base) var(--ease-inout); 
-  }
-  .app-container .app-card:first-child { 
-    margin-top: 0px; 
-    padding-top: 16px; 
   }
   .app-card:hover { 
     transform: translateY(-2px); 
