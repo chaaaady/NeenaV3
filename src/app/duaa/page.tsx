@@ -18,10 +18,9 @@ function DuaaContent() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   useEffect(() => {
-    if (sortedFeed.length === 0) {
-      addPost();
-    }
-  }, [sortedFeed.length, addPost]);
+    // No need to add an empty post on page load
+    // Posts will be added by user interaction
+  }, []);
   
 
   return (
