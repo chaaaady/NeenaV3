@@ -1,7 +1,8 @@
 import { z } from "zod";
+import { DONATION_TYPES, DONOR_TYPES, FREQUENCIES } from "@/lib/constants";
 
-export const frequencyOptions = ["One time", "Weekly", "Monthly"] as const;
-export const donationTypeOptions = ["Sadaqah", "Zakat"] as const;
+export const frequencyOptions = FREQUENCIES;
+export const donationTypeOptions = DONATION_TYPES;
 
 export const donationFormSchema = z.object({
   mosqueName: z.string(),
@@ -10,7 +11,7 @@ export const donationFormSchema = z.object({
   frequency: z.enum(frequencyOptions),
   donationType: z.enum(donationTypeOptions),
   information: z.string(),
-  donorType: z.enum(["Personal", "In honor of", "Company"] as const),
+  donorType: z.enum(DONOR_TYPES),
   tributeName: z.string(),
   isCompany: z.boolean(),
   companySiret: z.string(),

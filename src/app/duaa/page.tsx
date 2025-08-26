@@ -1,42 +1,16 @@
 "use client";
 
-import { useEffect, useMemo, useState, Suspense } from "react";
+import { useEffect, useState, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import { AppBar, SideMenu } from "@/components/ui";
 import { useRouter } from "next/navigation";
-
-type DuaaPost = {
-  id: string;
-  text: string;
-  author?: string;
-  likes: number;
-  reposts: number;
-  createdAt: number;
-  comments?: Array<{ id: string; author: string; text: string; createdAt: number }>;
-};
-
-const STORAGE_KEY = "neena.duaa.feed.v1";
-
-function loadFeed(): DuaaPost[] {
-  try {
-    const raw = localStorage.getItem(STORAGE_KEY);
-    return raw ? (JSON.parse(raw) as DuaaPost[]) : [];
-  } catch {
-    return [];
-  }
-}
-
-function saveFeed(feed: DuaaPost[]) {
-  try {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(feed));
-  } catch {}
-}
+import { useDuaaFeed } from "@/features/duaa/useDuaaFeed";
+import { DUAA_INTRO } from "@/features/duaa/constants";
 
 function DuaaContent() {
   const params = useSearchParams();
   const router = useRouter();
-  const [feed, setFeed] = useState<DuaaPost[]>([]);
-  const [visibleCount, setVisibleCount] = useState(10);
+  const { sortedFeed, visibleCount, showMore, addPost, like, repost, addComment } = useDuaaFeed();
   const [isComposerOpen, setIsComposerOpen] = useState(false);
   const [composerText, setComposerText] = useState("");
   const [openCommentId, setOpenCommentId] = useState<string | null>(null);
@@ -44,69 +18,11 @@ function DuaaContent() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   useEffect(() => {
-    setFeed(loadFeed());
-  }, []);
-
-  useEffect(() => {
     const text = params.get("text");
-    const name = params.get("name");
-    if (text && text.trim().length > 0) {
-      const post: DuaaPost = {
-        id: `${Date.now()}`,
-        text,
-        author: name || "Anonymous",
-        likes: 0,
-        reposts: 0,
-        createdAt: Date.now(),
-        comments: [],
-      };
-      setFeed((prev) => {
-        const next = [post, ...prev];
-        saveFeed(next);
-        return next;
-      });
-    }
+    const name = params.get("name") || "Anonymous";
+    if (text && text.trim().length > 0) addPost(text, name);
   }, [params]);
-
-  const sortedFeed = useMemo(() => {
-    return [...feed].sort((a, b) => b.createdAt - a.createdAt);
-  }, [feed]);
-
-  const handleLike = (id: string) => {
-    setFeed((prev) => {
-      const next = prev.map((p) => (p.id === id ? { ...p, likes: p.likes + 1 } : p));
-      saveFeed(next);
-      return next;
-    });
-  };
-
-  const handleRepost = (id: string) => {
-    setFeed((prev) => {
-      const next = prev.map((p) => (p.id === id ? { ...p, reposts: p.reposts + 1 } : p));
-      saveFeed(next);
-      return next;
-    });
-  };
-
-  const handleAddComment = (id: string, text: string, author: string) => {
-    const trimmed = text.trim();
-    if (!trimmed) return;
-    setFeed((prev) => {
-      const next = prev.map((p) =>
-        p.id === id
-          ? {
-              ...p,
-              comments: [
-                ...(p.comments || []),
-                { id: `${Date.now()}`, author: author || "Anonymous", text: trimmed, createdAt: Date.now() },
-              ],
-            }
-          : p
-      );
-      saveFeed(next);
-      return next;
-    });
-  };
+  
 
   return (
     <>
@@ -116,9 +32,7 @@ function DuaaContent() {
         <div className="app-card">
           <div className="space-y-2">
             <div className="app-title">Du’a</div>
-            <div className="text-[13px] text-[var(--text-muted)]">
-              A kind, anonymous space for prayers. Please keep a gentle, non‑judgmental tone and avoid personal details or promotions. Du’as are not conditioned by donations or any other action.
-            </div>
+            <div className="text-[13px] text-[var(--text-muted)]">{DUAA_INTRO}</div>
           </div>
           {/* Write a du’a section */}
           <div className="app-card mt-3">
@@ -145,20 +59,7 @@ function DuaaContent() {
                       onClick={() => {
                         const text = composerText.trim();
                         if (!text) return;
-                        const post: DuaaPost = {
-                          id: `${Date.now()}`,
-                          text,
-                          author: undefined,
-                          likes: 0,
-                          reposts: 0,
-                          createdAt: Date.now(),
-                          comments: [],
-                        };
-                        setFeed((prev) => {
-                          const next = [post, ...prev];
-                          saveFeed(next);
-                          return next;
-                        });
+                        addPost(text);
                         setComposerText("");
                         setIsComposerOpen(false);
                       }}
@@ -184,8 +85,8 @@ function DuaaContent() {
                     <div className="text-[12px] text-[var(--text-muted)]">{new Date(post.createdAt).toLocaleDateString()}</div>
                     <div className="text-[15px] mt-1">{post.text}</div>
                     <div className="flex items-center gap-4 mt-2 text-[13px] text-[var(--text-muted)]">
-                      <button onClick={() => handleLike(post.id)} className="hover:underline">Amine ({post.likes})</button>
-                      <button onClick={() => handleRepost(post.id)} className="hover:underline">Repost ({post.reposts})</button>
+                      <button onClick={() => like(post.id)} className="hover:underline">Amine ({post.likes})</button>
+                      <button onClick={() => repost(post.id)} className="hover:underline">Repost ({post.reposts})</button>
                       <button onClick={() => setOpenCommentId((id) => id === post.id ? null : post.id)} className="hover:underline ml-auto">Comment ({(post.comments || []).length})</button>
                     </div>
                     {openCommentId === post.id && (
@@ -212,7 +113,7 @@ function DuaaContent() {
                             onClick={() => {
                               const text = commentText.trim();
                               if (!text) return;
-                              handleAddComment(post.id, text, "Anonymous");
+                              addComment(post.id, text, "Anonymous");
                               setCommentText("");
                               setOpenCommentId(null);
                             }}
@@ -241,7 +142,7 @@ function DuaaContent() {
 
             {visibleCount < sortedFeed.length && (
               <div className="flex justify-center">
-                <button onClick={() => setVisibleCount((v) => v + 10)} className="btn-secondary text-[14px] px-4">
+                <button onClick={showMore} className="btn-secondary text-[14px] px-4">
                   View more
                 </button>
               </div>
