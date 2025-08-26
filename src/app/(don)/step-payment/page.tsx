@@ -3,13 +3,12 @@
 import { useState, useMemo, useRef } from "react";
 import { useFormContext } from "react-hook-form";
 import { useRouter } from "next/navigation";
-import { RotateCcw, CreditCard, Heart } from "lucide-react";
-import { AppBar, Stepper, Input, Checkbox, PayPalButton, SideMenu, ProductHeader, MosqueSelectorModal } from "@/components";
+import { RotateCcw, Heart } from "lucide-react";
+import { AppBar, Stepper, Checkbox, PayPalButton, SideMenu, ProductHeader, MosqueSelectorModal } from "@/components";
 import { DonateOverlay } from "@/components/DonateOverlay";
 import { buildDonationSummary } from "@/features/donation/summary";
 import { useDonationFlow } from "@/features/donation/useDonationFlow";
 import { DonationFormValues } from "@/lib/schema";
-import { Calendar, Shield } from "lucide-react";
 import { formatEuro } from "@/lib/currency";
 
 export default function StepPaymentPage() {
