@@ -1,5 +1,6 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import { cn } from "@/lib/cn";
 import { ChevronRight } from "lucide-react";
 
