@@ -14,7 +14,7 @@ import { formatEuro } from "@/lib/currency";
 
 export default function StepPaymentPage() {
   const form = useFormContext<DonationFormValues>();
-  const router = useRouter();
+  const _router = useRouter();
   const values = form.watch();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [showMosqueSelector, setShowMosqueSelector] = useState(false);
@@ -32,6 +32,7 @@ export default function StepPaymentPage() {
     values.tributeName,
     values.mosqueName,
     values.donationType,
+    values
   ]);
 
   const handleSubmit = () => {
@@ -47,7 +48,6 @@ export default function StepPaymentPage() {
       } catch {}
       setIsOverlayOpen(true);
     }
-    console.log("Payment submitted", values);
   };
 
   return (

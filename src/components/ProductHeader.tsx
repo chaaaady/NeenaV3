@@ -1,7 +1,6 @@
 "use client";
 
 import { Info } from "lucide-react";
-import { cn } from "@/lib/cn";
 
 export function ProductHeader({ 
   currentMosque, 

@@ -10,7 +10,7 @@ interface Step {
 export function Stepper({ steps }: { steps: Step[] }) {
   return (
     <div className="stepper-container">
-      {steps.map((step, index) => (
+      {steps.map((step, _index) => (
         <div key={step.label} className="stepper-item">
           <div className={cn(
             "stepper-dot",
