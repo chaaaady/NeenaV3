@@ -190,7 +190,7 @@
     margin: 0 auto; 
     padding-left: max(20px, env(safe-area-inset-left)); 
     padding-right: max(20px, env(safe-area-inset-right)); 
-    padding-top: 4px; 
+    padding-top: 0px; 
     padding-bottom: 8px; 
     min-height: calc(100dvh - var(--header-h) - var(--product-header-h) - var(--stepper-h) - var(--actions-h) - var(--safari-ui-h)); 
   }
@@ -219,7 +219,7 @@
     transition: all var(--motion-base) var(--ease-inout); 
   }
   .app-container .app-card:first-child { 
-    margin-top: 2px; 
+    margin-top: 0px; 
     padding-top: 16px; 
   }
   .app-card:hover { 
