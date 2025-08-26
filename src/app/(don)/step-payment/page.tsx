@@ -59,7 +59,7 @@ export default function StepPaymentPage() {
           "--cx": `${overlayVars.cx}px`,
           "--cy": `${overlayVars.cy}px`,
           background: overlayBg || undefined,
-        }}
+        } as React.CSSProperties}
         aria-hidden={!isOverlayOpen}
       >
         <div className="donate-overlay-content">

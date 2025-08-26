@@ -1,6 +1,6 @@
 "use client";
 
-import { ChevronRight, Info, X, Settings, HelpCircle, Shield, RotateCcw, CreditCard, Heart } from "lucide-react";
+import { ChevronRight, Info, X, Settings, HelpCircle, Shield } from "lucide-react";
 import { cn } from "@/lib/cn";
 import { useState, useEffect } from "react";
 
@@ -520,7 +520,7 @@ export function SegmentedControl({
           width: `calc(${thumbWidth}% - 2px)`,
         }}
       />
-      {options.map((option, index) => (
+      {options.map((option) => (
         <button
           key={option}
           className={cn("segmented-option", option === value && "active")}
