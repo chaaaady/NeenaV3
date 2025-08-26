@@ -87,28 +87,32 @@ export default function StepPaymentPage() {
             
             <div className="space-y-3">
               <div className="space-y-2">
-                <div className="text-[14px] font-[700] text-[var(--text-muted)]">Carte de crédit</div>
+                <div className="text-[14px] font-[700] text-[var(--text-muted)]">Résumé</div>
+                <div className="text-[15px] text-[var(--text)] leading-relaxed">
+                  Je souhaite donner {formatEuro(values.amount)} en {values.donationType} à la mosquée de {values.mosqueName}
+                </div>
+              </div>
+              
+              <div className="space-y-2">
                 <Input
-                  label="Numéro de carte"
                   value={values.cardNumber}
                   onChange={(v: string) => form.setValue("cardNumber", v, { shouldDirty: true })}
                   autoComplete="cc-number"
                   leftIcon={<CreditCard size={18} />}
+                  placeholder="Numéro de carte"
                 />
                 
                 <div className="grid grid-cols-2 gap-3">
                   <Input
-                    label="Expiration"
                     value={values.cardExp}
                     onChange={(v: string) => form.setValue("cardExp", v, { shouldDirty: true })}
-                    placeholder="MM/YY"
+                    placeholder="MM/AA"
                     leftIcon={<Calendar size={18} />}
                   />
                   <Input
-                    label="CVC"
                     value={values.cardCvc}
                     onChange={(v: string) => form.setValue("cardCvc", v, { shouldDirty: true })}
-                    placeholder="3 digits"
+                    placeholder="CVC"
                     leftIcon={<Shield size={18} />}
                   />
                 </div>
@@ -120,18 +124,10 @@ export default function StepPaymentPage() {
               <PayPalButton label="Payer avec PayPal" />
               
               <Checkbox
-                label="Je couvre les frais pour que 100% de mon don aille à la mosquée."
+                label={`Je rajoute ${formatEuro(values.amount * 0.029)} pour que 100% de mon don aille à la mosquée`}
                 checked={values.coverFees}
                 onChange={(v: boolean) => form.setValue("coverFees", v, { shouldDirty: true })}
               />
-
-              <div className="flex items-center gap-2 text-[12px] text-[var(--text-muted)]">
-                <span className="px-2 py-1 rounded-full border">3D Secure</span>
-                <span className="px-2 py-1 rounded-full border">SSL</span>
-              </div>
-              <div className="text-[12px] text-[var(--text-muted)]">
-                Nous ne stockons jamais votre carte. Données protégées (RGPD). Reçu fiscal par email.
-              </div>
             </div>
             
             {/* Boutons d'actions intégrés dans la carte */}
