@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useFormContext } from "react-hook-form";
 import { useRouter } from "next/navigation";
 import { RotateCcw, CreditCard } from "lucide-react";
-import { AppBar, Stepper, Input, Checkbox, SideMenu, ProductHeader, MosqueSelectorModal, SegmentedControl } from "@/components/ui";
+import { AppBar, Stepper, Input, Checkbox, SideMenu, ProductHeader, MosqueSelectorModal, SegmentedControl } from "@/components";
 import { DonationFormValues } from "@/lib/schema";
 import { useDonationFlow } from "@/features/donation/useDonationFlow";
 

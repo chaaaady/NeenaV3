@@ -2,7 +2,7 @@
 
 import { useEffect, useState, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
-import { AppBar, SideMenu } from "@/components/ui";
+import { AppBar, SideMenu } from "@/components";
 import { useRouter } from "next/navigation";
 import { useDuaaFeed } from "@/features/duaa/useDuaaFeed";
 import { DUAA_INTRO } from "@/features/duaa/constants";

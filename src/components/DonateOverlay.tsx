@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { DonationFormValues } from "@/lib/schema";
 
@@ -19,6 +19,8 @@ export function DonateOverlay({ open, cx, cy, background, summary, values, onClo
   const [isDuaaOpen, setIsDuaaOpen] = useState(false);
   const [duaaText, setDuaaText] = useState("
 ");
+  const containerRef = useRef<HTMLDivElement>(null);
+  const previouslyFocusedRef = useRef<Element | null>(null);
 
   const style: React.CSSProperties & { [key: string]: string | undefined } = {
     "--cx": `${cx}px`,
@@ -26,8 +28,60 @@ export function DonateOverlay({ open, cx, cy, background, summary, values, onClo
     background: background || undefined,
   };
 
+  // Focus trap + ESC close
+  useEffect(() => {
+    if (!open) return;
+    previouslyFocusedRef.current = document.activeElement;
+
+    const el = containerRef.current;
+    if (el) {
+      const focusables = el.querySelectorAll<HTMLElement>(
+        'a[href], button, textarea, input, select, [tabindex]:not([tabindex="-1"])'
+      );
+      const first = focusables[0] || el;
+      (first as HTMLElement).focus();
+
+      const handleKeyDown = (e: KeyboardEvent) => {
+        if (e.key === "Escape") {
+          e.preventDefault();
+          onClose();
+          return;
+        }
+        if (e.key === "Tab" && focusables.length > 0) {
+          const firstEl = focusables[0];
+          const lastEl = focusables[focusables.length - 1];
+          if (e.shiftKey) {
+            if (document.activeElement === firstEl) {
+              e.preventDefault();
+              (lastEl as HTMLElement).focus();
+            }
+          } else {
+            if (document.activeElement === lastEl) {
+              e.preventDefault();
+              (firstEl as HTMLElement).focus();
+            }
+          }
+        }
+      };
+      document.addEventListener("keydown", handleKeyDown);
+      return () => {
+        document.removeEventListener("keydown", handleKeyDown);
+        const prev = previouslyFocusedRef.current as HTMLElement | null;
+        if (prev && typeof prev.focus === "function") prev.focus();
+      };
+    }
+  }, [open, onClose]);
+
   return (
-    <div className={`donate-overlay ${open ? "open" : ""}`} style={style} aria-hidden={!open} role="dialog" aria-modal="true">
+    <div
+      className={`donate-overlay ${open ? "open" : ""}`}
+      style={style}
+      aria-hidden={!open}
+      role="dialog"
+      aria-modal="true"
+      ref={containerRef}
+      tabIndex={-1}
+    >
       <div className="donate-overlay-content" role="document">
         <div className="text-[28px] font-[800] tracking-[-0.3px]">Thank you!</div>
         <div className="text-[15px] opacity-90 text-center max-w-sm">
