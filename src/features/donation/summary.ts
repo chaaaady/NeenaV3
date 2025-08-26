@@ -4,18 +4,18 @@ import { DonationFormValues } from "@/lib/schema";
 
 export function buildDonationSummary(values: DonationFormValues): string {
   const freqSuffix =
-    values.frequency === "Weekly" ? "/week" :
-    values.frequency === "Monthly" ? "/month" : "";
+    values.frequency === "Hebdomadaire" ? "/semaine" :
+    values.frequency === "Mensuel" ? "/mois" : "";
 
   const donorPhrase =
-    values.donorType === "Company"
-      ? (values.companyName ? `the company ${values.companyName}` : "a company")
-      : (values.donorType === "In honor of"
-          ? (values.tributeName ? `in honor of ${values.tributeName}` : "in honor of someone")
+    values.donorType === "Entreprise"
+      ? (values.companyName ? `l'entreprise ${values.companyName}` : "une entreprise")
+      : (values.donorType === "En hommage"
+          ? (values.tributeName ? `au nom de ${values.tributeName}` : "au nom de quelqu'un")
           : "");
 
-  const donorPart = donorPhrase ? ` as ${donorPhrase}` : "";
+  const donorPart = donorPhrase ? ` ${donorPhrase}` : "";
 
-  return `You have donated €${values.amount}${freqSuffix}${donorPart} to ${values.mosqueName} as ${values.donationType}. May Allah bless you and your family and reward your generosity.`;
+  return `Je souhaite donner ${values.amount}€${freqSuffix}${donorPart} à la mosquée de ${values.mosqueName} en ${values.donationType}${values.wantsReceipt ? " avec reçu fiscal" : ""}.`;
 }
 

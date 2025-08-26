@@ -15,7 +15,9 @@ export function useDonationFlow() {
 
     canProceedFromAmount: (v: DonationFormValues) => v.amount > 0 && !!v.mosqueName,
     canProceedFromPersonal: (v: DonationFormValues) =>
-      !!(v.email && (v.donorType === "Company" ? v.companyName : v.firstName && v.lastName)),
+      v.donorType === "Entreprise" 
+        ? !!(v.companyName && v.companySiret)
+        : !!(v.firstName && v.lastName && v.email),
   };
 }
 

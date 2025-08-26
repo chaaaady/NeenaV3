@@ -40,7 +40,7 @@ export default function StepPersonalPage() {
         <div className="app-card">
           <div className="space-y-4">
             <div className="flex items-center justify-between">
-              <div className="app-title">Personal Information</div>
+              <div className="app-title">Informations personnelles</div>
               <Stepper 
                 steps={[
                   { label: "Montant", status: "completed" },
@@ -57,40 +57,49 @@ export default function StepPersonalPage() {
                 onChange={(v: string) => form.setValue("donorType", v as "Personnel" | "En hommage" | "Entreprise", { shouldDirty: true })}
               />
               
-              <div className="grid grid-cols-2 gap-3">
-                <Input
-                  value={values.firstName}
-                  onChange={(v: string) => form.setValue("firstName", v, { shouldDirty: true })}
-                  placeholder="Prénom"
-                />
-                <Input
-                  value={values.lastName}
-                  onChange={(v: string) => form.setValue("lastName", v, { shouldDirty: true })}
-                  placeholder="Nom"
-                />
-              </div>
-              
-              <Input
-                value={values.email}
-                onChange={(v: string) => form.setValue("email", v, { shouldDirty: true })}
-                placeholder="Email"
-                type="email"
-              />
-              
-              {values.donorType === "Entreprise" && (
-                <Input
-                  value={values.companyName}
-                  onChange={(v: string) => form.setValue("companyName", v, { shouldDirty: true })}
-                  placeholder="Nom de l'entreprise"
-                />
-              )}
-              
-              {values.donorType === "En hommage" && (
-                <Input
-                  value={values.tributeName}
-                  onChange={(v: string) => form.setValue("tributeName", v, { shouldDirty: true })}
-                  placeholder="Nom de la personne"
-                />
+              {values.donorType === "Entreprise" ? (
+                <>
+                  <Input
+                    value={values.companyName}
+                    onChange={(v: string) => form.setValue("companyName", v, { shouldDirty: true })}
+                    placeholder="Raison sociale"
+                  />
+                  <Input
+                    value={values.companySiret}
+                    onChange={(v: string) => form.setValue("companySiret", v, { shouldDirty: true })}
+                    placeholder="SIRET"
+                  />
+                </>
+              ) : (
+                <>
+                  <div className="grid grid-cols-2 gap-3">
+                    <Input
+                      value={values.firstName}
+                      onChange={(v: string) => form.setValue("firstName", v, { shouldDirty: true })}
+                      placeholder="Prénom"
+                    />
+                    <Input
+                      value={values.lastName}
+                      onChange={(v: string) => form.setValue("lastName", v, { shouldDirty: true })}
+                      placeholder="Nom"
+                    />
+                  </div>
+                  
+                  <Input
+                    value={values.email}
+                    onChange={(v: string) => form.setValue("email", v, { shouldDirty: true })}
+                    placeholder="Email"
+                    type="email"
+                  />
+                  
+                  {values.donorType === "En hommage" && (
+                    <Input
+                      value={values.tributeName}
+                      onChange={(v: string) => form.setValue("tributeName", v, { shouldDirty: true })}
+                      placeholder="Au nom de"
+                    />
+                  )}
+                </>
               )}
               
               <Checkbox
@@ -108,14 +117,18 @@ export default function StepPersonalPage() {
                   className="btn-secondary pressable w-full text-[16px] font-[700] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--focus)] flex items-center justify-center gap-2"
                 >
                   <RotateCcw size={18} />
-                  Back
+                  Retour
                 </button>
                 <button
                   onClick={handleNext}
-                  disabled={!values.firstName || !values.lastName || !values.email}
+                  disabled={
+                    values.donorType === "Entreprise" 
+                      ? (!values.companyName || !values.companySiret)
+                      : (!values.firstName || !values.lastName || !values.email)
+                  }
                   className="btn-primary pressable w-full text-[16px] font-[700] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--focus)] disabled:opacity-40 disabled:cursor-not-allowed flex items-center justify-center gap-2"
                 >
-                  Payment
+                  Paiement
                   <CreditCard size={18} />
                 </button>
               </div>

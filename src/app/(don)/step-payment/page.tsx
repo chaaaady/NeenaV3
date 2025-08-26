@@ -87,13 +87,6 @@ export default function StepPaymentPage() {
             
             <div className="space-y-3">
               <div className="space-y-2">
-                <div className="text-[14px] font-[700] text-[var(--text-muted)]">Résumé</div>
-                <div className="text-[15px] text-[var(--text)] leading-relaxed">
-                  Je souhaite donner {formatEuro(values.amount)} en {values.donationType} à la mosquée de {values.mosqueName}
-                </div>
-              </div>
-              
-              <div className="space-y-2">
                 <Input
                   value={values.cardNumber}
                   onChange={(v: string) => form.setValue("cardNumber", v, { shouldDirty: true })}
@@ -138,7 +131,7 @@ export default function StepPaymentPage() {
                   className="btn-secondary pressable w-full text-[16px] font-[700] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--focus)] flex items-center justify-center gap-2"
                 >
                   <RotateCcw size={18} />
-                  Back
+                  Retour
                 </button>
                 <button
                   onClick={handleSubmit}
