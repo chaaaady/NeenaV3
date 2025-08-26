@@ -18,10 +18,10 @@ function DuaaContent() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   useEffect(() => {
-    const text = params.get("text");
-    const name = params.get("name") || "Anonymous";
-    if (text && text.trim().length > 0) addPost(text, name);
-  }, [params]);
+    if (sortedFeed.length === 0) {
+      addPost();
+    }
+  }, [sortedFeed.length, addPost]);
   
 
   return (

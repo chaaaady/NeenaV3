@@ -1,6 +1,5 @@
 "use client";
 
-import { forwardRef } from "react";
 import { cn } from "@/lib/cn";
 import { ChevronRight } from "lucide-react";
 
@@ -9,6 +8,18 @@ export * from "./ProductHeader";
 export * from "./MosqueSelectorModal";
 export * from "./SideMenu";
 export * from "./Stepper";
+export * from "./SegmentedControl";
+export * from "./Slider";
+export * from "./AmountDisplay";
+export * from "./Input";
+export * from "./Checkbox";
+export * from "./SummaryRow";
+export * from "./CompactSummaryRow";
+export * from "./InlineNote";
+export * from "./PayPalButton";
+export * from "./DonateOverlay";
+export * from "./LayoutNoScroll";
+export * from "./ProgressHeader";
 export function PageTransition({ 
   children, 
   isVisible = true,
@@ -158,23 +169,5 @@ export function CollapsibleStepCard({
     </div>
   );
 }
-
-export * from "./SegmentedControl";
-
-export * from "./Slider";
-
-export * from "./AmountDisplay";
-
-export * from "./Input";
-
-export * from "./Checkbox";
-
-export * from "./SummaryRow";
-
-export * from "./CompactSummaryRow";
-
-export * from "./InlineNote";
-
-export * from "./PayPalButton";
 
 // Intentionally drop MosqueSelector (inline list) in favor of modal version

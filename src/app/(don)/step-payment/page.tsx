@@ -24,16 +24,7 @@ export default function StepPaymentPage() {
   const { backToPersonal } = useDonationFlow();
   const donateBtnRef = useRef<HTMLButtonElement>(null);
 
-  const summarySentence = useMemo(() => buildDonationSummary(values), [
-    values.amount,
-    values.frequency,
-    values.donorType,
-    values.companyName,
-    values.tributeName,
-    values.mosqueName,
-    values.donationType,
-    values
-  ]);
+  const summarySentence = useMemo(() => buildDonationSummary(values), [values]);
 
   const handleSubmit = () => {
     const btn = donateBtnRef.current;
