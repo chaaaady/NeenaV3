@@ -190,7 +190,7 @@
     margin: 0 auto; 
     padding-left: max(20px, env(safe-area-inset-left)); 
     padding-right: max(20px, env(safe-area-inset-right)); 
-    padding-top: 8px; 
+    padding-top: 24px; 
     padding-bottom: 4px; 
     min-height: calc(100dvh - var(--header-h) - var(--product-header-h) - var(--stepper-h) - var(--actions-h) - var(--safari-ui-h)); 
   }
