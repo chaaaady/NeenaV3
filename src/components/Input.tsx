@@ -12,7 +12,7 @@ export function Input({
   leftIcon,
   rightAccessory,
 }: {
-  label: string;
+  label?: string;
   value: string;
   onChange: (value: string) => void;
   type?: string;
@@ -23,9 +23,11 @@ export function Input({
 }) {
   return (
     <label className="block w-full">
-      <span className="block text-[var(--text-muted)] text-[16px] leading-[20px] font-[700] mb-2">
-        {label}
-      </span>
+      {label && (
+        <span className="block text-[var(--text-muted)] text-[16px] leading-[20px] font-[700] mb-2">
+          {label}
+        </span>
+      )}
       <div className="relative">
         {leftIcon && (
           <div className="absolute left-3 top-1/2 -translate-y-1/2 text-[var(--text-soft)]">

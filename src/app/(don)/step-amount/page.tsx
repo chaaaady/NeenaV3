@@ -58,33 +58,26 @@ export default function StepAmountPage() {
             </div>
             
             <div className="space-y-3">
-              <div className="space-y-2">
-                <div className="text-[14px] font-[700] text-[var(--text-muted)]">Fréquence</div>
-                <SegmentedControl
-                  options={["One time", "Weekly", "Monthly"]}
-                  value={values.frequency}
-                  onChange={(v: string) => form.setValue("frequency", v as "One time" | "Weekly" | "Monthly", { shouldDirty: true })}
-                />
-              </div>
+              <SegmentedControl
+                options={["One time", "Weekly", "Monthly"]}
+                value={values.frequency}
+                onChange={(v: string) => form.setValue("frequency", v as "One time" | "Weekly" | "Monthly", { shouldDirty: true })}
+              />
               
-              <div className="space-y-2">
-                <div className="text-[14px] font-[700] text-[var(--text-muted)]">Montant</div>
-                <AmountDisplay amount={values.amount} />
-                <Slider
-                  value={values.amount}
-                  onChange={(v: number) => form.setValue("amount", v, { shouldDirty: true })}
-                  min={5}
-                  max={100}
-                  step={1}
-                />
-              </div>
+              <AmountDisplay amount={values.amount} />
+              <Slider
+                value={values.amount}
+                onChange={(v: number) => form.setValue("amount", v, { shouldDirty: true })}
+                min={5}
+                max={100}
+                step={1}
+              />
               
               <div className="space-y-3">
                 <Input
-                  label="Autre montant"
                   value={otherAmountInput}
                   onChange={setOtherAmountInput}
-                  placeholder="€ Entrez votre montant"
+                  placeholder="Autre montant (€)"
                   rightAccessory="€"
                 />
                 <div className="inline-note" role="note">
@@ -94,14 +87,11 @@ export default function StepAmountPage() {
                 </div>
               </div>
               
-              <div className="space-y-2">
-                <div className="text-[14px] font-[700] text-[var(--text-muted)]">Type de don</div>
-                <SegmentedControl
-                  options={["Sadaqah", "Zakat"]}
-                  value={values.donationType}
-                  onChange={(v: string) => form.setValue("donationType", v as "Sadaqah" | "Zakat", { shouldDirty: true })}
-                />
-              </div>
+              <SegmentedControl
+                options={["Sadaqah", "Zakat"]}
+                value={values.donationType}
+                onChange={(v: string) => form.setValue("donationType", v as "Sadaqah" | "Zakat", { shouldDirty: true })}
+              />
             </div>
             
             {/* Boutons d'actions intégrés dans la carte */}
