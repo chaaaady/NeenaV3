@@ -17,8 +17,7 @@ type Props = {
 export function DonateOverlay({ open, cx, cy, background, summary, values, onClose }: Props) {
   const router = useRouter();
   const [isDuaaOpen, setIsDuaaOpen] = useState(false);
-  const [duaaText, setDuaaText] = useState("
-");
+  const [duaaText, setDuaaText] = useState("");
   const containerRef = useRef<HTMLDivElement>(null);
   const previouslyFocusedRef = useRef<Element | null>(null);
 
