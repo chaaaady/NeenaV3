@@ -73,95 +73,81 @@ export default function StepPaymentPage() {
         ]} 
       />
       <div className="app-container">
-        {/* Mini summary card */}
-        <div className="app-card">
-          <div className="space-y-2">
-            <div className="app-title">Summary</div>
-            <div className="text-[14px] text-[var(--text-muted)]">
-              {summarySentence}
-            </div>
-          </div>
-        </div>
-
-        {/* Carte principale Payment Method */}
         <div className="app-card">
           <div className="space-y-4">
             <div className="app-title">Paiement sécurisé</div>
             
             <div className="space-y-3">
-              <Input
-                label="Numéro de carte"
-                value={values.cardNumber}
-                onChange={(v: string) => form.setValue("cardNumber", v, { shouldDirty: true })}
-                autoComplete="cc-number"
-                leftIcon={<CreditCard size={18} />}
-              />
-              
-              <div className="grid grid-cols-2 gap-3">
-                <Input
-                  label="Expiration"
-                  value={values.cardExp}
-                  onChange={(v: string) => form.setValue("cardExp", v, { shouldDirty: true })}
-                  placeholder="MM/YY"
-                  leftIcon={<Calendar size={18} />}
-                />
-                <Input
-                  label="CVC"
-                  value={values.cardCvc}
-                  onChange={(v: string) => form.setValue("cardCvc", v, { shouldDirty: true })}
-                  placeholder="3 digits"
-                  leftIcon={<Shield size={18} />}
-                />
+              <div className="space-y-2">
+                <div className="text-[14px] font-[700] text-[var(--text-muted)]">Résumé du don</div>
+                <div className="summary-row">
+                  <span className="text-[var(--text-muted)] font-[700] text-[16px]">Montant</span>
+                  <span className="text-[var(--text-soft)] font-[600] text-[16px]">{formatEuro(values.amount)}</span>
+                </div>
+                <div className="summary-row">
+                  <span className="text-[var(--text-muted)] font-[700] text-[16px]">Fréquence</span>
+                  <span className="text-[var(--text-soft)] font-[600] text-[16px]">{values.frequency}</span>
+                </div>
+                <div className="summary-row">
+                  <span className="text-[var(--text-muted)] font-[700] text-[16px]">Type</span>
+                  <span className="text-[var(--text-soft)] font-[600] text-[16px]">{values.donationType}</span>
+                </div>
+                <div className="summary-row">
+                  <span className="text-[var(--text-muted)] font-[700] text-[16px]">Mosquée</span>
+                  <span className="text-[var(--text-soft)] font-[600] text-[16px]">{values.mosqueName}</span>
+                </div>
+                {values.tributeName && (
+                  <div className="summary-row">
+                    <span className="text-[var(--text-muted)] font-[700] text-[16px]">En hommage à</span>
+                    <span className="text-[var(--text-soft)] font-[600] text-[16px]">{values.tributeName}</span>
+                  </div>
+                )}
               </div>
               
-              <div className="h-[1px] bg-[var(--border)]"></div>
-              <div className="text-[13px] text-[var(--text-muted)]">Autres méthodes</div>
-              
-              <PayPalButton label="Payer avec PayPal" />
-              
-              <Checkbox
-                label="Je couvre les frais pour que 100% de mon don aille à la mosquée."
-                checked={values.coverFees}
-                onChange={(v: boolean) => form.setValue("coverFees", v, { shouldDirty: true })}
-              />
+              <div className="space-y-2">
+                <div className="text-[14px] font-[700] text-[var(--text-muted)]">Méthode de paiement</div>
+                <PayPalButton label="Payer avec PayPal" />
+                
+                <Checkbox
+                  label="Je couvre les frais pour que 100% de mon don aille à la mosquée."
+                  checked={values.coverFees}
+                  onChange={(v: boolean) => form.setValue("coverFees", v, { shouldDirty: true })}
+                />
 
-              <div className="flex items-center gap-2 text-[12px] text-[var(--text-muted)]">
-                <span className="px-2 py-1 rounded-full border">3D Secure</span>
-                <span className="px-2 py-1 rounded-full border">SSL</span>
+                <div className="flex items-center gap-2 text-[12px] text-[var(--text-muted)]">
+                  <span className="px-2 py-1 rounded-full border">3D Secure</span>
+                  <span className="px-2 py-1 rounded-full border">SSL</span>
+                </div>
+                <div className="text-[12px] text-[var(--text-muted)]">
+                  Nous ne stockons jamais votre carte. Données protégées (RGPD). Reçu fiscal par email.
+                </div>
               </div>
-              <div className="text-[12px] text-[var(--text-muted)]">
-                Nous ne stockons jamais votre carte. Données protégées (RGPD). Reçu fiscal par email.
+            </div>
+            
+            {/* Boutons d'actions intégrés dans la carte */}
+            <div className="pt-6 border-t border-[var(--border)]">
+              <div className="grid grid-cols-2 gap-3">
+                <button
+                  onClick={backToPersonal}
+                  className="btn-secondary pressable w-full text-[16px] font-[700] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--focus)] flex items-center justify-center gap-2"
+                >
+                  <RotateCcw size={18} />
+                  Back
+                </button>
+                <button
+                  onClick={handleSubmit}
+                  data-variant="success"
+                  ref={donateBtnRef}
+                  className="btn-primary pressable w-full text-[16px] font-[700] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--focus)] disabled:opacity-40 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                >
+                  Faire un don de {formatEuro(values.amount)}
+                  <Heart size={18} />
+                </button>
               </div>
             </div>
           </div>
         </div>
       </div>
-        
-      <div className="docked-actions">
-        <div className="container">
-          <div className="grid gap-3">
-            <button
-              onClick={backToPersonal}
-              className="btn-secondary pressable w-full text-[16px] font-[700] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--focus)] flex items-center justify-center gap-2"
-            >
-              <RotateCcw size={18} />
-              Back
-            </button>
-            <button
-              onClick={handleSubmit}
-              data-variant="success"
-              ref={donateBtnRef}
-              className="btn-primary pressable w-full text-[16px] font-[700] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--focus)] disabled:opacity-40 disabled:cursor-not-allowed flex items-center justify-center gap-2"
-            >
-              Faire un don de {formatEuro(values.amount)}
-              <Heart size={18} />
-            </button>
-          </div>
-        </div>
-      </div>
-      
-      {/* Espaceur pour la barre Safari */}
-      <div className="safari-spacer"></div>
     </>
   );
 }

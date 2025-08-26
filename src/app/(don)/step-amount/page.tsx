@@ -102,34 +102,30 @@ export default function StepAmountPage() {
                 />
               </div>
             </div>
+            
+            {/* Boutons d'actions intégrés dans la carte */}
+            <div className="pt-6 border-t border-[var(--border)]">
+              <div className="grid grid-cols-2 gap-3">
+                <button
+                  onClick={handleReset}
+                  className="btn-secondary pressable w-full text-[16px] font-[700] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--focus)] flex items-center justify-center gap-2"
+                >
+                  <RotateCcw size={18} />
+                  Reset
+                </button>
+                <button
+                  onClick={handleNext}
+                  disabled={!values.amount || values.amount < 5}
+                  className="btn-primary pressable w-full text-[16px] font-[700] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--focus)] disabled:opacity-40 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                >
+                  Next
+                  <ArrowRight size={18} />
+                </button>
+              </div>
+            </div>
           </div>
         </div>
       </div>
-        
-      <div className="docked-actions">
-        <div className="container">
-          <div className="grid gap-3">
-            <button
-              onClick={handleReset}
-              className="btn-secondary pressable w-full text-[16px] font-[700] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--focus)] flex items-center justify-center gap-2"
-            >
-              <RotateCcw size={18} />
-              Reset
-            </button>
-            <button
-              onClick={handleNext}
-              disabled={!values.amount || values.amount < 5}
-              className="btn-primary pressable w-full text-[16px] font-[700] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--focus)] disabled:opacity-40 disabled:cursor-not-allowed flex items-center justify-center gap-2"
-            >
-              Next
-              <ArrowRight size={18} />
-            </button>
-          </div>
-        </div>
-      </div>
-      
-      {/* Espaceur pour la barre Safari */}
-      <div className="safari-spacer"></div>
     </>
   );
 }
