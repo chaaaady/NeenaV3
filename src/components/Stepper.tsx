@@ -14,7 +14,7 @@ export function Stepper({ steps }: { steps: Step[] }) {
   return (
     <div className="flex items-center gap-2">
       <div className="flex items-center gap-1">
-        {steps.map((step, index) => (
+        {steps.map((step, _index) => (
           <div key={step.label} className="stepper-item">
             <div className={cn(
               "stepper-dot",
