@@ -191,14 +191,14 @@
     padding-left: max(20px, env(safe-area-inset-left)); 
     padding-right: max(20px, env(safe-area-inset-right)); 
     padding-top: 0px; 
-    padding-bottom: 8px; 
+    padding-bottom: 4px; 
     min-height: calc(100dvh - var(--header-h) - var(--product-header-h) - var(--stepper-h) - var(--actions-h) - var(--safari-ui-h)); 
   }
   @media (min-height: 700px) { 
     .app-container { 
       display: grid; 
       align-content: center; 
-      row-gap: 12px; 
+      row-gap: 4px; 
     } 
   }
   @media (min-width: 768px) { 
@@ -214,7 +214,7 @@
     background: var(--card); 
     border-radius: var(--radius-all); 
     box-shadow: var(--shadow-card); 
-    padding: 16px; 
+    padding: 12px; 
     min-height: 0; 
     transition: all var(--motion-base) var(--ease-inout); 
   }
@@ -224,7 +224,7 @@
   }
   @media (min-width: 768px) { 
     .app-card { 
-      padding: 24px; 
+      padding: 16px; 
       min-height: 0; 
     } 
   }
