@@ -8,7 +8,7 @@ import { useDuaaFeed } from "@/features/duaa/useDuaaFeed";
 import { DUAA_INTRO } from "@/features/duaa/constants";
 
 function DuaaContent() {
-  const params = useSearchParams();
+  const _params = useSearchParams();
   const router = useRouter();
   const { sortedFeed, visibleCount, showMore, addPost, like, repost, addComment } = useDuaaFeed();
   const [isComposerOpen, setIsComposerOpen] = useState(false);
