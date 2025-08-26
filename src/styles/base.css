@@ -71,7 +71,7 @@
     /* Layout sizing */
     --header-h: 56px;
     --product-header-h: 0px;
-    --stepper-h: 56px;
+    --stepper-h: 40px;
     --actions-h: 72px;
     --safari-ui-h: 60px;
   }
@@ -160,22 +160,22 @@
   /* Stepper */
   .stepper-container { 
     display: flex; 
+    flex-direction: column;
     align-items: center; 
     justify-content: center; 
-    gap: 16px; 
     height: var(--stepper-h); 
     padding: 4px 0; 
-    margin: 4px 0 8px 0; 
+    margin: 2px 0 4px 0; 
   }
   .stepper-item { 
     display: flex; 
     align-items: center; 
-    gap: 8px; 
+    justify-content: center;
     position: relative; 
   }
   .stepper-dot { 
-    width: 8px; 
-    height: 8px; 
+    width: 6px; 
+    height: 6px; 
     border-radius: 50%; 
     background: var(--surface-2); 
     border: 1px solid var(--border); 
@@ -184,25 +184,12 @@
   .stepper-dot.active { 
     background: var(--brand); 
     border-color: var(--brand); 
-    transform: scale(1.2); 
+    transform: scale(1.3); 
   }
   .stepper-dot.completed { 
     background: var(--brand); 
     border-color: var(--brand); 
     opacity: 0.6; 
-  }
-  .stepper-label { 
-    font-size: 14px; 
-    font-weight: 600; 
-    color: var(--text-soft); 
-    transition: color var(--motion-base) var(--ease-inout); 
-  }
-  .stepper-label.active { 
-    color: var(--brand); 
-    font-weight: 700; 
-  }
-  .stepper-label.completed { 
-    color: var(--text-muted); 
   }
 
   /* Layout containers */
