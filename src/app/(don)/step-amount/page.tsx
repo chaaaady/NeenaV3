@@ -1,10 +1,9 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState } from "react";
 import { useFormContext } from "react-hook-form";
 import { useRouter } from "next/navigation";
-import { RotateCcw, ArrowRight } from "lucide-react";
-import { AppBar, Stepper, SegmentedControl, Input, InlineNote, SummaryRow, Slider, AmountDisplay, SideMenu, ProductHeader, MosqueSelectorModal } from "@/components/ui";
+import { AppBar, Stepper, SegmentedControl, Input, Slider, AmountDisplay, SideMenu, ProductHeader, MosqueSelectorModal } from "@/components/ui";
 import { DonationFormValues } from "@/lib/schema";
 
 export default function StepAmountPage() {
@@ -21,8 +20,7 @@ export default function StepAmountPage() {
     }
   };
 
-  const hasAmount = values.amount > 0;
-  const hasPersonalInfo = Boolean(values.firstName && values.lastName && values.email);
+
 
   return (
     <>

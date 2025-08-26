@@ -1,6 +1,6 @@
 "use client";
 
-import { Menu, ChevronRight, Info, X, Settings, HelpCircle, Shield, ArrowRight, RotateCcw, CreditCard, Heart } from "lucide-react";
+import { ChevronRight, Info, X, Settings, HelpCircle, Shield, RotateCcw, CreditCard, Heart } from "lucide-react";
 import { cn } from "@/lib/cn";
 import { useState, useEffect } from "react";
 
@@ -434,7 +434,6 @@ export function CollapsibleStepCard({
   title,
   summaryValue,
   isActive,
-  isCompleted,
   children,
   className,
   delay = 0,
@@ -443,7 +442,6 @@ export function CollapsibleStepCard({
   title: string;
   summaryValue?: string;
   isActive: boolean;
-  isCompleted: boolean;
   children: React.ReactNode;
   className?: string;
   delay?: number;

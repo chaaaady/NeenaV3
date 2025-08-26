@@ -49,7 +49,6 @@ export default function DuaaPage() {
 
   useEffect(() => {
     const text = params.get("text");
-    const anon = params.get("anon");
     const name = params.get("name");
     if (text && text.trim().length > 0) {
       const post: DuaaPost = {
@@ -67,7 +66,6 @@ export default function DuaaPage() {
         return next;
       });
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [params]);
 
   const sortedFeed = useMemo(() => {

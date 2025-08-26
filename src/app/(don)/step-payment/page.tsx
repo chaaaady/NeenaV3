@@ -3,8 +3,8 @@
 import { useState, useMemo, useRef } from "react";
 import { useFormContext } from "react-hook-form";
 import { useRouter } from "next/navigation";
-import { RotateCcw, ArrowRight, CreditCard, Heart } from "lucide-react";
-import { AppBar, Stepper, Input, Checkbox, SummaryRow, PayPalButton, SideMenu, ProductHeader, MosqueSelectorModal } from "@/components/ui";
+import { RotateCcw, CreditCard, Heart } from "lucide-react";
+import { AppBar, Stepper, Input, Checkbox, PayPalButton, SideMenu, ProductHeader, MosqueSelectorModal } from "@/components/ui";
 import { DonationFormValues } from "@/lib/schema";
 import { Calendar, Shield } from "lucide-react";
 
@@ -48,9 +48,7 @@ export default function StepPaymentPage() {
     console.log("Payment submitted", values);
   };
 
-  const hasAmount = values.amount > 0;
-  const hasPersonalInfo = Boolean(values.firstName && values.lastName && values.email);
-  const hasPaymentInfo = Boolean(values.cardNumber && values.cardExp && values.cardCvc);
+
 
   return (
     <>
@@ -58,9 +56,7 @@ export default function StepPaymentPage() {
       <div
         className={`donate-overlay ${isOverlayOpen ? "open" : ""}`}
         style={{
-          // @ts-expect-error CSS vars injection
           "--cx": `${overlayVars.cx}px`,
-          // @ts-expect-error CSS vars injection
           "--cy": `${overlayVars.cy}px`,
           background: overlayBg || undefined,
         }}

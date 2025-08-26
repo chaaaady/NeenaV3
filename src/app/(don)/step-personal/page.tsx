@@ -3,8 +3,8 @@
 import { useState } from "react";
 import { useFormContext } from "react-hook-form";
 import { useRouter } from "next/navigation";
-import { RotateCcw, ArrowRight, CreditCard } from "lucide-react";
-import { AppBar, Stepper, Input, Checkbox, SummaryRow, SideMenu, ProductHeader, MosqueSelectorModal, SegmentedControl } from "@/components/ui";
+import { RotateCcw, CreditCard } from "lucide-react";
+import { AppBar, Stepper, Input, Checkbox, SideMenu, ProductHeader, MosqueSelectorModal, SegmentedControl } from "@/components/ui";
 import { DonationFormValues } from "@/lib/schema";
 
 export default function StepPersonalPage() {
@@ -20,9 +20,7 @@ export default function StepPersonalPage() {
     }
   };
 
-  const hasAmount = values.amount > 0;
-  const hasPersonalInfo = Boolean(values.firstName && values.lastName && values.email);
-  const hasPaymentInfo = Boolean(values.cardNumber && values.cardExp && values.cardCvc);
+
 
   return (
     <>
