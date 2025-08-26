@@ -28,7 +28,9 @@ export function DonationFormProvider({ children }: { children: React.ReactNode }
   // On mount: load saved values
   useEffect(() => {
     const saved = loadFromStorage<DonationFormValues>(STORAGE_KEY, defaultDonationValues);
-    form.reset(saved);
+    // Merge with defaults to avoid undefined fields (controlled inputs)
+    const merged: DonationFormValues = { ...defaultDonationValues, ...(saved as Partial<DonationFormValues>) } as DonationFormValues;
+    form.reset(merged);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 

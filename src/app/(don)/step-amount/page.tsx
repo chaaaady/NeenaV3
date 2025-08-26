@@ -82,8 +82,18 @@ export default function StepAmountPage() {
                 rightAccessory="€"
               />
               
-              <div className="text-[12px] text-[#64748B]">
-                Your donation actually only costs you €{Math.round(values.amount * 0.34)} after tax deduction.
+              <div className="inline-note" role="note">
+                <span className="text-[14px] font-[700]">Your donation only costs you €{Math.round(values.amount * 0.34)} after tax deduction.</span>
+              </div>
+
+              {/* Donation type moved under note */}
+              <div className="space-y-2">
+                <div className="text-[14px] font-[700] text-[var(--text-muted)]">Donation type</div>
+                <SegmentedControl
+                  options={["Sadaqah", "Zakat"]}
+                  value={values.donationType}
+                  onChange={(v: string) => form.setValue("donationType", v as "Sadaqah" | "Zakat", { shouldDirty: true })}
+                />
               </div>
             </div>
           </div>

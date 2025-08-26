@@ -4,7 +4,7 @@ import { Menu, ChevronRight, Info, X, Settings, HelpCircle, Shield, ArrowRight, 
 import { cn } from "@/lib/cn";
 import { useState, useEffect } from "react";
 
-export function AppBar({ title = "Neena", onMenu }: { title?: string; onMenu?: () => void }) {
+export function AppBar({ title = "Neena", onMenu, onTitleClick }: { title?: string; onMenu?: () => void; onTitleClick?: () => void }) {
   const [isMenuPressed, setIsMenuPressed] = useState(false);
 
   const handleMenuClick = (e: React.MouseEvent) => {
@@ -18,10 +18,20 @@ export function AppBar({ title = "Neena", onMenu }: { title?: string; onMenu?: (
   return (
     <div className="app-header">
       <div className="header-content">
-        {/* Titre Apple-style */}
-                  <div className="font-[800] text-[20px] leading-[24px] tracking-[-0.3px] text-[var(--text)]">
+        {/* Titre/Logo Apple-style */}
+        {onTitleClick ? (
+          <button
+            onClick={(e) => { e.preventDefault(); e.stopPropagation(); onTitleClick(); }}
+            className="font-[800] text-[20px] leading-[24px] tracking-[-0.3px] text-[var(--text)] hover:opacity-80"
+            aria-label="Home"
+          >
+            {title}
+          </button>
+        ) : (
+          <div className="font-[800] text-[20px] leading-[24px] tracking-[-0.3px] text-[var(--text)]">
             {title}
           </div>
+        )}
 
         {/* Burger Menu Apple-style */}
         <button
@@ -321,11 +331,18 @@ export function Stepper({ activeStep = 0 }: { activeStep?: number }) {
     <div className="stepper-container">
       {steps.map((step, index) => (
         <div key={step} className="stepper-item">
-          <div className={cn("stepper-dot", index === activeStep && "active")} />
-          <span className={cn("stepper-label", index === activeStep && "active")}>
+          <div className={cn(
+            "stepper-dot",
+            index === activeStep && "active",
+            index < activeStep && "completed"
+          )} />
+          <span className={cn(
+            "stepper-label",
+            index === activeStep && "active",
+            index < activeStep && "completed"
+          )}>
             {step}
           </span>
-          {index < steps.length - 1 && <div className="stepper-connector" />}
         </div>
       ))}
     </div>

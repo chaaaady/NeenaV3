@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useFormContext } from "react-hook-form";
 import { useRouter } from "next/navigation";
 import { RotateCcw, ArrowRight, CreditCard } from "lucide-react";
-import { AppBar, Stepper, Input, Checkbox, SummaryRow, SideMenu, ProductHeader, MosqueSelectorModal } from "@/components/ui";
+import { AppBar, Stepper, Input, Checkbox, SummaryRow, SideMenu, ProductHeader, MosqueSelectorModal, SegmentedControl } from "@/components/ui";
 import { DonationFormValues } from "@/lib/schema";
 
 export default function StepPersonalPage() {
@@ -47,33 +47,84 @@ export default function StepPersonalPage() {
             <div className="app-title line-clamp-2">Personal Information</div>
             
             <div className="space-y-3">
-              <div className="grid grid-cols-2 gap-3">
-                <Input
-                  label="First Name"
-                  value={values.firstName}
-                  onChange={(v: string) => form.setValue("firstName", v, { shouldDirty: true })}
-                  autoComplete="given-name"
-                />
-                <Input
-                  label="Last Name"
-                  value={values.lastName}
-                  onChange={(v: string) => form.setValue("lastName", v, { shouldDirty: true })}
-                  autoComplete="family-name"
+              {/* Donor type selector */}
+              <div className="space-y-2">
+                <div className="text-[14px] font-[700] text-[var(--text-muted)]">Donor type</div>
+                <SegmentedControl
+                  options={["Personal", "In honor of", "Company"]}
+                  value={values.donorType}
+                  onChange={(v: string) => form.setValue("donorType", v as "Personal" | "In honor of" | "Company", { shouldDirty: true })}
                 />
               </div>
-              <Input
-                label="Email"
-                type="email"
-                value={values.email}
-                onChange={(v: string) => form.setValue("email", v, { shouldDirty: true })}
-                autoComplete="email"
-              />
-              <Input
-                label="Address"
-                value={values.address}
-                onChange={(v: string) => form.setValue("address", v, { shouldDirty: true })}
-                autoComplete="street-address"
-              />
+              {values.donorType === "In honor of" && (
+                <Input
+                  label="In honor of"
+                  value={values.tributeName}
+                  onChange={(v: string) => form.setValue("tributeName", v, { shouldDirty: true })}
+                  placeholder="Name of a relative or loved one"
+                />
+              )}
+              {values.donorType === "Company" ? (
+                <>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                    <Input
+                      label="Company Name"
+                      value={values.companyName}
+                      onChange={(v: string) => form.setValue("companyName", v, { shouldDirty: true })}
+                      placeholder="Registered company name"
+                    />
+                    <Input
+                      label="Company SIRET"
+                      value={values.companySiret}
+                      onChange={(v: string) => form.setValue("companySiret", v, { shouldDirty: true })}
+                      placeholder="14-digit SIRET"
+                    />
+                  </div>
+                  <Input
+                    label="Email"
+                    type="email"
+                    value={values.email}
+                    onChange={(v: string) => form.setValue("email", v, { shouldDirty: true })}
+                    autoComplete="email"
+                  />
+                  <Input
+                    label="Address"
+                    value={values.address}
+                    onChange={(v: string) => form.setValue("address", v, { shouldDirty: true })}
+                    autoComplete="street-address"
+                  />
+                </>
+              ) : (
+                <>
+                  <div className="grid grid-cols-2 gap-3">
+                    <Input
+                      label={values.donorType === "In honor of" ? "Your First Name" : "First Name"}
+                      value={values.firstName}
+                      onChange={(v: string) => form.setValue("firstName", v, { shouldDirty: true })}
+                      autoComplete="given-name"
+                    />
+                    <Input
+                      label={values.donorType === "In honor of" ? "Your Last Name" : "Last Name"}
+                      value={values.lastName}
+                      onChange={(v: string) => form.setValue("lastName", v, { shouldDirty: true })}
+                      autoComplete="family-name"
+                    />
+                  </div>
+                  <Input
+                    label={values.donorType === "In honor of" ? "Your Email" : "Email"}
+                    type="email"
+                    value={values.email}
+                    onChange={(v: string) => form.setValue("email", v, { shouldDirty: true })}
+                    autoComplete="email"
+                  />
+                  <Input
+                    label={values.donorType === "In honor of" ? "Your Address" : "Address"}
+                    value={values.address}
+                    onChange={(v: string) => form.setValue("address", v, { shouldDirty: true })}
+                    autoComplete="street-address"
+                  />
+                </>
+              )}
               <Checkbox
                 label="Please indicate if you would like to receive a tax receipt to use when filing your tax return."
                 checked={values.wantsReceipt}
