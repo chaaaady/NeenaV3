@@ -1,8 +1,8 @@
-@import "tailwindcss";
 @import url("../styles/tokens.css");
 @import url("../styles/layout.css");
 @import url("../styles/components.css");
 @import url("../styles/animations.css");
+@import "tailwindcss";
 
 @layer components {}
 
