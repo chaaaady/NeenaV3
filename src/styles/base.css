@@ -194,13 +194,6 @@
     padding-bottom: 4px; 
     min-height: calc(100dvh - var(--header-h) - var(--product-header-h) - var(--stepper-h) - var(--actions-h) - var(--safari-ui-h)); 
   }
-  @media (min-height: 700px) { 
-    .app-container { 
-      display: grid; 
-      align-content: center; 
-      row-gap: 4px; 
-    } 
-  }
   @media (min-width: 768px) { 
     .app-container { 
       max-width: 700px; 
