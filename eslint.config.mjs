@@ -19,6 +19,18 @@ const eslintConfig = [
       "build/**",
       "next-env.d.ts",
     ],
+    rules: {
+      // Harden unused vars/imports
+      "@typescript-eslint/no-unused-vars": ["error", { argsIgnorePattern: "^_", varsIgnorePattern: "^_" }],
+      "no-unused-vars": "off",
+      // Console only allowed for warnings/errors in production
+      "no-console": ["warn", { allow: ["warn", "error"] }],
+      // Require description on ts-expect-error
+      "@typescript-eslint/ban-ts-comment": [
+        "warn",
+        { "ts-expect-error": "allow-with-description", "minimumDescriptionLength": 5 }
+      ],
+    },
   },
 ];
 
