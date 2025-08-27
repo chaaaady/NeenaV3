@@ -342,10 +342,10 @@
 
   /* Segmented control */
   .segmented-track { 
-    height: 44px; 
+    height: 48px; 
     background: rgba(120, 120, 128, 0.12); 
     border-radius: 16px; 
-    padding: 4px; 
+    padding: 6px; 
     position: relative; 
     display: flex; 
     align-items: center; 
@@ -357,17 +357,17 @@
     background: rgba(255, 255, 255, 0.92); 
     box-shadow: 0 0.5px 3px rgba(0, 0, 0, 0.12), 0 4px 16px rgba(0, 0, 0, 0.08); 
     border-radius: 12px; 
-    height: 32px; 
+    height: 30px; 
     transition: all 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94); 
     position: absolute; 
-    top: 6px; 
+    top: 9px; 
     backdrop-filter: blur(20px); 
     -webkit-backdrop-filter: blur(20px); 
     border: 0.5px solid rgba(255, 255, 255, 0.8); 
   }
   .segmented-option { 
     flex: 1; 
-    height: 32px; 
+    height: 30px; 
     display: flex; 
     align-items: center; 
     justify-content: center; 
