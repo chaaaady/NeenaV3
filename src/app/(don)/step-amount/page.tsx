@@ -16,7 +16,6 @@ export default function StepAmountPage() {
   const [otherAmountInput, setOtherAmountInput] = useState("Autre montant");
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [showMosqueSelector, setShowMosqueSelector] = useState(false);
-  const [showLandmarks, setShowLandmarks] = useState(false);
   const { toPersonal, canProceedFromAmount } = useDonationFlow();
 
   // Vérifier si un montant personnalisé est saisi
@@ -24,24 +23,16 @@ export default function StepAmountPage() {
 
   // Initialiser le montant à 0€ puis animer vers 25€ (calm-tech, court)
   useEffect(() => {
+    // éviter la dépendance à form/values pour ne pas réanimer
     if (!values.amount || values.amount === 50) {
       form.setValue("amount", 0, { shouldDirty: true });
       const t = setTimeout(() => {
         form.setValue("amount", 25, { shouldDirty: true });
-        setShowLandmarks(true);
       }, 600);
       return () => clearTimeout(t);
-    } else {
-      setShowLandmarks(true);
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-
-  // Calculer le pourcentage pour le slider basé sur la valeur actuelle
-  const getSliderPercent = (amount: number) => {
-    if (amount <= 5) return 0;
-    if (amount >= 100) return 100;
-    return ((amount - 5) / (100 - 5)) * 100;
-  };
 
   // Gérer le changement de l'input "Autre montant"
   const handleOtherAmountChange = (value: string) => {
