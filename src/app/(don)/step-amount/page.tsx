@@ -1,9 +1,9 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useFormContext } from "react-hook-form";
 import { useRouter } from "next/navigation";
-import { RotateCcw, ArrowRight } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import { AppBar, Stepper, SegmentedControl, Input, Slider, AmountDisplay, SideMenu, MosqueSelectorModal } from "@/components";
 import { formatEuro } from "@/lib/currency";
 import { DonationFormValues } from "@/lib/schema";
@@ -18,15 +18,33 @@ export default function StepAmountPage() {
   const [showMosqueSelector, setShowMosqueSelector] = useState(false);
   const { toPersonal, canProceedFromAmount } = useDonationFlow();
 
+  // Calculer le pourcentage pour le slider basé sur la valeur actuelle
+  const getSliderPercent = (amount: number) => {
+    if (amount <= 5) return 0;
+    if (amount >= 100) return 100;
+    return ((amount - 5) / (100 - 5)) * 100;
+  };
+
+  // Gérer le changement de l'input "Autre montant"
+  const handleOtherAmountChange = (value: string) => {
+    setOtherAmountInput(value);
+    const numValue = parseFloat(value);
+    if (!isNaN(numValue) && numValue > 0) {
+      form.setValue("amount", numValue, { shouldDirty: true });
+    }
+  };
+
+  // Synchroniser l'input avec la valeur du formulaire
+  useEffect(() => {
+    if (values.amount && !otherAmountInput) {
+      setOtherAmountInput(values.amount.toString());
+    }
+  }, [values.amount, otherAmountInput]);
+
   const handleNext = () => {
     if (canProceedFromAmount(values)) {
       toPersonal();
     }
-  };
-
-  const handleReset = () => {
-    form.reset();
-    setOtherAmountInput("");
   };
 
   return (
@@ -67,7 +85,10 @@ export default function StepAmountPage() {
               <AmountDisplay amount={values.amount} />
               <Slider
                 value={values.amount}
-                onChange={(v: number) => form.setValue("amount", v, { shouldDirty: true })}
+                onChange={(v: number) => {
+                  form.setValue("amount", v, { shouldDirty: true });
+                  setOtherAmountInput(v.toString());
+                }}
                 min={5}
                 max={100}
                 step={1}
@@ -76,14 +97,12 @@ export default function StepAmountPage() {
               <div className="space-y-3">
                 <Input
                   value={otherAmountInput}
-                  onChange={setOtherAmountInput}
+                  onChange={handleOtherAmountChange}
                   placeholder="Autre montant (€)"
                   rightAccessory="€"
                 />
-                <div className="inline-note" role="note">
-                  <span className="text-[14px] font-[700]">
-                    Après déduction fiscale estimée: {formatEuro(values.amount * 0.34)}
-                  </span>
+                <div className="text-[14px] text-[var(--text-muted)]">
+                  Après déduction fiscale estimée: {formatEuro(values.amount * 0.34)}
                 </div>
               </div>
               
@@ -94,25 +113,16 @@ export default function StepAmountPage() {
               />
             </div>
             
-            {/* Boutons d'actions intégrés dans la carte */}
+            {/* Bouton d'action intégré dans la carte */}
             <div className="pt-6 border-t border-[var(--border)]">
-              <div className="grid grid-cols-2 gap-3">
-                <button
-                  onClick={handleReset}
-                  className="btn-secondary pressable w-full text-[16px] font-[700] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--focus)] flex items-center justify-center gap-2"
-                >
-                  <RotateCcw size={18} />
-                  Reset
-                </button>
-                <button
-                  onClick={handleNext}
-                  disabled={!values.amount || values.amount < 5}
-                  className="btn-primary pressable w-full text-[16px] font-[700] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--focus)] disabled:opacity-40 disabled:cursor-not-allowed flex items-center justify-center gap-2"
-                >
-                  Next
-                  <ArrowRight size={18} />
-                </button>
-              </div>
+              <button
+                onClick={handleNext}
+                disabled={!values.amount || values.amount < 5}
+                className="btn-primary pressable w-full text-[16px] font-[700] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--focus)] disabled:opacity-40 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+              >
+                Suivant
+                <ArrowRight size={18} />
+              </button>
             </div>
           </div>
         </div>
