@@ -340,57 +340,49 @@
     transform: translateY(0); 
   }
 
-  /* Segmented control - Redesigned */
+  /* Segmented control - Simple and clean */
   .segmented-track { 
-    height: 52px; 
-    background: rgba(120, 120, 128, 0.08); 
-    border-radius: 20px; 
-    padding: 8px; 
+    height: 40px; 
+    background: #F1F5F9; 
+    border-radius: 12px; 
+    padding: 3px; 
     position: relative; 
     display: flex; 
     align-items: center; 
-    gap: 4px; 
-    backdrop-filter: blur(10px); 
-    -webkit-backdrop-filter: blur(10px); 
-    border: 1px solid rgba(120, 120, 128, 0.15); 
+    gap: 0; 
   }
   .segmented-thumb { 
-    background: linear-gradient(135deg, rgba(255, 255, 255, 0.95), rgba(255, 255, 255, 0.85)); 
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08), 0 1px 3px rgba(0, 0, 0, 0.12); 
-    border-radius: 16px; 
-    height: 36px; 
-    transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94); 
+    background: #FFFFFF; 
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1); 
+    border-radius: 8px; 
+    height: 34px; 
+    transition: all 0.2s ease; 
     position: absolute; 
-    top: 8px; 
-    backdrop-filter: blur(20px); 
-    -webkit-backdrop-filter: blur(20px); 
-    border: 1px solid rgba(255, 255, 255, 0.9); 
+    top: 3px; 
+    border: none; 
   }
   .segmented-option { 
     flex: 1; 
-    height: 36px; 
+    height: 34px; 
     display: flex; 
     align-items: center; 
     justify-content: center; 
-    font-size: 15px; 
-    font-weight: 600; 
-    color: rgba(60, 60, 67, 0.6); 
-    transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94); 
+    font-size: 14px; 
+    font-weight: 500; 
+    color: #64748B; 
+    transition: all 0.2s ease; 
     position: relative; 
     z-index: 2; 
     cursor: pointer; 
-    border-radius: 16px; 
-    letter-spacing: -0.3px; 
-    margin: 0 2px; 
+    border-radius: 8px; 
+    letter-spacing: -0.1px; 
   }
   .segmented-option:hover { 
-    color: rgba(60, 60, 67, 0.8); 
-    transform: translateY(-1px); 
+    color: #475569; 
   }
   .segmented-option.active { 
-    color: rgba(60, 60, 67, 1); 
-    font-weight: 700; 
-    transform: translateY(-1px); 
+    color: #0B1220; 
+    font-weight: 600; 
   }
 
   /* Slider */
