@@ -79,9 +79,9 @@ export default function StepAmountPage() {
             
             <div className="space-y-3">
               <SegmentedControl
-                options={["Unique", "Hebdomadaire", "Mensuel"]}
+                options={["Unique", "Hebdo", "Mensuel"]}
                 value={values.frequency}
-                onChange={(v: string) => form.setValue("frequency", v as "Unique" | "Hebdomadaire" | "Mensuel", { shouldDirty: true })}
+                onChange={(v: string) => form.setValue("frequency", v as "Unique" | "Hebdo" | "Mensuel", { shouldDirty: true })}
               />
             </div>
             

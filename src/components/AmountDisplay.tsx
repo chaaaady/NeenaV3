@@ -7,10 +7,10 @@ export function AmountDisplay({
 }: { 
   currency?: string; 
   amount: number;
-  frequency?: "Unique" | "Hebdomadaire" | "Mensuel";
+  frequency?: "Unique" | "Hebdo" | "Mensuel";
 }) {
   const getFrequencySuffix = () => {
-    if (frequency === "Hebdomadaire") return "/semaine";
+    if (frequency === "Hebdo") return "/semaine";
     if (frequency === "Mensuel") return "/mois";
     return "";
   };
