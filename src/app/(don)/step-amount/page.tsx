@@ -13,15 +13,27 @@ export default function StepAmountPage() {
   const form = useFormContext<DonationFormValues>();
   const _router = useRouter();
   const values = form.watch();
-  const [otherAmountInput, setOtherAmountInput] = useState("25");
+  const [otherAmountInput, setOtherAmountInput] = useState("Autre montant");
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [showMosqueSelector, setShowMosqueSelector] = useState(false);
+  const [showLandmarks, setShowLandmarks] = useState(false);
   const { toPersonal, canProceedFromAmount } = useDonationFlow();
 
-  // Initialiser le montant à 25€ si pas encore défini
+  // Vérifier si un montant personnalisé est saisi
+  const hasCustomAmount = otherAmountInput !== "Autre montant" && !isNaN(parseFloat(otherAmountInput));
+
+  // Initialiser le montant à 0€ puis animer vers 25€
   useEffect(() => {
     if (!values.amount || values.amount === 50) {
-      form.setValue("amount", 25, { shouldDirty: true });
+      form.setValue("amount", 0, { shouldDirty: true });
+      
+      // Animation du curseur de 0 à 25€
+      setTimeout(() => {
+        form.setValue("amount", 25, { shouldDirty: true });
+        setShowLandmarks(true);
+      }, 500);
+    } else {
+      setShowLandmarks(true);
     }
   }, []);
 
@@ -40,13 +52,6 @@ export default function StepAmountPage() {
       form.setValue("amount", numValue, { shouldDirty: true });
     }
   };
-
-  // Synchroniser l'input avec la valeur du formulaire
-  useEffect(() => {
-    if (values.amount && otherAmountInput !== values.amount.toString()) {
-      setOtherAmountInput(values.amount.toString());
-    }
-  }, [values.amount, otherAmountInput]);
 
   const handleNext = () => {
     if (canProceedFromAmount(values)) {
@@ -89,16 +94,16 @@ export default function StepAmountPage() {
                 onChange={(v: string) => form.setValue("frequency", v as "Unique" | "Hebdomadaire" | "Mensuel", { shouldDirty: true })}
               />
               
-              <AmountDisplay amount={values.amount} />
+              <AmountDisplay amount={values.amount} frequency={values.frequency} />
               <Slider
                 value={values.amount}
                 onChange={(v: number) => {
                   form.setValue("amount", v, { shouldDirty: true });
-                  setOtherAmountInput(v.toString());
                 }}
                 min={5}
                 max={100}
                 step={1}
+                hideLandmarks={hasCustomAmount}
               />
               
               <div className="space-y-3">
@@ -122,14 +127,16 @@ export default function StepAmountPage() {
             
             {/* Bouton d'action intégré dans la carte */}
             <div className="pt-6 border-t border-[var(--border)]">
-              <button
-                onClick={handleNext}
-                disabled={!values.amount || values.amount < 5}
-                className="btn-primary pressable w-full text-[16px] font-[700] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--focus)] disabled:opacity-40 disabled:cursor-not-allowed flex items-center justify-center gap-2"
-              >
-                Suivant
-                <ArrowRight size={18} />
-              </button>
+              <div className="flex justify-end">
+                <button
+                  onClick={handleNext}
+                  disabled={!values.amount || values.amount < 5}
+                  className="btn-primary pressable px-8 py-3 text-[16px] font-[700] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--focus)] disabled:opacity-40 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                >
+                  Suivant
+                  <ArrowRight size={18} />
+                </button>
+              </div>
             </div>
           </div>
         </div>

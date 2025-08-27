@@ -6,12 +6,14 @@ export function Slider({
   step = 1,
   value,
   onChange,
+  hideLandmarks = false,
 }: {
   min: number;
   max: number;
   step?: number;
   value: number;
   onChange: (value: number) => void;
+  hideLandmarks?: boolean;
 }) {
   // Calculer le pourcentage pour l'affichage visuel
   const getDisplayPercent = (val: number) => {
@@ -30,11 +32,8 @@ export function Slider({
     onChange(newValue);
   };
 
-  const landmarks = [
+  const landmarks = hideLandmarks ? [] : [
     { value: 5, label: "5€" },
-    { value: 25, label: "25€" },
-    { value: 50, label: "50€" },
-    { value: 75, label: "75€" },
     { value: 100, label: "100€" }
   ];
 
@@ -92,7 +91,11 @@ export function Slider({
           aria-label="amount"
           onChange={handleChange}
           className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
-          style={{ margin: 0 }}
+          style={{ 
+            margin: 0,
+            height: '40px', // Surface tactile plus grande
+            top: '-17px' // Centrer la surface tactile
+          }}
         />
       </div>
     </div>
