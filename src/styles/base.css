@@ -340,53 +340,57 @@
     transform: translateY(0); 
   }
 
-  /* Segmented control */
+  /* Segmented control - Redesigned */
   .segmented-track { 
-    height: 48px; 
-    background: rgba(120, 120, 128, 0.12); 
-    border-radius: 16px; 
-    padding: 6px; 
+    height: 52px; 
+    background: rgba(120, 120, 128, 0.08); 
+    border-radius: 20px; 
+    padding: 8px; 
     position: relative; 
     display: flex; 
     align-items: center; 
-    gap: 2px; 
+    gap: 4px; 
     backdrop-filter: blur(10px); 
     -webkit-backdrop-filter: blur(10px); 
+    border: 1px solid rgba(120, 120, 128, 0.15); 
   }
   .segmented-thumb { 
-    background: rgba(255, 255, 255, 0.92); 
-    box-shadow: 0 0.5px 3px rgba(0, 0, 0, 0.12), 0 4px 16px rgba(0, 0, 0, 0.08); 
-    border-radius: 12px; 
-    height: 30px; 
-    transition: all 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94); 
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.95), rgba(255, 255, 255, 0.85)); 
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08), 0 1px 3px rgba(0, 0, 0, 0.12); 
+    border-radius: 16px; 
+    height: 36px; 
+    transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94); 
     position: absolute; 
-    top: 9px; 
+    top: 8px; 
     backdrop-filter: blur(20px); 
     -webkit-backdrop-filter: blur(20px); 
-    border: 0.5px solid rgba(255, 255, 255, 0.8); 
+    border: 1px solid rgba(255, 255, 255, 0.9); 
   }
   .segmented-option { 
     flex: 1; 
-    height: 30px; 
+    height: 36px; 
     display: flex; 
     align-items: center; 
     justify-content: center; 
-    font-size: 14px; 
+    font-size: 15px; 
     font-weight: 600; 
-    color: rgba(60, 60, 67, 0.7); 
-    transition: all 0.25s cubic-bezier(0.25, 0.46, 0.45, 0.94); 
+    color: rgba(60, 60, 67, 0.6); 
+    transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94); 
     position: relative; 
     z-index: 2; 
     cursor: pointer; 
-    border-radius: 12px; 
-    letter-spacing: -0.2px; 
+    border-radius: 16px; 
+    letter-spacing: -0.3px; 
+    margin: 0 2px; 
   }
   .segmented-option:hover { 
     color: rgba(60, 60, 67, 0.8); 
+    transform: translateY(-1px); 
   }
   .segmented-option.active { 
     color: rgba(60, 60, 67, 1); 
-    font-weight: 600; 
+    font-weight: 700; 
+    transform: translateY(-1px); 
   }
 
   /* Slider */
