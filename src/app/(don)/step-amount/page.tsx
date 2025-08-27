@@ -13,10 +13,17 @@ export default function StepAmountPage() {
   const form = useFormContext<DonationFormValues>();
   const _router = useRouter();
   const values = form.watch();
-  const [otherAmountInput, setOtherAmountInput] = useState("");
+  const [otherAmountInput, setOtherAmountInput] = useState("25");
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [showMosqueSelector, setShowMosqueSelector] = useState(false);
   const { toPersonal, canProceedFromAmount } = useDonationFlow();
+
+  // Initialiser le montant à 25€ si pas encore défini
+  useEffect(() => {
+    if (!values.amount || values.amount === 50) {
+      form.setValue("amount", 25, { shouldDirty: true });
+    }
+  }, []);
 
   // Calculer le pourcentage pour le slider basé sur la valeur actuelle
   const getSliderPercent = (amount: number) => {
@@ -36,7 +43,7 @@ export default function StepAmountPage() {
 
   // Synchroniser l'input avec la valeur du formulaire
   useEffect(() => {
-    if (values.amount && !otherAmountInput) {
+    if (values.amount && otherAmountInput !== values.amount.toString()) {
       setOtherAmountInput(values.amount.toString());
     }
   }, [values.amount, otherAmountInput]);

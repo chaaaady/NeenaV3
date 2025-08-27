@@ -31,7 +31,7 @@ export type DonationFormValues = z.infer<typeof donationFormSchema>;
 
 export const defaultDonationValues: DonationFormValues = {
   mosqueName: "Créteil",
-  amount: 50,
+  amount: 25,
   currency: "€",
   frequency: "Unique",
   donationType: "Sadaqah",
