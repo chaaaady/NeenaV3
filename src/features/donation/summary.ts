@@ -16,6 +16,10 @@ export function buildDonationSummary(values: DonationFormValues): string {
 
   const donorPart = donorPhrase ? ` ${donorPhrase}` : "";
 
-  return `Je souhaite donner ${values.amount}€${freqSuffix}${donorPart} à la mosquée de ${values.mosqueName} en ${values.donationType}${values.wantsReceipt ? " avec reçu fiscal" : ""}.`;
+  const typeLabel = values.donationType === "Special" && values.specialDonation
+    ? `Special (${values.specialDonation})`
+    : values.donationType;
+
+  return `Je souhaite donner ${values.amount}€${freqSuffix}${donorPart} à la mosquée de ${values.mosqueName} en ${typeLabel}${values.wantsReceipt ? " avec reçu fiscal" : ""}.`;
 }
 

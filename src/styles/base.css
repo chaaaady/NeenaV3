@@ -131,11 +131,11 @@
     left: 0; 
     right: 0; 
     z-index: 50; 
-    background: rgba(255, 255, 255, 0.92); 
-    backdrop-filter: blur(20px) saturate(180%); 
-    -webkit-backdrop-filter: blur(20px) saturate(180%); 
-    border-bottom: 0.5px solid rgba(0, 0, 0, 0.08); 
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04), 0 4px 12px rgba(0, 0, 0, 0.02); 
+    background: rgba(255, 255, 255, 0.95); 
+    backdrop-filter: blur(24px) saturate(200%); 
+    -webkit-backdrop-filter: blur(24px) saturate(200%); 
+    border-bottom: 1px solid rgba(15, 23, 42, 0.06); 
+    box-shadow: 0 2px 8px rgba(15, 23, 42, 0.04); 
     width: 100%; 
     margin: 0; 
     padding: 0; 
@@ -186,7 +186,7 @@
   /* Layout containers */
   .app-container { 
     width: 100%; 
-    max-width: 680px; 
+    max-width: 640px; 
     margin: 0 auto; 
     padding-left: max(20px, env(safe-area-inset-left)); 
     padding-right: max(20px, env(safe-area-inset-right)); 
@@ -196,7 +196,7 @@
   }
   @media (min-width: 768px) { 
     .app-container { 
-      max-width: 700px; 
+      max-width: 660px; 
       padding-left: max(24px, env(safe-area-inset-left)); 
       padding-right: max(24px, env(safe-area-inset-right)); 
     } 
@@ -205,19 +205,20 @@
   /* Cards */
   .app-card { 
     background: var(--card); 
-    border-radius: var(--radius-all); 
-    box-shadow: var(--shadow-card); 
-    padding: 12px; 
+    border-radius: 16px; 
+    box-shadow: 0 6px 28px rgba(0,0,0,0.10); 
+    padding: 18px; 
     min-height: 0; 
-    transition: all var(--motion-base) var(--ease-inout); 
+    transition: box-shadow var(--motion-base) var(--ease-inout), transform var(--motion-base) var(--ease-inout); 
+    border: 1px solid rgba(15,23,42,0.06); 
   }
   .app-card:hover { 
-    transform: translateY(-2px); 
-    box-shadow: var(--shadow-elevated); 
+    transform: translateY(-1px); 
+    box-shadow: 0 10px 34px rgba(0,0,0,0.12); 
   }
   @media (min-width: 768px) { 
     .app-card { 
-      padding: 16px; 
+      padding: 20px; 
       min-height: 0; 
     } 
   }
@@ -304,32 +305,34 @@
 
   /* Buttons */
   .btn-primary { 
-    min-height: 48px; 
-    border-radius: var(--radius-pill); 
-    background: var(--brand); 
+    min-height: 46px; 
+    border-radius: 12px; 
+    background: linear-gradient(180deg, var(--brand), color-mix(in oklab, var(--brand) 85%, #000 15%)); 
     color: #fff; 
-    padding-left: 16px; 
-    padding-right: 16px; 
+    padding-left: 18px; 
+    padding-right: 18px; 
     transition: all var(--motion-base) var(--ease-inout); 
+    box-shadow: 0 6px 20px rgba(11, 18, 32, 0.22);
   }
   .btn-primary[data-variant="success"] { 
     background: var(--success); 
   }
   .btn-primary:hover { 
-    transform: translateY(-2px); 
-    box-shadow: 0 8px 25px rgba(0,0,0,0.15); 
+    transform: translateY(-1px); 
+    box-shadow: 0 10px 28px rgba(11, 18, 32, 0.28); 
+    filter: brightness(1.03);
   }
   .btn-primary:active { 
     transform: translateY(0); 
   }
   .btn-secondary { 
-    min-height: 48px; 
-    border-radius: var(--radius-pill); 
-    background: white; 
-    color: var(--brand); 
+    min-height: 46px; 
+    border-radius: 12px; 
+    background: #FFFFFF; 
+    color: #0B1220; 
     border: 1px solid var(--border); 
-    padding-left: 16px; 
-    padding-right: 16px; 
+    padding-left: 18px; 
+    padding-right: 18px; 
     transition: all var(--motion-base) var(--ease-inout); 
   }
   .btn-secondary:hover { 
@@ -340,56 +343,191 @@
     transform: translateY(0); 
   }
 
-  /* Segmented control - Simple and clean */
+  /* Frequency selector - Individual buttons design */
   .segmented-track { 
-    height: 44px; 
-    background: #F1F5F9; 
+    height: auto; 
+    background: #F9FAFB; 
+    border: 1px solid #E5E7EB; 
     border-radius: 12px; 
-    padding: 5px; 
+    padding: 8px; 
     position: relative; 
     display: flex; 
-    align-items: center; 
-    gap: 0; 
+    gap: 12px; 
+    box-shadow: none; 
   }
+
   .segmented-thumb { 
-    background: #FFFFFF; 
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1); 
-    border-radius: 8px; 
-    height: 30px; 
-    transition: all 0.2s ease; 
-    position: absolute; 
-    top: 7px; 
-    border: none; 
+    display: none; 
   }
+
   .segmented-option { 
     flex: 1; 
-    height: 30px; 
+    height: 44px; 
     display: flex; 
     align-items: center; 
     justify-content: center; 
-    font-size: 14px; 
-    font-weight: 500; 
-    color: #64748B; 
-    transition: all 0.2s ease; 
-    position: relative; 
-    z-index: 2; 
+    font-size: 15px; 
+    font-weight: 600; 
+    color: #334155; 
+    background: transparent; 
+    border: none; 
+    border-radius: 12px; 
+    padding: 0 14px; 
+    transition: transform 0.18s ease, box-shadow 0.18s ease, background-color 0.18s ease, color 0.18s ease; 
     cursor: pointer; 
-    border-radius: 8px; 
-    letter-spacing: -0.1px; 
+    letter-spacing: -0.2px; 
+    margin: 0; 
+    outline: none;
+  }
+  .segmented-option:focus-visible {
+    box-shadow: 0 0 0 3px rgba(14,165,233,0.25);
+    border-color: rgba(14,165,233,0.45);
   }
   .segmented-option:hover { 
-    color: #475569; 
+    background: rgba(15, 23, 42, 0.04); 
+    color: #0F172A; 
+    transform: translateY(-1px); 
+    box-shadow: 0 8px 18px rgba(15, 23, 42, 0.06); 
   }
   .segmented-option.active { 
+    background: #FFFFFF; 
     color: #0B1220; 
-    font-weight: 600; 
+    font-weight: 700; 
+    transform: translateY(-1px) scale(1.02); 
+    box-shadow: 0 14px 30px rgba(15, 23, 42, 0.16); 
+  }
+
+  /* Mosque selector */
+  .mosque-selector {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 4px 8px;
+    background: transparent;
+    border: none;
+    border-radius: 6px;
+    transition: all 0.18s ease;
+    cursor: pointer;
+    outline: none;
+  }
+  .mosque-selector:hover {
+    background: rgba(15, 23, 42, 0.04);
+    transform: translateY(-0.5px);
+  }
+  .mosque-selector:focus-visible {
+    box-shadow: 0 0 0 2px rgba(14,165,233,0.25);
+  }
+
+  /* Mosque Selector Modal */
+  .modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(15, 23, 42, 0.4);
+    backdrop-filter: blur(8px);
+    z-index: 100;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    padding-top: 80px;
+  }
+
+  .modal-content {
+    background: #FFFFFF;
+    border-radius: 16px;
+    box-shadow: 0 20px 40px rgba(15, 23, 42, 0.15);
+    border: 1px solid rgba(15, 23, 42, 0.08);
+    width: 320px;
+    max-height: 70vh;
+    overflow: hidden;
+    animation: modalSlideIn 0.3s ease-out;
+    transform-origin: center top;
+  }
+
+  @keyframes modalSlideIn {
+    from {
+      opacity: 0;
+      transform: translateY(-20px) scale(0.95);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+  }
+
+  .modal-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 24px 16px;
+    border-bottom: 1px solid rgba(15, 23, 42, 0.06);
+  }
+
+  .modal-title {
+    font-size: 18px;
+    font-weight: 700;
+    color: #0B1220;
+    margin: 0;
+  }
+
+  .modal-close-btn {
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    border: none;
+    background: transparent;
+    color: #64748B;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .modal-close-btn:hover {
+    background: rgba(15, 23, 42, 0.04);
+    color: #0B1220;
+  }
+
+  .modal-body {
+    padding: 16px 24px 24px;
+    max-height: 400px;
+    overflow-y: auto;
+  }
+
+  .mosque-option {
+    width: 100%;
+    padding: 12px 16px;
+    border: none;
+    background: transparent;
+    border-radius: 12px;
+    font-size: 15px;
+    font-weight: 500;
+    color: #334155;
+    text-align: left;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    margin-bottom: 4px;
+  }
+
+  .mosque-option:hover {
+    background: rgba(15, 23, 42, 0.04);
+    color: #0B1220;
+  }
+
+  .mosque-option.selected {
+    background: #0B1220;
+    color: #FFFFFF;
+    font-weight: 600;
   }
 
   /* Slider */
   .slider-track { 
-    height: 8px; 
+    height: 6px; 
     background: #E5E7EB; 
-    border-radius: var(--radius-pill); 
+    border-radius: 999px; 
   }
   .slider-active { 
     background: var(--brand); 
@@ -482,11 +620,39 @@
 
   /* Typography */
   .app-title { 
-    font-size: 22px; 
-    line-height: 28px; 
-    font-weight: 600; 
-    letter-spacing: -0.2px; 
+    font-size: 20px; 
+    line-height: 26px; 
+    font-weight: 700; 
+    letter-spacing: -0.3px; 
     color: var(--text); 
+  }
+  .amount-display {
+    display: flex;
+    align-items: baseline;
+    justify-content: center;
+    gap: 6px;
+  }
+  .amount-value {
+    font-size: 42px;
+    line-height: 44px;
+    font-weight: 800;
+    letter-spacing: -0.6px;
+    color: var(--text);
+  }
+  .amount-currency {
+    font-size: 26px;
+    line-height: 30px;
+    font-weight: 800;
+    letter-spacing: -0.4px;
+    color: var(--text);
+  }
+  .amount-suffix {
+    font-size: 18px;
+    line-height: 24px;
+    font-weight: 600;
+    letter-spacing: -0.2px;
+    color: var(--text-muted);
+    margin-left: 4px;
   }
   .card-title { 
     font-size: 16px; 
@@ -538,7 +704,7 @@
   /* Stepper pulse */
   @keyframes step-pulse {
     0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(14,165,233,0.0); }
-    70% { transform: scale(1.12); box-shadow: 0 0 0 6px rgba(14,165,233,0.10); }
+    60% { transform: scale(1.06); box-shadow: 0 0 0 4px rgba(14,165,233,0.06); }
     100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(14,165,233,0); }
   }
   .stepper-dot.active { 

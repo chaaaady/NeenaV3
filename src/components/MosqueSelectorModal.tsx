@@ -56,15 +56,16 @@ export function MosqueSelectorModal({ isOpen, onClose, currentMosque, onMosqueSe
   if (!isOpen) return null;
 
   return (
-    <div className="modal-overlay" onClick={onClose}>
+    <div className="modal-overlay" onClick={onClose} aria-modal="true" role="dialog">
       <div 
         className="modal-content"
         onClick={(e) => e.stopPropagation()}
         ref={containerRef}
         tabIndex={-1}
+        aria-labelledby="mosque-modal-title"
       >
         <div className="modal-header">
-          <h2 className="modal-title">Sélectionner une mosquée</h2>
+          <h2 id="mosque-modal-title" className="modal-title">Sélectionner une mosquée</h2>
           <button
             onClick={onClose}
             className="modal-close-btn"
@@ -88,7 +89,7 @@ export function MosqueSelectorModal({ isOpen, onClose, currentMosque, onMosqueSe
                   mosque === currentMosque && "selected"
                 )}
               >
-                {mosque}
+                Mosquée de {mosque}
               </button>
             ))}
           </div>

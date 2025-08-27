@@ -16,13 +16,11 @@ export function AmountDisplay({
   };
 
   return (
-    <div className="text-center">
-      <span className="text-[40px] font-[800] tracking-[-0.5px]">{amount}</span>
-      <span className="align-baseline text-[28px] font-[800] tracking-[-0.5px] ml-1">{currency}</span>
+    <div className="amount-display">
+      <span className="amount-value">{amount}</span>
+      <span className="amount-currency">{currency}</span>
       {frequency && frequency !== "Unique" && (
-        <span className="align-baseline text-[20px] font-[600] tracking-[-0.3px] ml-2 text-[var(--text-muted)]">
-          {getFrequencySuffix()}
-        </span>
+        <span className="amount-suffix">{getFrequencySuffix()}</span>
       )}
     </div>
   );

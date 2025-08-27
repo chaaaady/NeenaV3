@@ -22,19 +22,15 @@ export default function StepAmountPage() {
   // Vérifier si un montant personnalisé est saisi
   const hasCustomAmount = otherAmountInput !== "Autre montant" && !isNaN(parseFloat(otherAmountInput));
 
-  // Initialiser le montant à 0€ puis animer vers 25€
+  // Initialiser le montant à 0€ puis animer vers 25€ (calm-tech, court)
   useEffect(() => {
     if (!values.amount || values.amount === 50) {
       form.setValue("amount", 0, { shouldDirty: true });
-      
-      // Animation du curseur de 0 à 100 puis retour à 25€
-      setTimeout(() => {
-        form.setValue("amount", 100, { shouldDirty: true });
-        setTimeout(() => {
-          form.setValue("amount", 25, { shouldDirty: true });
-          setShowLandmarks(true);
-        }, 1000); // Retour à 25€ après 1 seconde
-      }, 1000); // Montée à 100€ après 1 seconde
+      const t = setTimeout(() => {
+        form.setValue("amount", 25, { shouldDirty: true });
+        setShowLandmarks(true);
+      }, 600);
+      return () => clearTimeout(t);
     } else {
       setShowLandmarks(true);
     }
@@ -78,9 +74,9 @@ export default function StepAmountPage() {
       />
       <div className="app-container">
         <div className="app-card">
-          <div className="space-y-4">
+          <div className="space-y-6">
             <div className="flex items-center justify-between">
-              <div className="app-title">Quel montant souhaites-tu donner ?</div>
+              <div className="app-title">Quel montant souhaitez-vous donner ?</div>
               <Stepper 
                 steps={[
                   { label: "Montant", status: "active" },
@@ -96,7 +92,9 @@ export default function StepAmountPage() {
                 value={values.frequency}
                 onChange={(v: string) => form.setValue("frequency", v as "Unique" | "Hebdomadaire" | "Mensuel", { shouldDirty: true })}
               />
-              
+            </div>
+            
+            <div className="space-y-3">
               <AmountDisplay amount={values.amount} frequency={values.frequency} />
               <Slider
                 value={values.amount}
@@ -122,10 +120,40 @@ export default function StepAmountPage() {
               </div>
               
               <SegmentedControl
-                options={["Sadaqah", "Zakat"]}
+                options={["Sadaqah", "Zakat", "Special"]}
                 value={values.donationType}
-                onChange={(v: string) => form.setValue("donationType", v as "Sadaqah" | "Zakat", { shouldDirty: true })}
+                onChange={(v: string) => {
+                  form.setValue("donationType", v as "Sadaqah" | "Zakat" | "Special", { shouldDirty: true });
+                  if (v !== "Special") {
+                    form.setValue("specialDonation", null, { shouldDirty: true });
+                  }
+                }}
               />
+
+              {values.donationType === "Special" && (
+                <div className="space-y-3">
+                  <div className="segmented-track" style={{ flexWrap: 'wrap' as const }}>
+                    {[
+                      "Zakat al-fitr",
+                      "Sadaqa Jâriya",
+                      "Waqf",
+                      "Kaffâra / Fidyah",
+                      "Aqîqa",
+                      "Udh’hiya",
+                      "Frais scolaire",
+                    ].map((label) => (
+                      <button
+                        key={label}
+                        className={`segmented-option ${values.specialDonation === label ? "active" : ""}`}
+                        onClick={() => form.setValue("specialDonation", label, { shouldDirty: true })}
+                        style={{ flex: '0 1 calc(33.333% - 8px)' }}
+                      >
+                        {label}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
             </div>
             
             {/* Bouton d'action intégré dans la carte */}
@@ -134,7 +162,7 @@ export default function StepAmountPage() {
                 <button
                   onClick={handleNext}
                   disabled={!values.amount || values.amount < 5}
-                  className="btn-primary pressable px-8 py-3 text-[16px] font-[700] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--focus)] disabled:opacity-40 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                  className="btn-primary pressable px-12 py-4 text-[16px] font-[700] disabled:opacity-40 disabled:cursor-not-allowed flex items-center justify-center gap-2 w-1/2"
                 >
                   Suivant
                   <ArrowRight size={18} />
