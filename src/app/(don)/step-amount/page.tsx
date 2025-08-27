@@ -27,11 +27,14 @@ export default function StepAmountPage() {
     if (!values.amount || values.amount === 50) {
       form.setValue("amount", 0, { shouldDirty: true });
       
-      // Animation du curseur de 0 à 25€
+      // Animation du curseur de 0 à 100 puis retour à 25€
       setTimeout(() => {
-        form.setValue("amount", 25, { shouldDirty: true });
-        setShowLandmarks(true);
-      }, 500);
+        form.setValue("amount", 100, { shouldDirty: true });
+        setTimeout(() => {
+          form.setValue("amount", 25, { shouldDirty: true });
+          setShowLandmarks(true);
+        }, 1000); // Retour à 25€ après 1 seconde
+      }, 1000); // Montée à 100€ après 1 seconde
     } else {
       setShowLandmarks(true);
     }
