@@ -111,12 +111,18 @@ export default function StepAmountV2Page() {
               <div className="amount-grid-footer flex items-center gap-2 text-[13px] text-[var(--text-muted)] mt-1">
                 <Info size={14} />
                 <span>
-                  Don de {formatEuro(values.amount)}{values.frequency !== "Unique" ? (values.frequency === "Vendredi" ? "/Vendredi" : "/mois") : ""} — après déduction fiscale, il ne vous coûtera que {formatEuro(Math.max(0, values.amount - values.amount * 0.34))}
+                  Votre don de <span className="font-[700] text-[var(--text)]">{formatEuro(values.amount)}</span>
+                  {values.frequency !== "Unique" ? (
+                    <>
+                      <span className="text-[var(--text)]">{values.frequency === "Vendredi" ? "/Vendredi" : "/mois"}</span>
+                    </>
+                  ) : null} 
+                  ne vous coûtera que <span className="font-[700] text-[var(--text)]">{formatEuro(values.amount * 0.34)}</span> après déduction fiscale
                 </span>
               </div>
             </div>
 
-            <div className="pt-2">
+            <div className="pt-1">
               <div className="flex items-center justify-end">
                 <button
                   onClick={handleNext}
