@@ -19,7 +19,7 @@ export default function StepAmountV2Page() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [showMosqueSelector, setShowMosqueSelector] = useState(false);
   const { toPersonal, canProceedFromAmount } = useDonationFlow();
-  const isInvalidAmount = !!otherAmountInput && (isNaN(parseFloat(otherAmountInput)) || parseFloat(otherAmountInput) < 5);
+  const isInvalidAmount = !!otherAmountInput && isNaN(parseFloat(otherAmountInput));
 
   // Animation d'intro discrète
   useEffect(() => {
@@ -101,7 +101,7 @@ export default function StepAmountV2Page() {
                     rightAccessory="€"
                     ariaInvalid={isInvalidAmount}
                     onEnter={() => {
-                      if (!isInvalidAmount && values.amount >= 5) {
+                      if (!isInvalidAmount) {
                         // Blur pour refermer le clavier et revenir au layout normal
                         const active = document.activeElement as HTMLElement | null;
                         active?.blur();
@@ -116,7 +116,7 @@ export default function StepAmountV2Page() {
                     }}
                   />
                   {isInvalidAmount && (
-                    <div className="text-[13px] text-red-600 mt-1">Montant minimum 5€</div>
+                    <div className="text-[13px] text-red-600 mt-1">Veuillez entrer un nombre valide</div>
                   )}
                 </div>
               </div>
@@ -139,7 +139,7 @@ export default function StepAmountV2Page() {
               <div className="flex items-center justify-end sm:justify-end">
                 <button
                   onClick={handleNext}
-                  disabled={!values.amount || values.amount < 5}
+                  disabled={!values.amount || isNaN(values.amount as any)}
                   className="btn-primary pressable px-10 py-3 text-[16px] font-[700] disabled:opacity-40 disabled:cursor-not-allowed flex items-center justify-center gap-2 w-full sm:w-1/2"
                 >
                   Suivant

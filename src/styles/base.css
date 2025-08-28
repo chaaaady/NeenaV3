@@ -195,7 +195,7 @@
     justify-content: center;
     padding-left: max(16px, env(safe-area-inset-left)); 
     padding-right: max(16px, env(safe-area-inset-right)); 
-    padding-top: calc(20px + env(safe-area-inset-top)); 
+    padding-top: calc(22px + env(safe-area-inset-top)); 
     padding-bottom: max(4px, env(safe-area-inset-bottom)); 
     min-height: calc(100dvh - var(--header-h) - var(--product-header-h) - var(--stepper-h) - var(--actions-h) - var(--safari-ui-h)); 
   }
@@ -280,6 +280,7 @@
   /* Form controls */
   .app-input { 
     height: 44px; 
+    font-size: 16px; 
     border-radius: var(--radius-all); 
     border: 1px solid var(--border); 
     padding: 0 12px; 
@@ -413,7 +414,7 @@
     color: #0B1220; 
     font-weight: 700; 
     transform: translateY(-1px) scale(1.02); 
-    box-shadow: 0 0 6px rgba(15, 23, 42, 0.06), 0 8px 18px rgba(15, 23, 42, 0.10); 
+    box-shadow: 0 8px 18px rgba(15, 23, 42, 0.10); 
   }
 
   /* Amount grid container */
