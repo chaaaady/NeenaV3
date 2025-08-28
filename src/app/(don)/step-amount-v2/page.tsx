@@ -1,0 +1,131 @@
+"use client";
+
+import { useState, useEffect } from "react";
+import { useFormContext } from "react-hook-form";
+import { useRouter } from "next/navigation";
+import { ArrowRight } from "lucide-react";
+import { AppBar, Stepper, Input, AmountDisplay, SideMenu, MosqueSelectorModal } from "@/components";
+import { formatEuro } from "@/lib/currency";
+import { DonationFormValues } from "@/lib/schema";
+import { useDonationFlow } from "@/features/donation/useDonationFlow";
+
+const PRESET_AMOUNTS = [5, 10, 25, 50, 75, 100];
+
+export default function StepAmountV2Page() {
+  const form = useFormContext<DonationFormValues>();
+  const _router = useRouter();
+  const values = form.watch();
+  const [otherAmountInput, setOtherAmountInput] = useState("");
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [showMosqueSelector, setShowMosqueSelector] = useState(false);
+  const { toPersonal, canProceedFromAmount } = useDonationFlow();
+
+  // Animation d'intro discrète
+  useEffect(() => {
+    if (!values.amount || values.amount === 50) {
+      form.setValue("amount", 25, { shouldDirty: true });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const handlePresetClick = (amt: number) => {
+    form.setValue("amount", amt, { shouldDirty: true });
+    setOtherAmountInput("");
+  };
+
+  const handleOtherAmountChange = (value: string) => {
+    setOtherAmountInput(value);
+    const numValue = parseFloat(value);
+    if (!isNaN(numValue) && numValue > 0) {
+      form.setValue("amount", numValue, { shouldDirty: true });
+    }
+  };
+
+  const handleNext = () => {
+    if (canProceedFromAmount(values)) {
+      toPersonal();
+    }
+  };
+
+  const isActive = (amt: number) => values.amount === amt && otherAmountInput.trim() === "";
+
+  return (
+    <>
+      <AppBar 
+        onMenu={() => setIsMenuOpen(true)} 
+        currentMosque={values.mosqueName}
+        onMosqueSelect={() => setShowMosqueSelector(true)}
+      />
+      <SideMenu isOpen={isMenuOpen} onClose={() => setIsMenuOpen(false)} />
+      <MosqueSelectorModal 
+        isOpen={showMosqueSelector}
+        onClose={() => setShowMosqueSelector(false)}
+        currentMosque={values.mosqueName}
+        onMosqueSelect={(mosque) => form.setValue("mosqueName", mosque, { shouldDirty: true })}
+      />
+      <div className="app-container">
+        <div className="app-card">
+          <div className="space-y-6">
+            <div className="flex items-center justify-between">
+              <div className="app-title">Quel montant souhaitez-vous donner ?</div>
+            </div>
+
+            <div className="space-y-4">
+              <AmountDisplay amount={values.amount} frequency={values.frequency} />
+
+              <div className="grid grid-cols-2 gap-3">
+                {PRESET_AMOUNTS.map((amt) => (
+                  <button
+                    key={amt}
+                    className={`segmented-option ${isActive(amt) ? "active" : ""}`}
+                    onClick={() => handlePresetClick(amt)}
+                    style={{ height: 44 }}
+                  >
+                    {amt} €
+                  </button>
+                ))}
+              </div>
+
+              <div className="space-y-3">
+                <Input
+                  value={otherAmountInput}
+                  onChange={handleOtherAmountChange}
+                  placeholder="Autre montant"
+                  rightAccessory="€"
+                />
+                <div className="text-[14px] text-[var(--text-muted)]">
+                  Après déduction fiscale estimée: {formatEuro(values.amount * 0.34)}
+                </div>
+              </div>
+
+              <div className="text-[15px] text-[var(--text)]">
+                Vous avez choisi {formatEuro(values.amount)}{values.frequency !== "Unique" ? (values.frequency === "Hebdo" ? "/semaine" : "/mois") : ""}
+              </div>
+            </div>
+
+            <div className="pt-4 border-t border-[var(--border)]">
+              <div className="flex items-center justify-between">
+                <Stepper 
+                  steps={[
+                    { label: "Montant", status: "active" },
+                    { label: "Info", status: "pending" },
+                    { label: "Payment", status: "pending" }
+                  ]} 
+                />
+                <button
+                  onClick={handleNext}
+                  disabled={!values.amount || values.amount < 5}
+                  className="btn-primary pressable px-10 py-3 text-[16px] font-[700] disabled:opacity-40 disabled:cursor-not-allowed flex items-center justify-center gap-2 w-1/2"
+                >
+                  Suivant
+                  <ArrowRight size={18} />
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </>
+  );
+}
+
