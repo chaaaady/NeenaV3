@@ -97,10 +97,11 @@ export default function StepAmountV2Page() {
                     placeholder="Autre montant"
                     rightAccessory="€"
                   />
-                  <div className="amount-grid-footer text-[14px] text-[var(--text-muted)]">
-                    Après déduction fiscale estimée: {formatEuro(values.amount * 0.34)}
-                  </div>
                 </div>
+              </div>
+
+              <div className="amount-grid-footer text-[14px] text-[var(--text-muted)]">
+                Après déduction fiscale estimée: {formatEuro(values.amount * 0.34)}
               </div>
             </div>
 
