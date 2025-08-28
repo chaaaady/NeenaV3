@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { useFormContext } from "react-hook-form";
 import { useRouter } from "next/navigation";
 import { ArrowRight } from "lucide-react";
-import { AppBar, Stepper, Input, AmountDisplay, SideMenu, MosqueSelectorModal } from "@/components";
+import { AppBar, Stepper, Input, AmountDisplay, SideMenu, MosqueSelectorModal, SegmentedControl } from "@/components";
 import { formatEuro } from "@/lib/currency";
 import { DonationFormValues } from "@/lib/schema";
 import { useDonationFlow } from "@/features/donation/useDonationFlow";
@@ -71,9 +71,15 @@ export default function StepAmountV2Page() {
             </div>
 
             <div className="space-y-4">
+              <SegmentedControl
+                options={["Unique", "Hebdo", "Mensuel"]}
+                value={values.frequency}
+                onChange={(v: string) => form.setValue("frequency", v as "Unique" | "Hebdo" | "Mensuel", { shouldDirty: true })}
+              />
+
               <AmountDisplay amount={values.amount} frequency={values.frequency} />
 
-              <div className="grid grid-cols-2 gap-3">
+              <div className="grid grid-cols-3 gap-3">
                 {PRESET_AMOUNTS.map((amt) => (
                   <button
                     key={amt}
@@ -96,10 +102,6 @@ export default function StepAmountV2Page() {
                 <div className="text-[14px] text-[var(--text-muted)]">
                   Après déduction fiscale estimée: {formatEuro(values.amount * 0.34)}
                 </div>
-              </div>
-
-              <div className="text-[15px] text-[var(--text)]">
-                Vous avez choisi {formatEuro(values.amount)}{values.frequency !== "Unique" ? (values.frequency === "Hebdo" ? "/semaine" : "/mois") : ""}
               </div>
             </div>
 
