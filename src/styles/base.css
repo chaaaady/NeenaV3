@@ -188,7 +188,7 @@
   /* Layout containers */
   .app-container { 
     width: 100%; 
-    max-width: 640px; 
+    max-width: 540px; 
     margin: 0 auto; 
     padding-left: max(16px, env(safe-area-inset-left)); 
     padding-right: max(16px, env(safe-area-inset-right)); 
@@ -198,7 +198,7 @@
   }
   @media (min-width: 768px) { 
     .app-container { 
-      max-width: 660px; 
+      max-width: 560px; 
       padding-left: max(24px, env(safe-area-inset-left)); 
       padding-right: max(24px, env(safe-area-inset-right)); 
     } 

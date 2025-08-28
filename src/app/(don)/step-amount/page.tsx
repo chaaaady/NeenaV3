@@ -97,6 +97,8 @@ export default function StepAmountPage() {
                 <Input
                   value={otherAmountInput}
                   onChange={handleOtherAmountChange}
+                  type="number"
+                  inputMode="numeric"
                   placeholder="Autre montant"
                   rightAccessory="€"
                 />
@@ -135,7 +137,7 @@ export default function StepAmountPage() {
             </div>
             
             {/* Bouton d'action et stepper en bas */}
-            <div className="pt-4 border-t border-[var(--border)]">
+            <div className="pt-4">
               <div className="flex items-center justify-between">
                 <Stepper 
                   steps={[

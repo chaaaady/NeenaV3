@@ -71,15 +71,15 @@ export default function StepAmountV2Page() {
             </div>
 
             <div className="space-y-5">
+              <div className="my-3">
+                <AmountDisplay amount={values.amount} frequency={values.frequency} />
+              </div>
+
               <SegmentedControl
                 options={["Unique", "Vendredi", "Mensuel"]}
                 value={values.frequency}
                 onChange={(v: string) => form.setValue("frequency", v as "Unique" | "Vendredi" | "Mensuel", { shouldDirty: true })}
               />
-
-              <div className="my-3">
-                <AmountDisplay amount={values.amount} frequency={values.frequency} />
-              </div>
 
               <div className="amount-grid mt-5">
                 {PRESET_AMOUNTS.map((amt) => (
@@ -102,7 +102,7 @@ export default function StepAmountV2Page() {
                 </div>
               </div>
 
-              <div className="amount-grid-footer text-[14px] text-[var(--text-muted)] flex items-center gap-2">
+              <div className="amount-grid-footer text-[14px] text-[var(--text-muted)] flex items-center gap-2 mt-2">
                 <Info size={16} />
                 <span>
                   Après déduction fiscale, votre don ne vous coûtera que {formatEuro(Math.max(0, values.amount - values.amount * 0.34))}
