@@ -108,20 +108,16 @@ export default function StepAmountV2Page() {
                 onChange={(v: string) => form.setValue("donationType", v as "Sadaqah" | "Zakat", { shouldDirty: true })}
               />
 
-              <div className="amount-grid-footer flex items-center gap-1 text-[13px] text-[var(--text-muted)] mt-1">
+              <div className="amount-grid-footer flex items-center gap-2 text-[13px] text-[var(--text-muted)] mt-1">
                 <Info size={14} />
                 <span>
-                  Après déduction fiscale, votre don ne vous coûtera que {formatEuro(Math.max(0, values.amount - values.amount * 0.34))}
+                  Don de {formatEuro(values.amount)}{values.frequency !== "Unique" ? (values.frequency === "Vendredi" ? "/Vendredi" : "/mois") : ""} — après déduction fiscale, il ne vous coûtera que {formatEuro(Math.max(0, values.amount - values.amount * 0.34))}
                 </span>
               </div>
             </div>
 
             <div className="pt-2">
-              <div className="flex items-center justify-between">
-                <div className="text-[13px] text-[var(--text-muted)]">
-                  Don: {formatEuro(values.amount)}
-                  {values.frequency !== "Unique" ? (values.frequency === "Vendredi" ? "/Vendredi" : "/mois") : ""}
-                </div>
+              <div className="flex items-center justify-end">
                 <button
                   onClick={handleNext}
                   disabled={!values.amount || values.amount < 5}
