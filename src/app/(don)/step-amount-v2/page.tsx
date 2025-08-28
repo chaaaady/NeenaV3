@@ -71,10 +71,6 @@ export default function StepAmountV2Page() {
             </div>
 
             <div className="space-y-5">
-              <div className="my-3">
-                <AmountDisplay amount={values.amount} frequency={values.frequency} />
-              </div>
-
               <SegmentedControl
                 options={["Unique", "Vendredi", "Mensuel"]}
                 value={values.frequency}
@@ -100,6 +96,10 @@ export default function StepAmountV2Page() {
                     rightAccessory="€"
                   />
                 </div>
+              </div>
+
+              <div className="my-3">
+                <AmountDisplay amount={values.amount} frequency={values.frequency} />
               </div>
 
               <div className="amount-grid-footer text-[14px] text-[var(--text-muted)] flex items-center gap-2 mt-2">
