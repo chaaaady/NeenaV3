@@ -424,6 +424,10 @@
     padding: 10px;
     box-shadow: 0 0 6px rgba(11,18,32,0.04), 0 2px 8px rgba(11,18,32,0.06);
   }
+  .amount-grid-footer {
+    margin-top: 8px;
+    padding-top: 8px;
+  }
 
   /* Mosque selector */
   .mosque-selector {
