@@ -8,17 +8,13 @@ interface Step {
 }
 
 export function Stepper({ steps }: { steps: Step[] }) {
+  const current = steps.findIndex((s) => s.status === "active");
+  const currentStep = current === -1 ? steps.findIndex((s) => s.status === "completed") + 1 : current + 1;
+  const total = steps.length;
+
   return (
-    <div className="flex items-center gap-1">
-      {steps.map((step, _index) => (
-        <div key={step.label} className="stepper-item">
-          <div className={cn(
-            "stepper-dot",
-            step.status === "active" && "active",
-            step.status === "completed" && "completed"
-          )} />
-        </div>
-      ))}
+    <div className="text-[13px] font-[700] text-[var(--text-muted)]">
+      {currentStep}/{total}
     </div>
   );
 }
