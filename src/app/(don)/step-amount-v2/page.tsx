@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { useFormContext } from "react-hook-form";
 import { useRouter } from "next/navigation";
-import { ArrowRight, Info } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import { AppBar, Stepper, Input, AmountDisplay, SideMenu, MosqueSelectorModal, SegmentedControl } from "@/components";
 import { formatEuro } from "@/lib/currency";
 import { DonationFormValues } from "@/lib/schema";
@@ -108,17 +108,10 @@ export default function StepAmountV2Page() {
                 onChange={(v: string) => form.setValue("donationType", v as "Sadaqah" | "Zakat", { shouldDirty: true })}
               />
 
-              <div className="amount-grid-footer flex items-center gap-2 text-[13px] text-[var(--text-muted)] mt-1">
-                <Info size={14} />
-                <span>
-                  Votre don de <span className="font-[700] text-[var(--text)]">{formatEuro(values.amount)}</span>
-                  {values.frequency !== "Unique" ? (
-                    <>
-                      <span className="text-[var(--text)]">{values.frequency === "Vendredi" ? "/Vendredi" : "/mois"}</span>
-                    </>
-                  ) : null} 
-                  ne vous coûtera que <span className="font-[700] text-[var(--text)]">{formatEuro(values.amount * 0.34)}</span> après déduction fiscale
-                </span>
+              <div className="amount-grid-footer text-[15px] text-[var(--text)] mt-1 leading-snug">
+                Votre don de <span className="font-[700]">{formatEuro(values.amount)}{values.frequency !== "Unique" ? (values.frequency === "Vendredi" ? "/Vendredi" : "/mois") : ""}</span>{" "}
+                ne vous coûtera que <span className="font-[700]">{formatEuro(values.amount * 0.34)}{values.frequency !== "Unique" ? (values.frequency === "Vendredi" ? "/Vendredi" : "/mois") : ""}</span>{" "}
+                après déduction fiscale
               </div>
             </div>
 
