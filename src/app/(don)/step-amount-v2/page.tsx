@@ -72,9 +72,9 @@ export default function StepAmountV2Page() {
 
             <div className="space-y-4">
               <SegmentedControl
-                options={["Unique", "Hebdo", "Mensuel"]}
+                options={["Unique", "Vendredi", "Mensuel"]}
                 value={values.frequency}
-                onChange={(v: string) => form.setValue("frequency", v as "Unique" | "Hebdo" | "Mensuel", { shouldDirty: true })}
+                onChange={(v: string) => form.setValue("frequency", v as "Unique" | "Vendredi" | "Mensuel", { shouldDirty: true })}
               />
 
               <AmountDisplay amount={values.amount} frequency={values.frequency} />
