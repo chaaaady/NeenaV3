@@ -98,9 +98,7 @@ export default function StepAmountV2Page() {
                 </div>
               </div>
 
-              <div className="my-3">
-                <AmountDisplay amount={values.amount} frequency={values.frequency} />
-              </div>
+              {/* Montant retiré pour test UX */}
 
               <div className="amount-grid-footer text-[14px] text-[var(--text-muted)] flex items-center gap-2 mt-2">
                 <Info size={16} />
