@@ -27,6 +27,8 @@ export function SegmentedControl({
         <button
           key={option}
           className={cn("segmented-option", option === value && "active")}
+          role="button"
+          aria-pressed={option === value}
           onClick={() => {
             if (navigator.vibrate && option !== value) {
               navigator.vibrate(3);

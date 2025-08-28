@@ -413,7 +413,7 @@
     color: #0B1220; 
     font-weight: 700; 
     transform: translateY(-1px) scale(1.02); 
-    box-shadow: 0 0 6px rgba(15, 23, 42, 0.06), 0 8px 18px rgba(15, 23, 42, 0.10); 
+    box-shadow: 0 0 0 2px rgba(15,23,42,0.08), 0 8px 18px rgba(15, 23, 42, 0.10); 
   }
 
   /* Amount grid container */
@@ -421,8 +421,8 @@
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: 10px;
-    background: #F5F6F7;
-    border: 1px solid #ECEEF1;
+    background: #F3F4F6;
+    border: 1px solid #E2E8F0;
     border-radius: 12px;
     padding: 10px;
     box-shadow: 0 0 6px rgba(11,18,32,0.04), 0 2px 8px rgba(11,18,32,0.06);
