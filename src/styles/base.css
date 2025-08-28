@@ -193,7 +193,7 @@
     padding-left: max(16px, env(safe-area-inset-left)); 
     padding-right: max(16px, env(safe-area-inset-right)); 
     padding-top: calc(28px + env(safe-area-inset-top)); 
-    padding-bottom: 4px; 
+    padding-bottom: calc(28px + env(safe-area-inset-bottom)); 
     min-height: calc(100dvh - var(--header-h) - var(--product-header-h) - var(--stepper-h) - var(--actions-h) - var(--safari-ui-h)); 
   }
   @media (min-width: 768px) { 
