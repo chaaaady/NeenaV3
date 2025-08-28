@@ -1,7 +1,5 @@
 "use client";
 
-import { cn } from "@/lib/cn";
-
 interface Step {
   label: string;
   status: "pending" | "active" | "completed";
