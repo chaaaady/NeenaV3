@@ -99,7 +99,7 @@ export default function StepAmountPage() {
                   rightAccessory="€"
                 />
                 <div className="text-[14px] text-[var(--text-muted)]">
-                  Après déduction fiscale estimée: {formatEuro(values.amount * 0.34)}
+                  Après déduction fiscale, votre don ne vous coûtera que {formatEuro(Math.max(0, values.amount - values.amount * 0.34))}
                 </div>
               </div>
               
