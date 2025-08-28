@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { useFormContext } from "react-hook-form";
 import { useRouter } from "next/navigation";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, Info } from "lucide-react";
 import { AppBar, Stepper, Input, AmountDisplay, SideMenu, MosqueSelectorModal, SegmentedControl } from "@/components";
 import { formatEuro } from "@/lib/currency";
 import { DonationFormValues } from "@/lib/schema";
@@ -100,8 +100,11 @@ export default function StepAmountV2Page() {
                 </div>
               </div>
 
-              <div className="amount-grid-footer text-[14px] text-[var(--text-muted)]">
-                Après déduction fiscale estimée: {formatEuro(values.amount * 0.34)}
+              <div className="amount-grid-footer text-[14px] text-[var(--text-muted)] flex items-center gap-2">
+                <Info size={16} />
+                <span>
+                  Après déduction fiscale, votre don ne vous coûtera que {formatEuro(Math.max(0, values.amount - values.amount * 0.34))}
+                </span>
               </div>
             </div>
 
