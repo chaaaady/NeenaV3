@@ -367,7 +367,7 @@
   .segmented-track { 
     height: auto; 
     background: #F9FAFB; 
-    border: none; 
+    border: 1px solid rgba(15, 23, 42, 0.06); 
     border-radius: 12px; 
     padding: 6px; 
     position: relative; 
@@ -423,7 +423,7 @@
     grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: 10px;
     background: #F3F4F6;
-    border: none;
+    border: 1px solid rgba(15, 23, 42, 0.06);
     border-radius: 12px;
     padding: 10px;
     box-shadow: 0 0 6px rgba(11,18,32,0.04), 0 2px 8px rgba(11,18,32,0.06);
