@@ -92,6 +92,9 @@ export default function StepAmountV2Page() {
                   <Input
                     value={otherAmountInput}
                     onChange={handleOtherAmountChange}
+                    type="tel"
+                    inputMode="numeric"
+                    pattern="[0-9]*"
                     placeholder="Autre montant"
                     rightAccessory="€"
                   />
@@ -110,13 +113,9 @@ export default function StepAmountV2Page() {
 
             <div className="pt-4 border-t border-[var(--border)]">
               <div className="flex items-center justify-between">
-                <Stepper 
-                  steps={[
-                    { label: "Montant", status: "active" },
-                    { label: "Info", status: "pending" },
-                    { label: "Payment", status: "pending" }
-                  ]} 
-                />
+                <div className="text-[16px] font-[700] text-[var(--text)]">
+                  {formatEuro(values.amount)}
+                </div>
                 <button
                   onClick={handleNext}
                   disabled={!values.amount || values.amount < 5}
