@@ -4,7 +4,7 @@
 @layer base {
   :root {
     /* Colors */
-    --bg: #F7F8FA;
+    --bg: #FFFFFF;
     --card: #FFFFFF;
     --surface-2: #F1F5F9;
     --border: #E6E8EB;
@@ -125,34 +125,7 @@
 /* @layer components - Layout and UI components */
 @layer components {
   /* Mini footer */
-  .mini-footer {
-    position: static;
-    width: 100%;
-    background: transparent;
-    border-top: 1px solid rgba(15,23,42,0.06);
-    padding: 8px 16px;
-    margin-top: 16px;
-  }
-  .mini-footer-content {
-    max-width: 700px;
-    margin: 0 auto;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    font-size: 12px;
-    color: var(--text-muted);
-  }
-  .mini-footer-link {
-    color: var(--text);
-    text-decoration: none;
-  }
-  .mini-footer-link:hover {
-    text-decoration: underline;
-  }
-  .mini-footer-sep {
-    opacity: 0.5;
-  }
+  /* Footer removed */
   /* Headers */
   .app-header { 
     position: sticky; 
@@ -219,7 +192,7 @@
     margin: 0 auto; 
     padding-left: max(16px, env(safe-area-inset-left)); 
     padding-right: max(16px, env(safe-area-inset-right)); 
-    padding-top: 24px; 
+    padding-top: calc(40px + env(safe-area-inset-top)); 
     padding-bottom: 4px; 
     min-height: calc(100dvh - var(--header-h) - var(--product-header-h) - var(--stepper-h) - var(--actions-h) - var(--safari-ui-h)); 
   }
@@ -233,23 +206,33 @@
 
   /* Cards */
   .app-card { 
-    background: var(--card); 
+    background: #FFFFFF; 
     border-radius: 16px; 
-    box-shadow: 0 6px 28px rgba(0,0,0,0.10); 
+    position: relative;
+    box-shadow: 0 0 32px rgba(11, 18, 32, 0.08), 0 12px 40px rgba(11, 18, 32, 0.10), 0 4px 12px rgba(11, 18, 32, 0.08); 
     padding: 18px; 
     min-height: 0; 
     transition: box-shadow var(--motion-base) var(--ease-inout), transform var(--motion-base) var(--ease-inout); 
-    border: 1px solid rgba(15,23,42,0.06); 
   }
   .app-card:hover { 
     transform: translateY(-1px); 
-    box-shadow: 0 10px 34px rgba(0,0,0,0.12); 
+    box-shadow: 0 0 40px rgba(11, 18, 32, 0.10), 0 16px 48px rgba(11, 18, 32, 0.12), 0 6px 16px rgba(11, 18, 32, 0.10); 
   }
   @media (min-width: 768px) { 
     .app-card { 
       padding: 20px; 
       min-height: 0; 
     } 
+  }
+
+  /* Subtle inner hairline for premium separation */
+  .app-card::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    pointer-events: none;
+    box-shadow: inset 0 0 0 1px rgba(15, 23, 42, 0.04);
   }
 
   /* Docked actions */
@@ -300,6 +283,7 @@
     background: #fff; 
     color: var(--text); 
     transition: all var(--motion-base) var(--ease-inout); 
+    box-shadow: 0 4px 12px rgba(11,18,32,0.06);
   }
   .app-input::placeholder { 
     color: var(--text-soft); 
@@ -307,7 +291,7 @@
   .app-input:focus { 
     outline: none; 
     border-color: #A5D8F3; 
-    box-shadow: var(--shadow-focus-ring); 
+    box-shadow: var(--shadow-focus-ring), 0 6px 16px rgba(11,18,32,0.10); 
     transform: translateY(-1px); 
   }
 
@@ -341,7 +325,7 @@
     padding-left: 18px; 
     padding-right: 18px; 
     transition: all var(--motion-base) var(--ease-inout); 
-    box-shadow: 0 6px 20px rgba(11, 18, 32, 0.22);
+    box-shadow: 0 8px 22px rgba(11, 18, 32, 0.16);
   }
   .btn-primary[data-variant="success"] { 
     background: var(--success); 
@@ -363,6 +347,7 @@
     padding-left: 18px; 
     padding-right: 18px; 
     transition: all var(--motion-base) var(--ease-inout); 
+    box-shadow: 0 6px 18px rgba(11, 18, 32, 0.10);
   }
   .btn-secondary:hover { 
     transform: translateY(-2px); 
@@ -423,7 +408,7 @@
     color: #0B1220; 
     font-weight: 700; 
     transform: translateY(-1px) scale(1.02); 
-    box-shadow: 0 14px 30px rgba(15, 23, 42, 0.16); 
+    box-shadow: 0 10px 24px rgba(15, 23, 42, 0.12); 
   }
 
   /* Mosque selector */

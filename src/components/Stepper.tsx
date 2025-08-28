@@ -13,8 +13,8 @@ export function Stepper({ steps }: { steps: Step[] }) {
   const total = steps.length;
 
   return (
-    <div className="text-[13px] font-[700] text-[var(--text-muted)]">
-      {currentStep}/{total}
+    <div className="text-[16px] font-[700] text-[var(--text)]">
+      Étape {currentStep}/{total}
     </div>
   );
 }
