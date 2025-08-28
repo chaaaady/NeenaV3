@@ -109,9 +109,9 @@ export default function StepAmountV2Page() {
               />
 
               <div className="amount-grid-footer text-[15px] text-[var(--text)] mt-1 leading-snug">
-                Votre don de <span className="font-[700]">{formatEuro(values.amount)}{values.frequency !== "Unique" ? (values.frequency === "Vendredi" ? "/Vendredi" : "/mois") : ""}</span>{" "}
+                Votre don de {formatEuro(values.amount)}{values.frequency !== "Unique" ? (values.frequency === "Vendredi" ? "/Vendredi" : "/mois") : ""}{" "}
                 ne vous coûtera que <span className="font-[700]">{formatEuro(values.amount * 0.34)}{values.frequency !== "Unique" ? (values.frequency === "Vendredi" ? "/Vendredi" : "/mois") : ""}</span>{" "}
-                après déduction fiscale
+                après déduction fiscale.
               </div>
             </div>
 
