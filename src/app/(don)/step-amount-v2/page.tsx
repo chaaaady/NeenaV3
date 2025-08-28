@@ -79,7 +79,7 @@ export default function StepAmountV2Page() {
 
               <AmountDisplay amount={values.amount} frequency={values.frequency} />
 
-              <div className="grid grid-cols-3 gap-3">
+              <div className="amount-grid">
                 {PRESET_AMOUNTS.map((amt) => (
                   <button
                     key={amt}

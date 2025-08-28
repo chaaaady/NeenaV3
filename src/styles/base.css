@@ -383,7 +383,7 @@
     font-size: 15px; 
     font-weight: 600; 
     color: #0B1220; 
-    background: #F1F5F9; 
+    background: transparent; 
     border: none; 
     border-radius: 12px; 
     padding: 0 14px; 
@@ -409,6 +409,17 @@
     font-weight: 700; 
     transform: translateY(-1px) scale(1.02); 
     box-shadow: 0 10px 24px rgba(15, 23, 42, 0.12); 
+  }
+
+  /* Amount grid container */
+  .amount-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 10px;
+    background: #F5F6F7;
+    border: 1px solid #ECEEF1;
+    border-radius: 12px;
+    padding: 10px;
   }
 
   /* Mosque selector */
