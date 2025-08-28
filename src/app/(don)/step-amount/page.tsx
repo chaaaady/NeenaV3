@@ -78,8 +78,8 @@ export default function StepAmountPage() {
               />
             </div>
             
-            <div className="space-y-4">
-              <div className="my-4">
+            <div className="space-y-5">
+              <div className="my-5">
                 <AmountDisplay amount={values.amount} frequency={values.frequency} />
               </div>
               <Slider
