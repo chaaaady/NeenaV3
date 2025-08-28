@@ -13,13 +13,13 @@ export default function StepAmountPage() {
   const form = useFormContext<DonationFormValues>();
   const _router = useRouter();
   const values = form.watch();
-  const [otherAmountInput, setOtherAmountInput] = useState("Autre montant");
+  const [otherAmountInput, setOtherAmountInput] = useState("");
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [showMosqueSelector, setShowMosqueSelector] = useState(false);
   const { toPersonal, canProceedFromAmount } = useDonationFlow();
 
   // Vérifier si un montant personnalisé est saisi
-  const hasCustomAmount = otherAmountInput !== "Autre montant" && !isNaN(parseFloat(otherAmountInput));
+  const hasCustomAmount = otherAmountInput.trim() !== "" && !isNaN(parseFloat(otherAmountInput));
 
   // Initialiser le montant à 0€ puis animer vers 25€ (calm-tech, court)
   useEffect(() => {
@@ -68,13 +68,6 @@ export default function StepAmountPage() {
           <div className="space-y-6">
             <div className="flex items-center justify-between">
               <div className="app-title">Quel montant souhaitez-vous donner ?</div>
-              <Stepper 
-                steps={[
-                  { label: "Montant", status: "active" },
-                  { label: "Info", status: "pending" },
-                  { label: "Payment", status: "pending" }
-                ]} 
-              />
             </div>
             
             <div className="space-y-3">
@@ -102,7 +95,7 @@ export default function StepAmountPage() {
                 <Input
                   value={otherAmountInput}
                   onChange={handleOtherAmountChange}
-                  placeholder="Autre montant (€)"
+                  placeholder="Autre montant"
                   rightAccessory="€"
                 />
                 <div className="text-[14px] text-[var(--text-muted)]">
@@ -124,15 +117,7 @@ export default function StepAmountPage() {
               {values.donationType === "Special" && (
                 <div className="space-y-3">
                   <div className="segmented-track" style={{ flexWrap: 'wrap' as const }}>
-                    {[
-                      "Zakat al-fitr",
-                      "Sadaqa Jâriya",
-                      "Waqf",
-                      "Kaffâra / Fidyah",
-                      "Aqîqa",
-                      "Udh’hiya",
-                      "Frais scolaire",
-                    ].map((label) => (
+                    {["Zakat al-fitr","Sadaqa Jâriya","Waqf","Kaffâra / Fidyah","Aqîqa","Udh’hiya","Frais scolaire"].map((label) => (
                       <button
                         key={label}
                         className={`segmented-option ${values.specialDonation === label ? "active" : ""}`}
@@ -147,13 +132,20 @@ export default function StepAmountPage() {
               )}
             </div>
             
-            {/* Bouton d'action intégré dans la carte */}
-            <div className="pt-6 border-t border-[var(--border)]">
-              <div className="flex justify-end">
+            {/* Bouton d'action et stepper en bas */}
+            <div className="pt-4 border-t border-[var(--border)]">
+              <div className="flex items-center justify-between">
+                <Stepper 
+                  steps={[
+                    { label: "Montant", status: "active" },
+                    { label: "Info", status: "pending" },
+                    { label: "Payment", status: "pending" }
+                  ]} 
+                />
                 <button
                   onClick={handleNext}
                   disabled={!values.amount || values.amount < 5}
-                  className="btn-primary pressable px-12 py-4 text-[16px] font-[700] disabled:opacity-40 disabled:cursor-not-allowed flex items-center justify-center gap-2 w-1/2"
+                  className="btn-primary pressable px-10 py-3 text-[16px] font-[700] disabled:opacity-40 disabled:cursor-not-allowed flex items-center justify-center gap-2 w-1/2"
                 >
                   Suivant
                   <ArrowRight size={18} />

@@ -38,8 +38,8 @@ export function Slider({
   ];
 
   return (
-    <div className="w-full px-3">
-      <div className="relative h-[16px] mb-2 px-1">
+    <div className="w-full px-2">
+      <div className="relative h-[14px] mb-1 px-1">
         {landmarks.map((landmark) => {
           const landmarkPercent = ((landmark.value - min) / (max - min)) * 100;
           const isFirst = landmark.value === min;
@@ -49,7 +49,7 @@ export function Slider({
           return (
             <div
               key={landmark.value}
-              className={`absolute text-[13px] font-[600] text-[var(--text-muted)] tracking-tight ${alignClass}`}
+              className={`absolute text-[12px] font-[600] text-[var(--text-muted)] tracking-tight ${alignClass}`}
               style={{ left: `${landmarkPercent}%`, top: 0, transform }}
             >
               {landmark.label}
@@ -58,7 +58,7 @@ export function Slider({
         })}
       </div>
 
-      <div className="relative h-[6px] bg-[var(--surface-2)] rounded-full mb-10 mx-2">
+      <div className="relative h-[6px] bg-[var(--surface-2)] rounded-full mb-6 mx-1">
         <div 
           className="absolute top-0 left-0 h-full bg-[var(--brand)] rounded-full transition-all duration-150 ease-out"
           style={{ width: `${displayPercent}%` }}
@@ -74,10 +74,10 @@ export function Slider({
           );
         })}
         <div 
-          className="absolute top-1/2 transform -translate-y-1/2 w-[20px] h-[20px] bg-[var(--brand)] rounded-full shadow-lg transition-all duration-150 ease-out"
+          className="absolute top-1/2 transform -translate-y-1/2 w-[18px] h-[18px] bg-[var(--brand)] rounded-full shadow-lg transition-all duration-150 ease-out"
           style={{ 
             left: `${displayPercent}%`, 
-            marginLeft: '-10px',
+            marginLeft: '-9px',
             boxShadow: '0 2px 6px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.16)',
             border: '2px solid white'
           }}
@@ -93,8 +93,8 @@ export function Slider({
           className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
           style={{ 
             margin: 0,
-            height: '40px', // Surface tactile plus grande
-            top: '-17px' // Centrer la surface tactile
+            height: '36px', // Surface tactile toujours suffisante
+            top: '-15px' // Centrer la surface tactile
           }}
         />
       </div>

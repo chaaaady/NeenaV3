@@ -124,6 +124,36 @@
 
 /* @layer components - Layout and UI components */
 @layer components {
+  /* Mini footer */
+  .mini-footer {
+    position: sticky;
+    bottom: 0;
+    width: 100%;
+    background: transparent;
+    border-top: 1px solid rgba(15,23,42,0.06);
+    padding: 8px 16px;
+    margin-top: 12px;
+  }
+  .mini-footer-content {
+    max-width: 700px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    font-size: 12px;
+    color: var(--text-muted);
+  }
+  .mini-footer-link {
+    color: var(--text);
+    text-decoration: none;
+  }
+  .mini-footer-link:hover {
+    text-decoration: underline;
+  }
+  .mini-footer-sep {
+    opacity: 0.5;
+  }
   /* Headers */
   .app-header { 
     position: sticky; 
@@ -135,19 +165,19 @@
     backdrop-filter: blur(24px) saturate(200%); 
     -webkit-backdrop-filter: blur(24px) saturate(200%); 
     border-bottom: 1px solid rgba(15, 23, 42, 0.06); 
-    box-shadow: 0 2px 8px rgba(15, 23, 42, 0.04); 
+    box-shadow: 0 2px 10px rgba(15, 23, 42, 0.08); 
     width: 100%; 
     margin: 0; 
     padding: 0; 
     transition: all var(--motion-base) var(--ease-inout); 
   }
   .app-header .header-content { 
-    height: var(--header-h); 
+    height: 52px; 
     display: flex; 
     align-items: center; 
     justify-content: space-between; 
-    padding-left: max(12px, env(safe-area-inset-left)); 
-    padding-right: max(12px, env(safe-area-inset-right)); 
+    padding-left: max(10px, env(safe-area-inset-left)); 
+    padding-right: max(10px, env(safe-area-inset-right)); 
     width: 100%; 
   }
   @media (min-width: 768px) { 
@@ -188,8 +218,8 @@
     width: 100%; 
     max-width: 640px; 
     margin: 0 auto; 
-    padding-left: max(20px, env(safe-area-inset-left)); 
-    padding-right: max(20px, env(safe-area-inset-right)); 
+    padding-left: max(16px, env(safe-area-inset-left)); 
+    padding-right: max(16px, env(safe-area-inset-right)); 
     padding-top: 24px; 
     padding-bottom: 4px; 
     min-height: calc(100dvh - var(--header-h) - var(--product-header-h) - var(--stepper-h) - var(--actions-h) - var(--safari-ui-h)); 
@@ -305,7 +335,7 @@
 
   /* Buttons */
   .btn-primary { 
-    min-height: 46px; 
+    min-height: 44px; 
     border-radius: 12px; 
     background: linear-gradient(180deg, var(--brand), color-mix(in oklab, var(--brand) 85%, #000 15%)); 
     color: #fff; 
@@ -326,7 +356,7 @@
     transform: translateY(0); 
   }
   .btn-secondary { 
-    min-height: 46px; 
+    min-height: 44px; 
     border-radius: 12px; 
     background: #FFFFFF; 
     color: #0B1220; 
@@ -349,10 +379,10 @@
     background: #F9FAFB; 
     border: 1px solid #E5E7EB; 
     border-radius: 12px; 
-    padding: 8px; 
+    padding: 6px; 
     position: relative; 
     display: flex; 
-    gap: 12px; 
+    gap: 8px; 
     box-shadow: none; 
   }
 
@@ -362,7 +392,7 @@
 
   .segmented-option { 
     flex: 1; 
-    height: 44px; 
+    height: 40px; 
     display: flex; 
     align-items: center; 
     justify-content: center; 
