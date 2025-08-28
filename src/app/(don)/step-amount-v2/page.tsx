@@ -115,7 +115,7 @@ export default function StepAmountV2Page() {
               </div>
             </div>
 
-            <div className="pt-1">
+            <div className="pt-0">
               <div className="flex items-center justify-end">
                 <button
                   onClick={handleNext}
