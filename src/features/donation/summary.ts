@@ -4,7 +4,7 @@ import { DonationFormValues } from "@/lib/schema";
 
 export function buildDonationSummary(values: DonationFormValues): string {
   const freqSuffix =
-    values.frequency === "Vendredi" ? "/semaine" :
+    values.frequency === "Vendredi" ? "/Vendredi" :
     values.frequency === "Mensuel" ? "/mois" : "";
 
   const donorPhrase =

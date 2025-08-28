@@ -10,7 +10,7 @@ export function AmountDisplay({
   frequency?: "Unique" | "Vendredi" | "Mensuel";
 }) {
   const getFrequencySuffix = () => {
-    if (frequency === "Vendredi") return "/semaine";
+    if (frequency === "Vendredi") return "/Vendredi";
     if (frequency === "Mensuel") return "/mois";
     return "";
   };
