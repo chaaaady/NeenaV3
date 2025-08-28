@@ -70,14 +70,16 @@ export default function StepAmountV2Page() {
               <div className="app-title">Quel montant souhaitez-vous donner ?</div>
             </div>
 
-            <div className="space-y-4">
+            <div className="space-y-5">
               <SegmentedControl
                 options={["Unique", "Vendredi", "Mensuel"]}
                 value={values.frequency}
                 onChange={(v: string) => form.setValue("frequency", v as "Unique" | "Vendredi" | "Mensuel", { shouldDirty: true })}
               />
 
-              <AmountDisplay amount={values.amount} frequency={values.frequency} />
+              <div className="my-3">
+                <AmountDisplay amount={values.amount} frequency={values.frequency} />
+              </div>
 
               <div className="amount-grid">
                 {PRESET_AMOUNTS.map((amt) => (
