@@ -90,17 +90,16 @@ export default function StepAmountV2Page() {
                     {amt} €
                   </button>
                 ))}
-              </div>
-
-              <div className="space-y-3">
-                <Input
-                  value={otherAmountInput}
-                  onChange={handleOtherAmountChange}
-                  placeholder="Autre montant"
-                  rightAccessory="€"
-                />
-                <div className="text-[14px] text-[var(--text-muted)]">
-                  Après déduction fiscale estimée: {formatEuro(values.amount * 0.34)}
+                <div style={{ gridColumn: '1 / -1' }}>
+                  <Input
+                    value={otherAmountInput}
+                    onChange={handleOtherAmountChange}
+                    placeholder="Autre montant"
+                    rightAccessory="€"
+                  />
+                  <div className="text-[14px] text-[var(--text-muted)] mt-2">
+                    Après déduction fiscale estimée: {formatEuro(values.amount * 0.34)}
+                  </div>
                 </div>
               </div>
             </div>

@@ -325,14 +325,16 @@
     padding-left: 18px; 
     padding-right: 18px; 
     transition: all var(--motion-base) var(--ease-inout); 
-    box-shadow: 0 6px 16px rgba(11, 18, 32, 0.12);
+    position: relative;
+    z-index: 0;
+    box-shadow: 0 0 6px rgba(11, 18, 32, 0.06), 0 6px 14px rgba(11, 18, 32, 0.10);
   }
   .btn-primary[data-variant="success"] { 
     background: var(--success); 
   }
   .btn-primary:hover { 
     transform: translateY(-1px); 
-    box-shadow: 0 10px 28px rgba(11, 18, 32, 0.28); 
+    box-shadow: 0 0 8px rgba(11, 18, 32, 0.08), 0 8px 18px rgba(11, 18, 32, 0.14); 
     filter: brightness(1.03);
   }
   .btn-primary:active { 
@@ -408,7 +410,7 @@
     color: #0B1220; 
     font-weight: 700; 
     transform: translateY(-1px) scale(1.02); 
-    box-shadow: 0 10px 24px rgba(15, 23, 42, 0.12); 
+    box-shadow: 0 0 6px rgba(15, 23, 42, 0.06), 0 8px 18px rgba(15, 23, 42, 0.10); 
   }
 
   /* Amount grid container */
@@ -420,7 +422,7 @@
     border: 1px solid #ECEEF1;
     border-radius: 12px;
     padding: 10px;
-    box-shadow: 0 4px 12px rgba(11,18,32,0.06);
+    box-shadow: 0 0 6px rgba(11,18,32,0.04), 0 2px 8px rgba(11,18,32,0.06);
   }
 
   /* Mosque selector */
