@@ -325,7 +325,7 @@
     padding-left: 18px; 
     padding-right: 18px; 
     transition: all var(--motion-base) var(--ease-inout); 
-    box-shadow: 0 8px 22px rgba(11, 18, 32, 0.16);
+    box-shadow: 0 6px 16px rgba(11, 18, 32, 0.12);
   }
   .btn-primary[data-variant="success"] { 
     background: var(--success); 
@@ -420,6 +420,7 @@
     border: 1px solid #ECEEF1;
     border-radius: 12px;
     padding: 10px;
+    box-shadow: 0 4px 12px rgba(11,18,32,0.06);
   }
 
   /* Mosque selector */
