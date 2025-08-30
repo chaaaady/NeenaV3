@@ -20,6 +20,6 @@ export function buildDonationSummary(values: DonationFormValues): string {
     ? `Special (${values.specialDonation})`
     : values.donationType;
 
-  return `Je souhaite donner ${values.amount}€${freqSuffix}${donorPart} à la mosquée de ${values.mosqueName} en ${typeLabel}${values.wantsReceipt ? " avec reçu fiscal" : ""}.`;
+  return `${values.amount}€${freqSuffix}${donorPart} en ${typeLabel}${values.wantsReceipt ? " avec reçu fiscal" : ""}.`;
 }
 
