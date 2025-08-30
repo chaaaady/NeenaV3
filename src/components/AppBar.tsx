@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { cn } from "@/lib/cn";
-import { Menu, ChevronDown, Home } from "lucide-react";
+import { Menu, ChevronDown } from "lucide-react";
 
 export function AppBar({ 
   title = "Neena", 
@@ -31,30 +31,10 @@ export function AppBar({
   return (
     <header className="modern-header">
       <div className="header-container">
-        {/* Logo/Titre à gauche avec icône */}
-        <div className="header-left">
-          {onTitleClick ? (
-            <button
-              onClick={(e) => { e.preventDefault(); e.stopPropagation(); onTitleClick(); }}
-              className="logo-button"
-              aria-label="Accueil"
-            >
-              <div className="logo-icon">
-                <Home size={20} />
-              </div>
-              <span className="logo-text">{title}</span>
-            </button>
-          ) : (
-            <div className="logo-static">
-              <div className="logo-icon">
-                <Home size={20} />
-              </div>
-              <span className="logo-text">{title}</span>
-            </div>
-          )}
-        </div>
+        {/* Espace vide à gauche pour équilibrer */}
+        <div className="header-left"></div>
 
-        {/* Sélecteur de mosquée au centre */}
+        {/* Sélecteur de mosquée centré */}
         <div className="header-center">
           <button
             onClick={onMosqueSelect}

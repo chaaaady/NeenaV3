@@ -200,8 +200,8 @@
     background: rgba(255, 255, 255, 0.98);
     backdrop-filter: blur(20px) saturate(180%);
     -webkit-backdrop-filter: blur(20px) saturate(180%);
-    border-bottom: 1px solid rgba(15, 23, 42, 0.04);
-    box-shadow: 0 1px 3px rgba(15, 23, 42, 0.04), 0 4px 12px rgba(15, 23, 42, 0.06);
+    border-bottom: 1px solid rgba(15, 23, 42, 0.06);
+    box-shadow: 0 2px 8px rgba(15, 23, 42, 0.08), 0 4px 16px rgba(15, 23, 42, 0.12);
     width: 100%;
     margin: 0;
     padding: 0;
@@ -209,7 +209,7 @@
   }
 
   .header-container {
-    height: 64px;
+    height: 52px;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -227,61 +227,12 @@
     }
   }
 
-  /* Section gauche - Logo */
+  /* Section gauche - Espace vide */
   .header-left {
     display: flex;
     align-items: center;
     flex-shrink: 0;
-  }
-
-  .logo-button {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    padding: 8px 12px;
-    border-radius: 12px;
-    background: transparent;
-    border: none;
-    cursor: pointer;
-    transition: all var(--motion-base) var(--ease-out);
-    text-decoration: none;
-  }
-
-  .logo-button:hover {
-    background: rgba(15, 23, 42, 0.04);
-    transform: translateY(-1px);
-  }
-
-  .logo-button:active {
-    transform: translateY(0);
-    background: rgba(15, 23, 42, 0.08);
-  }
-
-  .logo-static {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    padding: 8px 12px;
-  }
-
-  .logo-icon {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 32px;
-    height: 32px;
-    border-radius: 8px;
-    background: linear-gradient(135deg, rgba(15, 23, 42, 0.08), rgba(15, 23, 42, 0.04));
-    color: var(--text);
-  }
-
-  .logo-text {
-    font-size: 18px;
-    font-weight: 700;
-    line-height: 22px;
-    letter-spacing: -0.3px;
-    color: var(--text);
-    white-space: nowrap;
+    width: 48px;
   }
 
   /* Section centre - Sélecteur de mosquée */
@@ -290,33 +241,36 @@
     align-items: center;
     justify-content: center;
     flex: 1;
-    max-width: 300px;
+    max-width: 280px;
   }
 
   .mosque-selector-modern {
     display: flex;
     align-items: center;
     gap: 8px;
-    padding: 10px 16px;
+    padding: 8px 14px;
     border-radius: 12px;
     background: rgba(15, 23, 42, 0.02);
-    border: 1px solid rgba(15, 23, 42, 0.06);
+    border: 1px solid rgba(15, 23, 42, 0.08);
     cursor: pointer;
     transition: all var(--motion-base) var(--ease-out);
     min-width: 0;
     max-width: 100%;
+    box-shadow: 0 1px 3px rgba(15, 23, 42, 0.04);
   }
 
   .mosque-selector-modern:hover {
     background: rgba(15, 23, 42, 0.04);
-    border-color: rgba(15, 23, 42, 0.08);
+    border-color: rgba(15, 23, 42, 0.12);
     transform: translateY(-1px);
+    box-shadow: 0 2px 6px rgba(15, 23, 42, 0.08);
   }
 
   .mosque-selector-modern.pressed {
     transform: translateY(0);
     background: rgba(15, 23, 42, 0.06);
-    border-color: rgba(15, 23, 42, 0.10);
+    border-color: rgba(15, 23, 42, 0.14);
+    box-shadow: 0 1px 2px rgba(15, 23, 42, 0.06);
   }
 
   .mosque-info {
@@ -328,23 +282,23 @@
   }
 
   .mosque-label {
-    font-size: 11px;
+    font-size: 10px;
     font-weight: 500;
-    line-height: 14px;
+    line-height: 12px;
     color: var(--text-soft);
     text-transform: uppercase;
-    letter-spacing: 0.5px;
+    letter-spacing: 0.6px;
   }
 
   .mosque-name {
-    font-size: 14px;
+    font-size: 13px;
     font-weight: 600;
-    line-height: 18px;
+    line-height: 16px;
     color: var(--text);
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    max-width: 200px;
+    max-width: 180px;
   }
 
   .chevron-icon {
@@ -362,15 +316,17 @@
     display: flex;
     align-items: center;
     flex-shrink: 0;
+    width: 48px;
+    justify-content: flex-end;
   }
 
   .menu-button {
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 40px;
-    height: 40px;
-    border-radius: 12px;
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
     background: transparent;
     border: none;
     cursor: pointer;
