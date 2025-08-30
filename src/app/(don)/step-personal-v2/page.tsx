@@ -27,7 +27,7 @@ export default function StepPersonalV2Page() {
   const [isVisible, setIsVisible] = useState(true);
 
   return (
-    <>
+    <div>
       <AppBar 
         onMenu={() => setIsMenuOpen(true)} 
         currentMosque={values.mosqueName}
@@ -151,7 +151,7 @@ export default function StepPersonalV2Page() {
           </div>
         </div>
       </PageTransition>
-    </>
+    </div>
   );
 }
 
