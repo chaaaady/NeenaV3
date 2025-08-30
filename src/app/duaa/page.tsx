@@ -3,13 +3,11 @@
 import { useEffect, useState, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import { AppBar, SideMenu } from "@/components";
-import { useRouter } from "next/navigation";
 import { useDuaaFeed } from "@/features/duaa/useDuaaFeed";
 import { DUAA_INTRO } from "@/features/duaa/constants";
 
 function DuaaContent() {
   const _params = useSearchParams();
-  const router = useRouter();
   const { sortedFeed, visibleCount, showMore, addPost, like, repost, addComment } = useDuaaFeed();
   const [isComposerOpen, setIsComposerOpen] = useState(false);
   const [composerText, setComposerText] = useState("");
