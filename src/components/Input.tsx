@@ -24,7 +24,7 @@ export function Input({
   type?: string;
   placeholder?: string;
   autoComplete?: string;
-  inputMode?: string;
+  inputMode?: React.HTMLAttributes<HTMLInputElement>["inputMode"]; 
   pattern?: string;
   leftIcon?: React.ReactNode;
   rightAccessory?: React.ReactNode;
@@ -53,7 +53,7 @@ export function Input({
           value={value}
           onChange={(e) => onChange(e.target.value)}
           placeholder={placeholder}
-          inputMode={inputMode as any}
+          inputMode={inputMode}
           pattern={pattern}
           onKeyDown={(e) => {
             if (e.key === "Enter") {

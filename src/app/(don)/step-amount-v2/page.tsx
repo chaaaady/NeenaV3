@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { useFormContext } from "react-hook-form";
 import { useRouter } from "next/navigation";
 import { ArrowRight } from "lucide-react";
-import { AppBar, Stepper, Input, AmountDisplay, SideMenu, MosqueSelectorModal, SegmentedControl } from "@/components";
+import { AppBar, Input, SideMenu, MosqueSelectorModal, SegmentedControl } from "@/components";
 import { formatEuro } from "@/lib/currency";
 import { DonationFormValues } from "@/lib/schema";
 import { useDonationFlow } from "@/features/donation/useDonationFlow";
@@ -139,7 +139,7 @@ export default function StepAmountV2Page() {
               <div className="flex items-center justify-end sm:justify-end">
                 <button
                   onClick={handleNext}
-                  disabled={!values.amount || isNaN(values.amount as any)}
+                  disabled={!(typeof values.amount === "number" && Number.isFinite(values.amount) && values.amount > 0)}
                   className="btn-primary pressable px-10 py-3 text-[16px] font-[700] disabled:opacity-40 disabled:cursor-not-allowed flex items-center justify-center gap-2 w-full sm:w-1/2"
                 >
                   Suivant
