@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef, useMemo } from "react";
+import { useState, useRef } from "react";
 import { useFormContext } from "react-hook-form";
 import { AppBar, Input, SideMenu, MosqueSelectorModal } from "@/components";
 import { Switch } from "@/components/Switch";
@@ -58,8 +58,6 @@ export default function StepPaymentPage() {
     <>
       <AppBar
         onMenu={() => setIsMenuOpen(true)}
-        currentMosque={values.mosqueName}
-        onMosqueSelect={() => setShowMosqueSelector(true)}
       />
       <SideMenu isOpen={isMenuOpen} onClose={() => setIsMenuOpen(false)} />
       <MosqueSelectorModal

@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useFormContext } from "react-hook-form";
 import { AppBar, Input, SideMenu, MosqueSelectorModal, SegmentedControl, Checkbox } from "@/components";
 import { DonationFormValues } from "@/lib/schema";
-import { User, Building2, Mail, MapPin, CreditCard } from "lucide-react";
+import { CreditCard } from "lucide-react";
 
 export default function StepPersonalPage() {
   const form = useFormContext<DonationFormValues>();
@@ -21,8 +21,6 @@ export default function StepPersonalPage() {
     <>
       <AppBar 
         onMenu={() => setIsMenuOpen(true)} 
-        currentMosque={values.mosqueName}
-        onMosqueSelect={() => setShowMosqueSelector(true)}
       />
       <SideMenu isOpen={isMenuOpen} onClose={() => setIsMenuOpen(false)} />
       <MosqueSelectorModal 
