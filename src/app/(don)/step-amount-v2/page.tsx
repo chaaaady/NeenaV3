@@ -19,7 +19,6 @@ export default function StepAmountV2Page() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [showMosqueSelector, setShowMosqueSelector] = useState(false);
   const { canProceedFromAmount } = useDonationFlow();
-  const [isVisible, setIsVisible] = useState(true);
   const isInvalidAmount = !!otherAmountInput && isNaN(parseFloat(otherAmountInput));
 
   // Animation d'intro discrète
@@ -45,8 +44,7 @@ export default function StepAmountV2Page() {
 
   const handleNext = () => {
     if (canProceedFromAmount(values)) {
-      setIsVisible(false);
-      setTimeout(() => router.push("/step-personal-v2"), 240);
+      router.push("/step-personal-v2");
     }
   };
 
@@ -151,6 +149,7 @@ export default function StepAmountV2Page() {
             </div>
           </div>
         </div>
+      </div>
     </>
   );
 }

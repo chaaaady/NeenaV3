@@ -23,11 +23,8 @@ export default function StepPersonalV2Page() {
     }
   };
 
-
-  const [isVisible, setIsVisible] = useState(true);
-
   return (
-    <div>
+    <>
       <AppBar 
         onMenu={() => setIsMenuOpen(true)} 
         currentMosque={values.mosqueName}
@@ -118,22 +115,14 @@ export default function StepPersonalV2Page() {
               <div className="pt-0">
                 <div className="grid grid-cols-2 gap-3">
                   <button
-                    onClick={() => {
-                      setIsVisible(false);
-                      setTimeout(() => router.push("/step-amount-v2"), 240);
-                    }}
+                    onClick={() => router.push("/step-amount-v2")}
                     className="btn-secondary pressable w-full text-[16px] font-[700] focus-visible:outline-none flex items-center justify-center gap-2"
                   >
                     <ArrowLeft size={18} />
                     Retour
                   </button>
                   <button
-                    onClick={() => {
-                      if (canProceedFromPersonal(values)) {
-                        setIsVisible(false);
-                        setTimeout(() => toPayment(), 240);
-                      }
-                    }}
+                    onClick={handleNext}
                     disabled={
                       values.donorType === "Entreprise" 
                         ? (!values.companyName || !values.companySiret || !values.email)
@@ -149,7 +138,8 @@ export default function StepPersonalV2Page() {
             </div>
           </div>
         </div>
-    </div>
+      </div>
+    </>
   );
 }
 
