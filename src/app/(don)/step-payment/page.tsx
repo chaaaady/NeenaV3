@@ -3,16 +3,13 @@
 import { useState, useRef, useMemo } from "react";
 import { useFormContext } from "react-hook-form";
 import { useRouter } from "next/navigation";
-import { ArrowLeft } from "lucide-react";
 import { AppBar, Input, SideMenu, MosqueSelectorModal } from "@/components";
 import { Switch } from "@/components/Switch";
-import { ApplePayButton } from "@/components/ApplePayButton";
-import { PayPalButton } from "@/components/PayPalButton";
 import { DonationFormValues } from "@/lib/schema";
 import { useDonationFlow } from "@/features/donation/useDonationFlow";
 import { formatEuro } from "@/lib/currency";
 import { buildDonationSummary } from "@/features/donation/summary";
-import { Receipt, CreditCard, Calendar, Shield } from "lucide-react";
+import { Receipt, CreditCard, Calendar, Shield, Apple } from "lucide-react";
 
 export default function StepPaymentPage() {
   const form = useFormContext<DonationFormValues>();
@@ -68,7 +65,7 @@ export default function StepPaymentPage() {
               </div>
             </div>
 
-            {/* Section carte bancaire et autres paiements */}
+            {/* Section carte bancaire */}
             <div className="section-box space-y-2">
               <Input
                 value={values.cardNumber}
@@ -100,10 +97,6 @@ export default function StepPaymentPage() {
                   pattern="[0-9]*"
                 />
               </div>
-              <div className="grid grid-cols-2 gap-3 pt-2">
-                <ApplePayButton />
-                <PayPalButton label="PayPal" variant="brand" />
-              </div>
             </div>
 
             {/* Couvrir les frais */}
@@ -118,24 +111,30 @@ export default function StepPaymentPage() {
               </div>
             </div>
 
-            {/* Actions */}
+            {/* Bouton Valider en pleine largeur */}
             <div className="pt-0">
-              <div className="grid grid-cols-2 gap-3"> {/* Changed to grid for Retour button */}
-                <button
-                  onClick={() => router.push("/step-personal-v2")} // Navigate back to personal V2
-                  className="btn-secondary pressable w-full text-[16px] font-[700] focus-visible:outline-none flex items-center justify-center gap-2"
-                >
-                  <ArrowLeft size={18} />
-                  Retour
+              <button
+                onClick={handleSubmit}
+                data-variant="success"
+                ref={donateBtnRef}
+                className="btn-primary pressable w-full text-[16px] font-[700] disabled:opacity-40 disabled:cursor-not-allowed flex items-center justify-center gap-2 py-3"
+                style={{ background: '#15803D' }}
+              >
+                <CreditCard size={18} />
+                Valider
+              </button>
+            </div>
+
+            {/* Options de paiement alternatives */}
+            <div className="space-y-2">
+              <div className="text-[13px] text-[var(--text-muted)] text-center">Ou payer avec</div>
+              <div className="space-y-2">
+                <button className="w-full py-3 px-4 rounded-12 bg-[var(--surface-2)] border border-[var(--border)] flex items-center justify-center gap-2 text-[14px] font-[500] text-[var(--text-soft)] hover:bg-[var(--surface-2)] transition-colors">
+                  <Apple size={18} />
+                  <span>Apple Pay</span>
                 </button>
-                <button
-                  onClick={handleSubmit}
-                  data-variant="success"
-                  ref={donateBtnRef}
-                  className="btn-primary pressable w-full text-[16px] font-[700] disabled:opacity-40 disabled:cursor-not-allowed flex items-center justify-center gap-2"
-                  style={{ background: '#15803D' }}
-                >
-                  Valider
+                <button className="w-full py-3 px-4 rounded-12 bg-[var(--surface-2)] border border-[var(--border)] flex items-center justify-center gap-2 text-[14px] font-[500] text-[var(--text-soft)] hover:bg-[var(--surface-2)] transition-colors">
+                  <span className="text-[#003087] font-[600]">PayPal</span>
                 </button>
               </div>
             </div>
