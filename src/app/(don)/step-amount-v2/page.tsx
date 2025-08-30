@@ -136,11 +136,11 @@ export default function StepAmountV2Page() {
             </div>
 
             <div className="pt-0">
-              <div className="flex items-center justify-end sm:justify-end">
+              <div className="flex items-center justify-end">
                 <button
                   onClick={handleNext}
                   disabled={!(typeof values.amount === "number" && Number.isFinite(values.amount) && values.amount > 0)}
-                  className="btn-primary pressable px-10 py-3 text-[16px] font-[700] disabled:opacity-40 disabled:cursor-not-allowed flex items-center justify-center gap-2 w-full sm:w-1/2"
+                  className="btn-primary pressable px-10 py-3 text-[16px] font-[700] disabled:opacity-40 disabled:cursor-not-allowed flex items-center justify-center gap-2 w-1/2"
                 >
                   Suivant
                   <ArrowRight size={18} />
