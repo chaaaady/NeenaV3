@@ -56,24 +56,3 @@ export function AppBar({
   );
 }
 
-export function MosqueDisplay({ 
-  currentMosque,
-  onMosqueSelect
-}: { 
-  currentMosque?: string;
-  onMosqueSelect?: () => void;
-}) {
-  return (
-    <div className="mosque-display-container">
-      <div 
-        className="mosque-display"
-        onClick={onMosqueSelect}
-      >
-        <span className="mosquée-text">
-          Mosquée de {currentMosque || "Sélectionner"}
-        </span>
-      </div>
-    </div>
-  );
-}
-

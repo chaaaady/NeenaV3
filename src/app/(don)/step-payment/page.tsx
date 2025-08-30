@@ -4,7 +4,7 @@ import { useState, useRef, useMemo } from "react";
 import { useFormContext } from "react-hook-form";
 import { useRouter } from "next/navigation";
 import { ArrowLeft } from "lucide-react";
-import { AppBar, MosqueDisplay, Input, SideMenu, MosqueSelectorModal } from "@/components";
+import { AppBar, Input, SideMenu, MosqueSelectorModal } from "@/components";
 import { Switch } from "@/components/Switch";
 import { ApplePayButton } from "@/components/ApplePayButton";
 import { PayPalButton } from "@/components/PayPalButton";
@@ -36,10 +36,6 @@ export default function StepPaymentPage() {
         currentMosque={values.mosqueName}
         onMosqueSelect={() => setShowMosqueSelector(true)}
       />
-      <MosqueDisplay
-        currentMosque={values.mosqueName}
-        onMosqueSelect={() => setShowMosqueSelector(true)}
-      />
       <SideMenu isOpen={isMenuOpen} onClose={() => setIsMenuOpen(false)} />
       <MosqueSelectorModal
         isOpen={showMosqueSelector}
@@ -67,7 +63,15 @@ export default function StepPaymentPage() {
         <div className="app-card">
           <div className="space-y-4">
             <div className="flex items-center justify-between">
-              <div className="app-title">Paiement sécurisé</div>
+              <div className="app-title">
+                Paiement sécurisé pour la{" "}
+                <button
+                  onClick={() => setShowMosqueSelector(true)}
+                  className="mosque-title-link"
+                >
+                  mosquée de {values.mosqueName || "Sélectionner"}
+                </button>
+              </div>
             </div>
 
             {/* Section carte bancaire et autres paiements */}

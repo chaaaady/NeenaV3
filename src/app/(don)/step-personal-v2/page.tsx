@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useFormContext } from "react-hook-form";
 import { useRouter } from "next/navigation";
 import { ArrowRight, ArrowLeft } from "lucide-react";
-import { AppBar, MosqueDisplay, SegmentedControl, Input, SideMenu, MosqueSelectorModal } from "@/components";
+import { AppBar, SegmentedControl, Input, SideMenu, MosqueSelectorModal } from "@/components";
 import { Switch } from "@/components/Switch";
 import { DonationFormValues } from "@/lib/schema";
 import { useDonationFlow } from "@/features/donation/useDonationFlow";
@@ -30,10 +30,6 @@ export default function StepPersonalV2Page() {
         currentMosque={values.mosqueName}
         onMosqueSelect={() => setShowMosqueSelector(true)}
       />
-      <MosqueDisplay
-        currentMosque={values.mosqueName}
-        onMosqueSelect={() => setShowMosqueSelector(true)}
-      />
       <SideMenu isOpen={isMenuOpen} onClose={() => setIsMenuOpen(false)} />
       <MosqueSelectorModal 
         isOpen={showMosqueSelector}
@@ -45,7 +41,15 @@ export default function StepPersonalV2Page() {
         <div className="app-card">
           <div className="space-y-6">
             <div className="flex items-center justify-between">
-              <div className="app-title">Informations personnelles</div>
+              <div className="app-title">
+                Informations personnelles pour la{" "}
+                <button
+                  onClick={() => setShowMosqueSelector(true)}
+                  className="mosque-title-link"
+                >
+                  mosquée de {values.mosqueName || "Sélectionner"}
+                </button>
+              </div>
             </div>
 
             <div className="space-y-5">

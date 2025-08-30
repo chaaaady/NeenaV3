@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { useFormContext } from "react-hook-form";
 import { useRouter } from "next/navigation";
 import { ArrowRight } from "lucide-react";
-import { AppBar, MosqueDisplay, Input, SideMenu, MosqueSelectorModal, SegmentedControl } from "@/components";
+import { AppBar, Input, SideMenu, MosqueSelectorModal, SegmentedControl } from "@/components";
 import { formatEuro } from "@/lib/currency";
 import { DonationFormValues } from "@/lib/schema";
 import { useDonationFlow } from "@/features/donation/useDonationFlow";
@@ -57,10 +57,6 @@ export default function StepAmountV2Page() {
         currentMosque={values.mosqueName}
         onMosqueSelect={() => setShowMosqueSelector(true)}
       />
-      <MosqueDisplay
-        currentMosque={values.mosqueName}
-        onMosqueSelect={() => setShowMosqueSelector(true)}
-      />
       <SideMenu isOpen={isMenuOpen} onClose={() => setIsMenuOpen(false)} />
       <MosqueSelectorModal 
         isOpen={showMosqueSelector}
@@ -72,7 +68,16 @@ export default function StepAmountV2Page() {
         <div className="app-card">
           <div className="space-y-6">
             <div className="flex items-center justify-between">
-              <div className="app-title">Quel montant souhaitez-vous donner ?</div>
+              <div className="app-title">
+                Quel montant souhaitez-vous donner à la{" "}
+                <button
+                  onClick={() => setShowMosqueSelector(true)}
+                  className="mosque-title-link"
+                >
+                  mosquée de {values.mosqueName || "Sélectionner"}
+                </button>
+                {" "}?
+              </div>
             </div>
 
             <div className="space-y-5">
