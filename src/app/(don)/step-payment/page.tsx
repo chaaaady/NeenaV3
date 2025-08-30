@@ -28,7 +28,11 @@ export default function StepPaymentPage() {
 
   // Fonction pour afficher le montant avec la fréquence
   const getAmountDisplay = () => {
-    const amount = formatEuro(values.amount);
+    const baseAmount = values.amount;
+    const feesAmount = values.coverFees ? baseAmount * 0.015 : 0;
+    const totalAmount = baseAmount + feesAmount;
+    const amount = formatEuro(totalAmount);
+    
     if (values.frequency === "Vendredi" || values.frequency === "Mensuel") {
       return (
         <div className="text-center">
@@ -36,12 +40,22 @@ export default function StepPaymentPage() {
           <div className="text-[14px] text-[var(--text-muted)] mt-1">
             {values.frequency === "Vendredi" ? "/semaine" : "/mois"}
           </div>
+          {values.coverFees && (
+            <div className="text-[12px] text-[var(--text-muted)] mt-1">
+              (dont {formatEuro(feesAmount)} de frais)
+            </div>
+          )}
         </div>
       );
     }
     return (
       <div className="text-center">
         <div className="text-[32px] font-[700] text-[var(--text)]">{amount}</div>
+        {values.coverFees && (
+          <div className="text-[12px] text-[var(--text-muted)] mt-1">
+            (dont {formatEuro(feesAmount)} de frais)
+          </div>
+        )}
       </div>
     );
   };
@@ -72,7 +86,7 @@ export default function StepPaymentPage() {
         {/* Couvrir les frais - section indépendante */}
         <div className="app-card mb-3">
           <div className="flex items-center justify-between gap-3">
-            <span className="flex-1 text-[14px] leading-snug text-[var(--text)] font-[500]">Je rajoute {formatEuro(values.amount * 0.029)} pour que 100% de mon don aille à la mosquée</span>
+            <span className="flex-1 text-[14px] leading-snug text-[var(--text)] font-[500]">Je rajoute {formatEuro(values.amount * 0.015)} pour que 100% de mon don aille à la mosquée</span>
             <Switch
               checked={values.coverFees}
               onChange={(v: boolean) => form.setValue("coverFees", v, { shouldDirty: true })}
