@@ -15,7 +15,7 @@ export function LayoutNoScroll({
   const heroMinHeight = `calc(100dvh - var(--header-h) - env(safe-area-inset-top) - env(safe-area-inset-bottom)${stickyFooterHeight ? ` - ${stickyFooterHeight}px` : ""})`;
   return (
     <div className="NoScrollPage">
-      <AppBar onMenu={onMenu} />
+      <AppBar onMenu={onMenu ?? (() => {})} />
       <main className="HeroFill" style={{ minHeight: heroMinHeight }}>
         {children}
       </main>
