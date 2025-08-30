@@ -390,7 +390,7 @@
     justify-content: center;
     padding-left: max(16px, env(safe-area-inset-left)); 
     padding-right: max(16px, env(safe-area-inset-right)); 
-    padding-top: calc(22px + env(safe-area-inset-top)); 
+    padding-top: calc(12px + env(safe-area-inset-top)); 
     padding-bottom: max(4px, env(safe-area-inset-bottom)); 
     min-height: calc(100dvh - var(--header-h) - var(--product-header-h) - var(--stepper-h) - var(--actions-h) - var(--safari-ui-h)); 
   }
