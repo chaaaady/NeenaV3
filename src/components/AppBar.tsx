@@ -31,8 +31,10 @@ export function AppBar({
   return (
     <header className="modern-header">
       <div className="header-container">
-        {/* Espace vide à gauche pour équilibrer */}
-        <div className="header-left"></div>
+        {/* Logo Neena à gauche */}
+        <div className="header-left">
+          <div className="logo-neena">Neena</div>
+        </div>
 
         {/* Sélecteur de mosquée centré */}
         <div className="header-center">

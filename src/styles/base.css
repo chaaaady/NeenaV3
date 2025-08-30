@@ -227,12 +227,28 @@
     }
   }
 
-  /* Section gauche - Espace vide */
+  /* Section gauche - Logo Neena */
   .header-left {
     display: flex;
     align-items: center;
     flex-shrink: 0;
-    width: 48px;
+    width: 120px;
+  }
+
+  .logo-neena {
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 20px;
+    font-weight: 700;
+    line-height: 24px;
+    letter-spacing: -0.5px;
+    color: var(--text);
+    white-space: nowrap;
+    cursor: pointer;
+    transition: opacity var(--motion-base) var(--ease-out);
+  }
+
+  .logo-neena:hover {
+    opacity: 0.8;
   }
 
   /* Section centre - Sélecteur de mosquée */
