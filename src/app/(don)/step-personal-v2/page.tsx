@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useFormContext } from "react-hook-form";
 import { useRouter } from "next/navigation";
 import { ArrowRight, ArrowLeft } from "lucide-react";
-import { AppBar, SegmentedControl, Input, SideMenu, MosqueSelectorModal, PageTransition } from "@/components";
+import { AppBar, SegmentedControl, Input, SideMenu, MosqueSelectorModal } from "@/components";
 import { Switch } from "@/components/Switch";
 import { DonationFormValues } from "@/lib/schema";
 import { useDonationFlow } from "@/features/donation/useDonationFlow";
@@ -40,9 +40,8 @@ export default function StepPersonalV2Page() {
         currentMosque={values.mosqueName}
         onMosqueSelect={(mosque) => form.setValue("mosqueName", mosque, { shouldDirty: true })}
       />
-      <PageTransition isVisible={isVisible}>
-        <div className="app-container">
-          <div className="app-card">
+      <div className="app-container">
+        <div className="app-card">
           <div className="space-y-6">
             <div className="flex items-center justify-between">
               <div className="app-title">Informations personnelles</div>
@@ -150,7 +149,6 @@ export default function StepPersonalV2Page() {
             </div>
           </div>
         </div>
-      </PageTransition>
     </div>
   );
 }

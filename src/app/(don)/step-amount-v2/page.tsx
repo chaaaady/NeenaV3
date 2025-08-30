@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { useFormContext } from "react-hook-form";
 import { useRouter } from "next/navigation";
 import { ArrowRight } from "lucide-react";
-import { AppBar, Input, SideMenu, MosqueSelectorModal, SegmentedControl, PageTransition } from "@/components";
+import { AppBar, Input, SideMenu, MosqueSelectorModal, SegmentedControl } from "@/components";
 import { formatEuro } from "@/lib/currency";
 import { DonationFormValues } from "@/lib/schema";
 import { useDonationFlow } from "@/features/donation/useDonationFlow";
@@ -66,9 +66,8 @@ export default function StepAmountV2Page() {
         currentMosque={values.mosqueName}
         onMosqueSelect={(mosque) => form.setValue("mosqueName", mosque, { shouldDirty: true })}
       />
-      <PageTransition isVisible={isVisible}>
-        <div className="app-container">
-          <div className="app-card">
+      <div className="app-container">
+        <div className="app-card">
           <div className="space-y-6">
             <div className="flex items-center justify-between">
               <div className="app-title">Quel montant souhaitez-vous donner ?</div>
@@ -151,9 +150,7 @@ export default function StepAmountV2Page() {
               </div>
             </div>
           </div>
-          </div>
         </div>
-      </PageTransition>
     </>
   );
 }
