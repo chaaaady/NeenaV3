@@ -53,8 +53,6 @@ export default function StepAmountPage() {
     <>
       <AppBar 
         onMenu={() => setIsMenuOpen(true)} 
-        currentMosque={values.mosqueName}
-        onMosqueSelect={() => setShowMosqueSelector(true)}
       />
       <SideMenu isOpen={isMenuOpen} onClose={() => setIsMenuOpen(false)} />
       <MosqueSelectorModal 
