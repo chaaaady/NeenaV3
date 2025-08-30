@@ -66,7 +66,6 @@ export default function StepPaymentPage() {
           <div className="space-y-4">
             <div className="text-[13px] text-[var(--text-muted)] text-center">Mosquée de {values.mosqueName}</div>
             {getAmountDisplay()}
-            <div className="text-[15px] text-[var(--text)] leading-relaxed text-center">{summarySentence}</div>
           </div>
         </div>
 
