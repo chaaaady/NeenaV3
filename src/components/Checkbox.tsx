@@ -10,19 +10,25 @@ export function Checkbox({
   onChange: (checked: boolean) => void;
 }) {
   return (
-    <div className="flex items-start gap-3">
-      <div className="checkbox-touch">
-        <input
-          type="checkbox"
-          className="app-checkbox mt-[2px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--focus)]"
-          checked={checked}
-          onChange={(e) => onChange(e.target.checked)}
-        />
-      </div>
-      <label className="text-[16px] leading-[22px] text-[var(--text-muted)]">
-        {label}
-      </label>
-    </div>
+    <button
+      type="button"
+      onClick={() => onChange(!checked)}
+      className="inline-flex items-center gap-2 px-3 h-9 rounded-full border border-[rgba(15,23,42,0.08)] bg-white shadow-sm text-[14px] font-[600] text-[var(--text-soft)] hover:shadow transition"
+      aria-pressed={checked}
+    >
+      <span
+        className="inline-flex items-center justify-center w-5 h-5 rounded-md border border-[var(--border)]"
+        aria-hidden
+        style={{ background: checked ? '#0B1220' : '#FFFFFF' }}
+      >
+        {checked && (
+          <svg width="12" height="12" viewBox="0 0 20 20" fill="none">
+            <path d="M5 10.5l3 3 7-7" stroke="#fff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+          </svg>
+        )}
+      </span>
+      {label}
+    </button>
   );
 }
 

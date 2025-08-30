@@ -13,12 +13,12 @@ const PRESET_AMOUNTS = [5, 10, 25, 50, 75, 100];
 
 export default function StepAmountV2Page() {
   const form = useFormContext<DonationFormValues>();
-  const _router = useRouter();
+  const router = useRouter();
   const values = form.watch();
   const [otherAmountInput, setOtherAmountInput] = useState("");
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [showMosqueSelector, setShowMosqueSelector] = useState(false);
-  const { toPersonal, canProceedFromAmount } = useDonationFlow();
+  const { canProceedFromAmount } = useDonationFlow();
   const isInvalidAmount = !!otherAmountInput && isNaN(parseFloat(otherAmountInput));
 
   // Animation d'intro discrète
@@ -44,7 +44,7 @@ export default function StepAmountV2Page() {
 
   const handleNext = () => {
     if (canProceedFromAmount(values)) {
-      toPersonal();
+      router.push("/step-personal-v2");
     }
   };
 

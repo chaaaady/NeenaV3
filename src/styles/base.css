@@ -124,6 +124,37 @@
 
 /* @layer components - Layout and UI components */
 @layer components {
+  /* Modern switch */
+  .switch {
+    width: 46px;
+    height: 28px;
+    border-radius: 999px;
+    border: 1px solid rgba(15,23,42,0.08);
+    background: #F3F4F6;
+    position: relative;
+    box-shadow: inset 0 0 0 1px rgba(15,23,42,0.02);
+    transition: background-color var(--motion-base) var(--ease-inout), box-shadow var(--motion-base) var(--ease-inout);
+  }
+  .switch .switch-thumb {
+    position: absolute;
+    top: 50%;
+    left: 4px;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: #fff;
+    transform: translate(0, -50%);
+    box-shadow: 0 2px 6px rgba(0,0,0,0.12);
+    transition: transform var(--motion-base) var(--ease-inout), background-color var(--motion-base) var(--ease-inout);
+  }
+  .switch.on {
+    background: #0B1220;
+    box-shadow: inset 0 0 0 1px rgba(255,255,255,0.06);
+  }
+  .switch.on .switch-thumb {
+    transform: translate(18px, -50%);
+    background: #fff;
+  }
   /* Mini footer */
   /* Footer removed */
   /* Headers */
@@ -281,7 +312,7 @@
   .app-input { 
     height: 44px; 
     font-size: 16px; 
-    border-radius: var(--radius-all); 
+    border-radius: 12px; 
     border: 1px solid var(--border); 
     padding: 0 12px; 
     background: #fff; 
@@ -304,20 +335,21 @@
     height: 22px; 
     border-radius: var(--radius-all); 
     border: 1px solid var(--border); 
-    transition: all var(--motion-base) var(--ease-inout); 
+    transition: background-color var(--motion-base) var(--ease-inout), transform var(--motion-base) var(--ease-inout), box-shadow var(--motion-base) var(--ease-inout); 
   }
   .app-checkbox:checked { 
-    background: var(--success); 
-    transform: scale(1.1); 
+    background: #0B1220; 
+    transform: translateY(-1px); 
+    box-shadow: 0 6px 16px rgba(11,18,32,0.10);
   }
   .checkbox-touch { 
-    padding: 12px; 
-    margin: -12px; 
+    padding: 8px; 
+    margin: -8px; 
     border-radius: var(--radius-all); 
     transition: background-color var(--motion-base) var(--ease-inout); 
   }
   .checkbox-touch:hover { 
-    background-color: rgba(0,0,0,0.05); 
+    background-color: rgba(0,0,0,0.03); 
   }
 
   /* Buttons */
@@ -426,6 +458,14 @@
     border: 1px solid rgba(15, 23, 42, 0.06);
     border-radius: 12px;
     padding: 10px;
+    box-shadow: 0 0 6px rgba(11,18,32,0.04), 0 2px 8px rgba(11,18,32,0.06);
+  }
+  /* Generic section container for V2 (used on personal step) */
+  .section-box {
+    background: #F9FAFB;
+    border: 1px solid rgba(15, 23, 42, 0.06);
+    border-radius: 12px;
+    padding: 12px;
     box-shadow: 0 0 6px rgba(11,18,32,0.04), 0 2px 8px rgba(11,18,32,0.06);
   }
   .amount-grid-footer {
@@ -622,7 +662,7 @@
 
   /* Special buttons */
   .paypal-btn { 
-    min-height: 56px; 
+    min-height: 44px; 
     border-radius: var(--radius-all); 
     background: #F7F9FC; 
     border: 1px solid var(--border); 
@@ -636,6 +676,11 @@
   .paypal-btn:hover { 
     transform: translateY(-1px); 
     box-shadow: 0 4px 12px rgba(0,0,0,0.08); 
+  }
+  .paypal-btn[data-brand="paypal"] {
+    background: #FFC439; /* PayPal yellow */
+    border-color: #FFC439;
+    color: #003087; /* PayPal blue */
   }
 
   /* Notes */

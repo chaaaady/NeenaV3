@@ -3,8 +3,10 @@
 import { useState, useMemo, useRef } from "react";
 import { useFormContext } from "react-hook-form";
 import { useRouter } from "next/navigation";
-import { RotateCcw, Heart, CreditCard, Calendar, Shield } from "lucide-react";
-import { AppBar, Stepper, Checkbox, PayPalButton, SideMenu, MosqueSelectorModal, Input } from "@/components";
+import { Heart, CreditCard, Calendar, Shield, User, Receipt } from "lucide-react";
+import { AppBar, Checkbox, PayPalButton, SideMenu, MosqueSelectorModal, Input } from "@/components";
+import { ApplePayButton } from "@/components/ApplePayButton";
+import { Switch } from "@/components/Switch";
 import { DonateOverlay } from "@/components/DonateOverlay";
 import { buildDonationSummary } from "@/features/donation/summary";
 import { useDonationFlow } from "@/features/donation/useDonationFlow";
@@ -64,10 +66,18 @@ export default function StepPaymentPage() {
         onMosqueSelect={(mosque) => form.setValue("mosqueName", mosque, { shouldDirty: true })}
       />
       <div className="app-container">
-        {/* Mini carte pour le résumé */}
+        {/* Récapitulatif sur fond blanc (esthétique améliorée) */}
         <div className="app-card mb-3">
-          <div className="text-[15px] text-[var(--text)] leading-relaxed">
-            {summarySentence}
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3 min-w-0">
+              <div className="w-8 h-8 rounded-full bg-[var(--surface-2)] border border-[var(--border)] flex items-center justify-center text-[var(--text-soft)] flex-shrink-0">
+                <Receipt size={16} />
+              </div>
+              <div className="min-w-0">
+                <div className="text-[13px] text-[var(--text-muted)]">Récapitulatif</div>
+                <div className="text-[15px] text-[var(--text)] leading-relaxed whitespace-normal break-words">{summarySentence}</div>
+              </div>
+            </div>
           </div>
         </div>
 
@@ -76,71 +86,75 @@ export default function StepPaymentPage() {
           <div className="space-y-4">
             <div className="flex items-center justify-between">
               <div className="app-title">Paiement sécurisé</div>
-              <Stepper 
-                steps={[
-                  { label: "Montant", status: "completed" },
-                  { label: "Info", status: "completed" },
-                  { label: "Payment", status: "active" }
-                ]} 
-              />
             </div>
             
-            <div className="space-y-3">
-              <div className="space-y-2">
+            {/* Section carte bancaire */}
+            <div className="section-box space-y-2">
+              <Input
+                value={values.cardNumber}
+                onChange={(v: string) => form.setValue("cardNumber", v, { shouldDirty: true })}
+                autoComplete="cc-number"
+                leftIcon={<CreditCard size={18} />}
+                placeholder="Numéro de carte"
+                type="tel"
+                inputMode="numeric"
+                pattern="[0-9]*"
+              />
+              <div className="grid grid-cols-2 gap-3">
                 <Input
-                  value={values.cardNumber}
-                  onChange={(v: string) => form.setValue("cardNumber", v, { shouldDirty: true })}
-                  autoComplete="cc-number"
-                  leftIcon={<CreditCard size={18} />}
-                  placeholder="Numéro de carte"
+                  value={values.cardExp}
+                  onChange={(v: string) => form.setValue("cardExp", v, { shouldDirty: true })}
+                  placeholder="MM/AA"
+                  leftIcon={<Calendar size={18} />}
+                  type="tel"
+                  inputMode="numeric"
+                  pattern="[0-9]*"
                 />
-                
-                <div className="grid grid-cols-2 gap-3">
-                  <Input
-                    value={values.cardExp}
-                    onChange={(v: string) => form.setValue("cardExp", v, { shouldDirty: true })}
-                    placeholder="MM/AA"
-                    leftIcon={<Calendar size={18} />}
-                  />
-                  <Input
-                    value={values.cardCvc}
-                    onChange={(v: string) => form.setValue("cardCvc", v, { shouldDirty: true })}
-                    placeholder="CVC"
-                    leftIcon={<Shield size={18} />}
-                  />
-                </div>
+                <Input
+                  value={values.cardCvc}
+                  onChange={(v: string) => form.setValue("cardCvc", v, { shouldDirty: true })}
+                  placeholder="CVC"
+                  leftIcon={<Shield size={18} />}
+                  type="tel"
+                  inputMode="numeric"
+                  pattern="[0-9]*"
+                />
               </div>
-              
-              <div className="h-[1px] bg-[var(--border)]"></div>
-              <div className="text-[13px] text-[var(--text-muted)]">Autres méthodes</div>
-              
-              <PayPalButton label="Payer avec PayPal" />
-              
-              <Checkbox
-                label={`Je rajoute ${formatEuro(values.amount * 0.029)} pour que 100% de mon don aille à la mosquée`}
-                checked={values.coverFees}
-                onChange={(v: boolean) => form.setValue("coverFees", v, { shouldDirty: true })}
-              />
+              <div className="grid grid-cols-2 gap-3 pt-2">
+                <ApplePayButton />
+                <PayPalButton label="PayPal" variant="brand" />
+              </div>
+            </div>
+
+            {/* Couvrir les frais */}
+            <div className="section-box">
+              <div className="flex items-center justify-between gap-3">
+                <span className="flex-1 text-[14px] leading-snug text-[var(--text)] font-[500]">Je rajoute {formatEuro(values.amount * 0.029)} pour que 100% de mon don aille à la mosquée</span>
+                <Switch
+                  checked={values.coverFees}
+                  onChange={(v: boolean) => form.setValue("coverFees", v, { shouldDirty: true })}
+                  ariaLabel="Couvrir les frais"
+                />
+              </div>
             </div>
             
-            {/* Boutons d'actions intégrés dans la carte */}
-            <div className="pt-6 border-t border-[var(--border)]">
+            {/* Actions */}
+            <div className="pt-0">
               <div className="grid grid-cols-2 gap-3">
                 <button
                   onClick={backToPersonal}
-                  className="btn-secondary pressable w-full text-[16px] font-[700] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--focus)] flex items-center justify-center gap-2"
+                  className="btn-secondary pressable w-full text-[16px] font-[700] focus-visible:outline-none"
                 >
-                  <RotateCcw size={18} />
                   Retour
                 </button>
                 <button
                   onClick={handleSubmit}
                   data-variant="success"
                   ref={donateBtnRef}
-                  className="btn-primary pressable w-full text-[16px] font-[700] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--focus)] disabled:opacity-40 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                  className="btn-primary pressable w-full text-[16px] font-[700] disabled:opacity-40 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                  style={{ background: '#15803D' }}
                 >
-                  Faire un don de {formatEuro(values.amount)}
-                  <Heart size={18} />
+                  Valider
                 </button>
               </div>
             </div>
