@@ -34,11 +34,11 @@ export default function StepPaymentPage() {
     const amount = formatEuro(totalAmount);
     
     if (values.frequency === "Vendredi" || values.frequency === "Mensuel") {
+      const freqSuffix = values.frequency === "Vendredi" ? "/semaine" : "/mois";
       return (
         <div className="text-center">
-          <div className="text-[32px] font-[700] text-[var(--text)]">{amount}</div>
-          <div className="text-[14px] text-[var(--text-muted)] mt-1">
-            {values.frequency === "Vendredi" ? "/semaine" : "/mois"}
+          <div className="text-[32px] font-[700] text-[var(--text)]">
+            {amount}<span className="text-[16px] font-[500] text-[var(--text-muted)] ml-1">{freqSuffix}</span>
           </div>
           {values.coverFees && (
             <div className="text-[12px] text-[var(--text-muted)] mt-1">
