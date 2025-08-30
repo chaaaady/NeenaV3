@@ -235,10 +235,7 @@
     left: 0;
     right: 0;
     z-index: 50;
-    background: #FFFFFF;
-    backdrop-filter: blur(20px) saturate(180%);
-    -webkit-backdrop-filter: blur(20px) saturate(180%);
-    box-shadow: 0 2px 8px rgba(15, 23, 42, 0.08), 0 4px 16px rgba(15, 23, 42, 0.12);
+    background: transparent;
     width: 100%;
     margin: 0;
     padding: 0;
@@ -326,13 +323,13 @@
     box-shadow: 0 0 0 2px var(--focus), 0 0 0 4px rgba(14, 165, 233, 0.1);
   }
 
-  /* Affichage de la mosquée équidistant entre header et carte */
+  /* Affichage de la mosquée optimisé */
   .mosque-display-container {
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 24px 16px;
-    min-height: 72px;
+    padding: 16px;
+    margin-bottom: 8px;
   }
 
   .mosque-display {
@@ -343,21 +340,25 @@
     transition: all var(--motion-base) var(--ease-out);
     min-width: 0;
     max-width: 280px;
+    padding: 8px 16px;
+    border-radius: 20px;
+    background: rgba(15, 23, 42, 0.03);
   }
 
   .mosque-display:hover {
+    background: rgba(15, 23, 42, 0.06);
     transform: translateY(-1px);
   }
 
   .mosquée-text {
-    font-size: 14px;
+    font-size: 13px;
     font-weight: 500;
-    line-height: 18px;
+    line-height: 16px;
     color: var(--text);
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    max-width: 240px;
+    max-width: 220px;
   }
 
   /* Stepper */
