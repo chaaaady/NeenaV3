@@ -190,6 +190,209 @@
     } 
   }
 
+  /* Nouveau Header Moderne */
+  .modern-header {
+    position: sticky;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 50;
+    background: rgba(255, 255, 255, 0.98);
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    border-bottom: 1px solid rgba(15, 23, 42, 0.04);
+    box-shadow: 0 1px 3px rgba(15, 23, 42, 0.04), 0 4px 12px rgba(15, 23, 42, 0.06);
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    transition: all var(--motion-base) var(--ease-inout);
+  }
+
+  .header-container {
+    height: 64px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-left: max(16px, env(safe-area-inset-left));
+    padding-right: max(16px, env(safe-area-inset-right));
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  @media (min-width: 768px) {
+    .header-container {
+      padding-left: max(24px, env(safe-area-inset-left));
+      padding-right: max(24px, env(safe-area-inset-right));
+    }
+  }
+
+  /* Section gauche - Logo */
+  .header-left {
+    display: flex;
+    align-items: center;
+    flex-shrink: 0;
+  }
+
+  .logo-button {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 12px;
+    border-radius: 12px;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    transition: all var(--motion-base) var(--ease-out);
+    text-decoration: none;
+  }
+
+  .logo-button:hover {
+    background: rgba(15, 23, 42, 0.04);
+    transform: translateY(-1px);
+  }
+
+  .logo-button:active {
+    transform: translateY(0);
+    background: rgba(15, 23, 42, 0.08);
+  }
+
+  .logo-static {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 12px;
+  }
+
+  .logo-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    background: linear-gradient(135deg, rgba(15, 23, 42, 0.08), rgba(15, 23, 42, 0.04));
+    color: var(--text);
+  }
+
+  .logo-text {
+    font-size: 18px;
+    font-weight: 700;
+    line-height: 22px;
+    letter-spacing: -0.3px;
+    color: var(--text);
+    white-space: nowrap;
+  }
+
+  /* Section centre - Sélecteur de mosquée */
+  .header-center {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: 1;
+    max-width: 300px;
+  }
+
+  .mosque-selector-modern {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 16px;
+    border-radius: 12px;
+    background: rgba(15, 23, 42, 0.02);
+    border: 1px solid rgba(15, 23, 42, 0.06);
+    cursor: pointer;
+    transition: all var(--motion-base) var(--ease-out);
+    min-width: 0;
+    max-width: 100%;
+  }
+
+  .mosque-selector-modern:hover {
+    background: rgba(15, 23, 42, 0.04);
+    border-color: rgba(15, 23, 42, 0.08);
+    transform: translateY(-1px);
+  }
+
+  .mosque-selector-modern.pressed {
+    transform: translateY(0);
+    background: rgba(15, 23, 42, 0.06);
+    border-color: rgba(15, 23, 42, 0.10);
+  }
+
+  .mosque-info {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    min-width: 0;
+    flex: 1;
+  }
+
+  .mosque-label {
+    font-size: 11px;
+    font-weight: 500;
+    line-height: 14px;
+    color: var(--text-soft);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  .mosque-name {
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 18px;
+    color: var(--text);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 200px;
+  }
+
+  .chevron-icon {
+    color: var(--text-soft);
+    transition: transform var(--motion-base) var(--ease-out);
+    flex-shrink: 0;
+  }
+
+  .chevron-icon.rotate-180 {
+    transform: rotate(180deg);
+  }
+
+  /* Section droite - Menu */
+  .header-right {
+    display: flex;
+    align-items: center;
+    flex-shrink: 0;
+  }
+
+  .menu-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 12px;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    color: var(--text);
+    transition: all var(--motion-base) var(--ease-out);
+  }
+
+  .menu-button:hover {
+    background: rgba(15, 23, 42, 0.04);
+    transform: translateY(-1px);
+  }
+
+  .menu-button.pressed {
+    transform: translateY(0);
+    background: rgba(15, 23, 42, 0.08);
+  }
+
+  .menu-button:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 2px var(--focus), 0 0 0 4px rgba(14, 165, 233, 0.1);
+  }
+
   /* Stepper */
   .stepper-item { 
     display: flex; 

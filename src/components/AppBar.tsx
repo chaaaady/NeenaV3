@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { cn } from "@/lib/cn";
+import { Menu, ChevronDown, Home } from "lucide-react";
 
 export function AppBar({ 
   title = "Neena", 
@@ -17,6 +18,7 @@ export function AppBar({
   onMosqueSelect?: () => void;
 }) {
   const [isMenuPressed, setIsMenuPressed] = useState(false);
+  const [isMosquePressed, setIsMosquePressed] = useState(false);
 
   const handleMenuClick = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -27,78 +29,78 @@ export function AppBar({
   };
 
   return (
-    <div className="app-header">
-      <div className="header-content">
-        {/* Logo/Titre à gauche */}
-        {onTitleClick ? (
-          <button
-            onClick={(e) => { e.preventDefault(); e.stopPropagation(); onTitleClick(); }}
-            className="font-[800] text-[18px] leading-[22px] tracking-[-0.4px] text-[var(--text)] hover:opacity-80 transition-opacity"
-            aria-label="Home"
-          >
-            {title}
-          </button>
-        ) : (
-          <div className="font-[800] text-[18px] leading-[22px] tracking-[-0.4px] text-[var(--text)]">
-            {title}
-          </div>
-        )}
+    <header className="modern-header">
+      <div className="header-container">
+        {/* Logo/Titre à gauche avec icône */}
+        <div className="header-left">
+          {onTitleClick ? (
+            <button
+              onClick={(e) => { e.preventDefault(); e.stopPropagation(); onTitleClick(); }}
+              className="logo-button"
+              aria-label="Accueil"
+            >
+              <div className="logo-icon">
+                <Home size={20} />
+              </div>
+              <span className="logo-text">{title}</span>
+            </button>
+          ) : (
+            <div className="logo-static">
+              <div className="logo-icon">
+                <Home size={20} />
+              </div>
+              <span className="logo-text">{title}</span>
+            </div>
+          )}
+        </div>
 
-        {/* Mosquée au centre */}
-        <div className="flex-1 flex justify-center">
+        {/* Sélecteur de mosquée au centre */}
+        <div className="header-center">
           <button
             onClick={onMosqueSelect}
-            className="mosque-selector"
+            onMouseDown={() => setIsMosquePressed(true)}
+            onMouseUp={() => setIsMosquePressed(false)}
+            onMouseLeave={() => setIsMosquePressed(false)}
+            className={cn(
+              "mosque-selector-modern",
+              isMosquePressed && "pressed"
+            )}
+            aria-label="Changer de mosquée"
           >
-            <span className="text-[14px] font-[600] text-[var(--text)] tracking-[-0.1px]">
-              {currentMosque ? `Mosquée de ${currentMosque}` : "Sélectionner une mosquée"}
-            </span>
+            <div className="mosque-info">
+              <span className="mosque-label">Mosquée</span>
+              <span className="mosque-name">
+                {currentMosque || "Sélectionner"}
+              </span>
+            </div>
+            <ChevronDown 
+              size={16} 
+              className={cn(
+                "chevron-icon",
+                isMosquePressed && "rotate-180"
+              )} 
+            />
           </button>
         </div>
 
         {/* Menu à droite */}
-        <button
-          aria-label="menu"
-          onClick={handleMenuClick}
-          onMouseDown={(e) => {
-            e.stopPropagation();
-            setIsMenuPressed(true);
-          }}
-          onMouseUp={(e) => {
-            e.stopPropagation();
-            setIsMenuPressed(false);
-          }}
-          onMouseLeave={(e) => {
-            e.stopPropagation();
-            setIsMenuPressed(false);
-          }}
-          className={cn(
-            "relative w-9 h-9 rounded-[12px] flex items-center justify-center transition-all duration-200 ease-out",
-            "hover:bg-[var(--surface-2)] active:bg-[var(--border)]",
-            "focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--focus)] focus-visible:ring-offset-2",
-            isMenuPressed && "scale-95"
-          )}
-        >
-          <div className="relative w-5 h-5 flex flex-col justify-center items-center">
-            <div className={cn(
-              "w-4 h-0.5 bg-[var(--text)] rounded-full transition-all duration-200 ease-out",
-              "transform origin-center",
-              isMenuPressed && "scale-90"
-            )} />
-            <div className={cn(
-              "w-4 h-0.5 bg-[var(--text)] rounded-full mt-1 transition-all duration-200 ease-out",
-              "transform origin-center",
-              isMenuPressed && "scale-90"
-            )} />
-            <div className={cn(
-              "w-4 h-0.5 bg-[var(--text)] rounded-full mt-1 transition-all duration-200 ease-out",
-              "transform origin-center",
-              isMenuPressed && "scale-90"
-            )} />
-          </div>
-        </button>
+        <div className="header-right">
+          <button
+            aria-label="Menu"
+            onClick={handleMenuClick}
+            onMouseDown={() => setIsMenuPressed(true)}
+            onMouseUp={() => setIsMenuPressed(false)}
+            onMouseLeave={() => setIsMenuPressed(false)}
+            className={cn(
+              "menu-button",
+              isMenuPressed && "pressed"
+            )}
+          >
+            <Menu size={20} />
+          </button>
+        </div>
       </div>
-    </div>
+    </header>
   );
 }
 
