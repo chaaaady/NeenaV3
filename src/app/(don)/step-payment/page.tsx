@@ -26,6 +26,26 @@ export default function StepPaymentPage() {
     console.log("Paiement soumis:", values);
   };
 
+  // Fonction pour afficher le montant avec la fréquence
+  const getAmountDisplay = () => {
+    const amount = formatEuro(values.amount);
+    if (values.frequency === "Vendredi" || values.frequency === "Mensuel") {
+      return (
+        <div className="text-center">
+          <div className="text-[32px] font-[700] text-[var(--text)]">{amount}</div>
+          <div className="text-[14px] text-[var(--text-muted)] mt-1">
+            {values.frequency === "Vendredi" ? "/semaine" : "/mois"}
+          </div>
+        </div>
+      );
+    }
+    return (
+      <div className="text-center">
+        <div className="text-[32px] font-[700] text-[var(--text)]">{amount}</div>
+      </div>
+    );
+  };
+
   return (
     <>
       <AppBar
@@ -41,21 +61,24 @@ export default function StepPaymentPage() {
         onMosqueSelect={(mosque) => form.setValue("mosqueName", mosque, { shouldDirty: true })}
       />
       <div className="app-container">
-        {/* Récapitulatif sur fond blanc (esthétique améliorée) */}
+        {/* Récapitulatif avec montant en gros */}
         <div className="app-card mb-3">
-          <div className="space-y-3">
-            <div className="text-[13px] text-[var(--text-muted)]">Récapitulatif</div>
-            <div className="text-[15px] text-[var(--text)] leading-relaxed whitespace-normal break-words">{summarySentence}</div>
-            
-            {/* Couvrir les frais intégré dans le récap */}
-            <div className="flex items-center justify-between gap-3 pt-2 border-t border-[var(--border)]">
-              <span className="flex-1 text-[14px] leading-snug text-[var(--text)] font-[500]">Je rajoute {formatEuro(values.amount * 0.029)} pour que 100% de mon don aille à la mosquée</span>
-              <Switch
-                checked={values.coverFees}
-                onChange={(v: boolean) => form.setValue("coverFees", v, { shouldDirty: true })}
-                ariaLabel="Couvrir les frais"
-              />
-            </div>
+          <div className="space-y-4">
+            <div className="text-[13px] text-[var(--text-muted)] text-center">Récapitulatif</div>
+            {getAmountDisplay()}
+            <div className="text-[15px] text-[var(--text)] leading-relaxed text-center">{summarySentence}</div>
+          </div>
+        </div>
+
+        {/* Couvrir les frais - section indépendante */}
+        <div className="app-card mb-3">
+          <div className="flex items-center justify-between gap-3">
+            <span className="flex-1 text-[14px] leading-snug text-[var(--text)] font-[500]">Je rajoute {formatEuro(values.amount * 0.029)} pour que 100% de mon don aille à la mosquée</span>
+            <Switch
+              checked={values.coverFees}
+              onChange={(v: boolean) => form.setValue("coverFees", v, { shouldDirty: true })}
+              ariaLabel="Couvrir les frais"
+            />
           </div>
         </div>
 
@@ -120,11 +143,11 @@ export default function StepPaymentPage() {
             <div className="space-y-2">
               <div className="text-[13px] text-[var(--text-muted)] text-center">Ou payer avec</div>
               <div className="grid grid-cols-2 gap-3">
-                <button className="w-full py-3 px-4 rounded-12 bg-[var(--surface-2)] border border-[var(--border)] flex items-center justify-center gap-2 text-[14px] font-[500] text-[var(--text-soft)] hover:bg-[var(--surface-2)] transition-colors">
+                <button className="w-full py-3 px-4 rounded-12 bg-white border border-[var(--border)] flex items-center justify-center gap-2 text-[14px] font-[500] text-[var(--text)] hover:bg-[var(--surface-1)] transition-colors">
                   <Apple size={18} />
                   <span>Apple Pay</span>
                 </button>
-                <button className="w-full py-3 px-4 rounded-12 bg-[var(--surface-2)] border border-[var(--border)] flex items-center justify-center gap-2 text-[14px] font-[500] text-[var(--text-soft)] hover:bg-[var(--surface-2)] transition-colors">
+                <button className="w-full py-3 px-4 rounded-12 bg-white border border-[var(--border)] flex items-center justify-center gap-2 text-[14px] font-[500] text-[var(--text)] hover:bg-[var(--surface-1)] transition-colors">
                   <span className="text-[#003087] font-[600]">PayPal</span>
                 </button>
               </div>
