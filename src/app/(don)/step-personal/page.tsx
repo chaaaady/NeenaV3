@@ -2,24 +2,19 @@
 
 import { useState } from "react";
 import { useFormContext } from "react-hook-form";
-import { useRouter } from "next/navigation";
-import { RotateCcw, CreditCard } from "lucide-react";
-import { AppBar, SegmentedControl, Input, Checkbox, SideMenu, MosqueSelectorModal } from "@/components";
+import { AppBar, Input, SideMenu, MosqueSelectorModal, SegmentedControl, Checkbox } from "@/components";
 import { DonationFormValues } from "@/lib/schema";
-import { useDonationFlow } from "@/features/donation/useDonationFlow";
+import { User, Building2, Mail, MapPin, CreditCard } from "lucide-react";
 
 export default function StepPersonalPage() {
   const form = useFormContext<DonationFormValues>();
-  const router = useRouter();
   const values = form.watch();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [showMosqueSelector, setShowMosqueSelector] = useState(false);
-  const { toPayment, canProceedFromPersonal } = useDonationFlow();
 
   const handleNext = () => {
-    if (canProceedFromPersonal(values)) {
-      toPayment();
-    }
+    // Logique de navigation vers la page de paiement
+    console.warn("Navigation vers paiement");
   };
 
   return (

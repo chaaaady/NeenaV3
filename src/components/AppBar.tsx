@@ -4,19 +4,11 @@ import { useState } from "react";
 import { cn } from "@/lib/cn";
 import { Menu } from "lucide-react";
 
-export function AppBar({ 
-  title = "Neena", 
-  onMenu, 
-  onTitleClick,
-  currentMosque,
-  onMosqueSelect
-}: { 
-  title?: string; 
-  onMenu?: () => void; 
-  onTitleClick?: () => void;
-  currentMosque?: string;
-  onMosqueSelect?: () => void;
-}) {
+interface AppBarProps {
+  onMenu: () => void;
+}
+
+export function AppBar({ onMenu }: AppBarProps) {
   const [isMenuPressed, setIsMenuPressed] = useState(false);
 
   const handleMenuClick = (e: React.MouseEvent) => {

@@ -2,28 +2,22 @@
 
 import { useState, useRef, useMemo } from "react";
 import { useFormContext } from "react-hook-form";
-import { useRouter } from "next/navigation";
 import { AppBar, Input, SideMenu, MosqueSelectorModal } from "@/components";
 import { Switch } from "@/components/Switch";
 import { DonationFormValues } from "@/lib/schema";
-import { useDonationFlow } from "@/features/donation/useDonationFlow";
 import { formatEuro } from "@/lib/currency";
-import { buildDonationSummary } from "@/features/donation/summary";
-import { Receipt, CreditCard, Calendar, Shield, Apple } from "lucide-react";
+import { CreditCard, Calendar, Shield, Apple } from "lucide-react";
 
 export default function StepPaymentPage() {
   const form = useFormContext<DonationFormValues>();
-  const router = useRouter();
   const values = form.watch();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [showMosqueSelector, setShowMosqueSelector] = useState(false);
   const donateBtnRef = useRef<HTMLButtonElement>(null);
 
-  const summarySentence = useMemo(() => buildDonationSummary(values), [values]);
-
   const handleSubmit = () => {
     // Logique de soumission du paiement
-    console.log("Paiement soumis:", values);
+    console.warn("Paiement soumis:", values);
   };
 
   // Fonction pour afficher le montant avec la fréquence
