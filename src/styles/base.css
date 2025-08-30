@@ -251,12 +251,15 @@
     opacity: 0.8;
   }
 
-  /* Section centre - Sélecteur de mosquée */
-  .header-center {
+  /* Section centre - Sélecteur de mosquée absolument centré */
+  .header-center-absolute {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
     display: flex;
     align-items: center;
     justify-content: center;
-    flex: 1;
     max-width: 280px;
   }
 
@@ -322,7 +325,7 @@
     display: flex;
     align-items: center;
     flex-shrink: 0;
-    width: 48px;
+    width: 120px;
     justify-content: flex-end;
   }
 

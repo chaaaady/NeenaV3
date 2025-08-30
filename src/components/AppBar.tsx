@@ -36,8 +36,8 @@ export function AppBar({
           <div className="logo-neena">Neena</div>
         </div>
 
-        {/* Sélecteur de mosquée centré */}
-        <div className="header-center">
+        {/* Sélecteur de mosquée absolument centré */}
+        <div className="header-center-absolute">
           <button
             onClick={onMosqueSelect}
             onMouseDown={() => setIsMosquePressed(true)}
