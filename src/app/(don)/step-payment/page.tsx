@@ -9,20 +9,18 @@ import { ApplePayButton } from "@/components/ApplePayButton";
 import { Switch } from "@/components/Switch";
 import { DonateOverlay } from "@/components/DonateOverlay";
 import { buildDonationSummary } from "@/features/donation/summary";
-import { useDonationFlow } from "@/features/donation/useDonationFlow";
 import { DonationFormValues } from "@/lib/schema";
 import { formatEuro } from "@/lib/currency";
 
 export default function StepPaymentPage() {
   const form = useFormContext<DonationFormValues>();
-  const _router = useRouter();
+  const router = useRouter();
   const values = form.watch();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [showMosqueSelector, setShowMosqueSelector] = useState(false);
   const [isOverlayOpen, setIsOverlayOpen] = useState(false);
   const [overlayVars, setOverlayVars] = useState<{ cx: number; cy: number }>({ cx: 0, cy: 0 });
   const [overlayBg, setOverlayBg] = useState<string>("");
-  const { backToPersonal } = useDonationFlow();
   const donateBtnRef = useRef<HTMLButtonElement>(null);
 
   const summarySentence = useMemo(() => buildDonationSummary(values), [values]);
@@ -142,7 +140,7 @@ export default function StepPaymentPage() {
             <div className="pt-0">
               <div className="grid grid-cols-2 gap-3">
                 <button
-                  onClick={backToPersonal}
+                  onClick={() => router.push("/step-personal-v2")}
                   className="btn-secondary pressable w-full text-[16px] font-[700] focus-visible:outline-none"
                 >
                   Retour
