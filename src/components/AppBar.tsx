@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { cn } from "@/lib/cn";
-import { Menu, ChevronDown } from "lucide-react";
+import { Menu } from "lucide-react";
 
 export function AppBar({ 
   title = "Neena", 
@@ -55,13 +55,6 @@ export function AppBar({
                 {currentMosque || "Sélectionner"}
               </span>
             </div>
-            <ChevronDown 
-              size={16} 
-              className={cn(
-                "chevron-icon",
-                isMosquePressed && "rotate-180"
-              )} 
-            />
           </button>
         </div>
 
