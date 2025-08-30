@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useFormContext } from "react-hook-form";
 import { useRouter } from "next/navigation";
 import { ArrowRight, ArrowLeft } from "lucide-react";
-import { AppBar, SegmentedControl, Input, SideMenu, MosqueSelectorModal } from "@/components";
+import { AppBar, SegmentedControl, Input, SideMenu, MosqueSelectorModal, PageTransition } from "@/components";
 import { Switch } from "@/components/Switch";
 import { DonationFormValues } from "@/lib/schema";
 import { useDonationFlow } from "@/features/donation/useDonationFlow";
@@ -24,6 +24,8 @@ export default function StepPersonalV2Page() {
   };
 
 
+  const [isVisible, setIsVisible] = useState(true);
+
   return (
     <>
       <AppBar 
@@ -38,8 +40,9 @@ export default function StepPersonalV2Page() {
         currentMosque={values.mosqueName}
         onMosqueSelect={(mosque) => form.setValue("mosqueName", mosque, { shouldDirty: true })}
       />
-      <div className="app-container">
-        <div className="app-card">
+      <PageTransition isVisible={isVisible}>
+        <div className="app-container">
+          <div className="app-card">
           <div className="space-y-6">
             <div className="flex items-center justify-between">
               <div className="app-title">Informations personnelles</div>
@@ -116,14 +119,22 @@ export default function StepPersonalV2Page() {
               <div className="pt-0">
                 <div className="grid grid-cols-2 gap-3">
                   <button
-                    onClick={() => router.push("/step-amount-v2")}
+                    onClick={() => {
+                      setIsVisible(false);
+                      setTimeout(() => router.push("/step-amount-v2"), 240);
+                    }}
                     className="btn-secondary pressable w-full text-[16px] font-[700] focus-visible:outline-none flex items-center justify-center gap-2"
                   >
                     <ArrowLeft size={18} />
                     Retour
                   </button>
                   <button
-                    onClick={handleNext}
+                    onClick={() => {
+                      if (canProceedFromPersonal(values)) {
+                        setIsVisible(false);
+                        setTimeout(() => toPayment(), 240);
+                      }
+                    }}
                     disabled={
                       values.donorType === "Entreprise" 
                         ? (!values.companyName || !values.companySiret || !values.email)
@@ -139,7 +150,7 @@ export default function StepPersonalV2Page() {
             </div>
           </div>
         </div>
-      </div>
+      </PageTransition>
     </>
   );
 }
