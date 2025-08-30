@@ -3,8 +3,8 @@
 import { useState, useMemo, useRef } from "react";
 import { useFormContext } from "react-hook-form";
 import { useRouter } from "next/navigation";
-import { Heart, CreditCard, Calendar, Shield, User, Receipt } from "lucide-react";
-import { AppBar, Checkbox, PayPalButton, SideMenu, MosqueSelectorModal, Input } from "@/components";
+import { CreditCard, Calendar, Shield, Receipt } from "lucide-react";
+import { AppBar, PayPalButton, SideMenu, MosqueSelectorModal, Input } from "@/components";
 import { ApplePayButton } from "@/components/ApplePayButton";
 import { Switch } from "@/components/Switch";
 import { DonateOverlay } from "@/components/DonateOverlay";
