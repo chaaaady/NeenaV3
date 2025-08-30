@@ -64,13 +64,7 @@ export default function StepPaymentPage() {
           <div className="space-y-4">
             <div className="flex items-center justify-between">
               <div className="app-title">
-                Paiement sécurisé pour la{" "}
-                <button
-                  onClick={() => setShowMosqueSelector(true)}
-                  className="mosque-title-link"
-                >
-                  mosquée de {values.mosqueName || "Sélectionner"}
-                </button>
+                Paiement sécurisé
               </div>
             </div>
 

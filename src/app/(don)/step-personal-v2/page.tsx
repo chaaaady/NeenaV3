@@ -42,13 +42,7 @@ export default function StepPersonalV2Page() {
           <div className="space-y-6">
             <div className="flex items-center justify-between">
               <div className="app-title">
-                Informations personnelles pour la{" "}
-                <button
-                  onClick={() => setShowMosqueSelector(true)}
-                  className="mosque-title-link"
-                >
-                  mosquée de {values.mosqueName || "Sélectionner"}
-                </button>
+                Informations personnelles
               </div>
             </div>
 
