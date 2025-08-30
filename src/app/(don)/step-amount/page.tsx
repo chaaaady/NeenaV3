@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { useFormContext } from "react-hook-form";
 import { useRouter } from "next/navigation";
 import { ArrowRight } from "lucide-react";
-import { AppBar, Stepper, SegmentedControl, Input, Slider, AmountDisplay, SideMenu, MosqueSelectorModal } from "@/components";
+import { AppBar, SegmentedControl, Input, Slider, AmountDisplay, SideMenu, MosqueSelectorModal } from "@/components";
 import { formatEuro } from "@/lib/currency";
 import { DonationFormValues } from "@/lib/schema";
 import { useDonationFlow } from "@/features/donation/useDonationFlow";
@@ -139,13 +139,6 @@ export default function StepAmountPage() {
             {/* Bouton d'action et stepper en bas */}
             <div className="pt-4">
               <div className="flex items-center justify-between">
-                <Stepper 
-                  steps={[
-                    { label: "Montant", status: "active" },
-                    { label: "Info", status: "pending" },
-                    { label: "Payment", status: "pending" }
-                  ]} 
-                />
                 <button
                   onClick={handleNext}
                   disabled={!values.amount || values.amount < 5}
