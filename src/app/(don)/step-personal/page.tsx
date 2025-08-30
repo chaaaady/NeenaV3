@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useFormContext } from "react-hook-form";
 import { useRouter } from "next/navigation";
 import { RotateCcw, CreditCard } from "lucide-react";
-import { AppBar, Stepper, SegmentedControl, Input, Checkbox, SideMenu, MosqueSelectorModal } from "@/components";
+import { AppBar, SegmentedControl, Input, Checkbox, SideMenu, MosqueSelectorModal } from "@/components";
 import { DonationFormValues } from "@/lib/schema";
 import { useDonationFlow } from "@/features/donation/useDonationFlow";
 
@@ -41,13 +41,6 @@ export default function StepPersonalPage() {
           <div className="space-y-4">
             <div className="flex items-center justify-between">
               <div className="app-title">Informations personnelles</div>
-              <Stepper 
-                steps={[
-                  { label: "Montant", status: "completed" },
-                  { label: "Info", status: "active" },
-                  { label: "Payment", status: "pending" }
-                ]} 
-              />
             </div>
             
             <div className="space-y-3">
@@ -102,36 +95,28 @@ export default function StepPersonalPage() {
                 </>
               )}
               
-              <Checkbox
-                label="Je souhaite recevoir un reçu fiscal par email"
-                checked={values.wantsReceipt}
-                onChange={(v: boolean) => form.setValue("wantsReceipt", v, { shouldDirty: true })}
-              />
+              <div className="flex items-center gap-3">
+                <Checkbox
+                  label="Je souhaite recevoir un reçu fiscal"
+                  checked={values.wantsReceipt}
+                  onChange={(checked: boolean) => form.setValue("wantsReceipt", checked, { shouldDirty: true })}
+                />
+              </div>
             </div>
             
-            {/* Boutons d'actions intégrés dans la carte */}
-            <div className="pt-6 border-t border-[var(--border)]">
-              <div className="grid grid-cols-2 gap-3">
-                <button
-                  onClick={() => router.push("/step-amount")}
-                  className="btn-secondary pressable w-full text-[16px] font-[700] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--focus)] flex items-center justify-center gap-2"
-                >
-                  <RotateCcw size={18} />
-                  Retour
-                </button>
-                <button
-                  onClick={handleNext}
-                  disabled={
-                    values.donorType === "Entreprise" 
-                      ? (!values.companyName || !values.companySiret)
-                      : (!values.firstName || !values.lastName || !values.email)
-                  }
-                  className="btn-primary pressable w-full text-[16px] font-[700] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--focus)] disabled:opacity-40 disabled:cursor-not-allowed flex items-center justify-center gap-2"
-                >
-                  Paiement
-                  <CreditCard size={18} />
-                </button>
-              </div>
+            <div className="pt-4 border-t border-[var(--border)]">
+              <button
+                onClick={handleNext}
+                disabled={
+                  values.donorType === "Entreprise" 
+                    ? (!values.companyName || !values.companySiret || !values.email)
+                    : (!values.firstName || !values.lastName || !values.email)
+                }
+                className="btn-primary pressable w-full px-10 py-3 text-[16px] font-[700] disabled:opacity-40 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+              >
+                Continuer
+                <CreditCard size={18} />
+              </button>
             </div>
           </div>
         </div>

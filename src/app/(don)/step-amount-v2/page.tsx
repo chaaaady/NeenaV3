@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { useFormContext } from "react-hook-form";
 import { useRouter } from "next/navigation";
 import { ArrowRight } from "lucide-react";
-import { AppBar, Input, SideMenu, MosqueSelectorModal, SegmentedControl } from "@/components";
+import { AppBar, MosqueDisplay, Input, SideMenu, MosqueSelectorModal, SegmentedControl } from "@/components";
 import { formatEuro } from "@/lib/currency";
 import { DonationFormValues } from "@/lib/schema";
 import { useDonationFlow } from "@/features/donation/useDonationFlow";
@@ -54,6 +54,10 @@ export default function StepAmountV2Page() {
     <>
       <AppBar 
         onMenu={() => setIsMenuOpen(true)} 
+        currentMosque={values.mosqueName}
+        onMosqueSelect={() => setShowMosqueSelector(true)}
+      />
+      <MosqueDisplay
         currentMosque={values.mosqueName}
         onMosqueSelect={() => setShowMosqueSelector(true)}
       />

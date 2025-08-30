@@ -1,16 +1,18 @@
 "use client";
 
-import { useState, useMemo, useRef } from "react";
+import { useState, useRef, useMemo } from "react";
 import { useFormContext } from "react-hook-form";
 import { useRouter } from "next/navigation";
-import { CreditCard, Calendar, Shield, Receipt } from "lucide-react";
-import { AppBar, PayPalButton, SideMenu, MosqueSelectorModal, Input } from "@/components";
-import { ApplePayButton } from "@/components/ApplePayButton";
+import { ArrowLeft } from "lucide-react";
+import { AppBar, MosqueDisplay, Input, SideMenu, MosqueSelectorModal } from "@/components";
 import { Switch } from "@/components/Switch";
-import { DonateOverlay } from "@/components/DonateOverlay";
-import { buildDonationSummary } from "@/features/donation/summary";
+import { ApplePayButton } from "@/components/ApplePayButton";
+import { PayPalButton } from "@/components/PayPalButton";
 import { DonationFormValues } from "@/lib/schema";
+import { useDonationFlow } from "@/features/donation/useDonationFlow";
 import { formatEuro } from "@/lib/currency";
+import { buildDonationSummary } from "@/features/donation/summary";
+import { Receipt, CreditCard, Calendar, Shield } from "lucide-react";
 
 export default function StepPaymentPage() {
   const form = useFormContext<DonationFormValues>();
@@ -18,46 +20,28 @@ export default function StepPaymentPage() {
   const values = form.watch();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [showMosqueSelector, setShowMosqueSelector] = useState(false);
-  const [isOverlayOpen, setIsOverlayOpen] = useState(false);
-  const [overlayVars, setOverlayVars] = useState<{ cx: number; cy: number }>({ cx: 0, cy: 0 });
-  const [overlayBg, setOverlayBg] = useState<string>("");
   const donateBtnRef = useRef<HTMLButtonElement>(null);
 
   const summarySentence = useMemo(() => buildDonationSummary(values), [values]);
 
   const handleSubmit = () => {
-    const btn = donateBtnRef.current;
-    if (btn) {
-      const rect = btn.getBoundingClientRect();
-      const cx = rect.left + rect.width / 2;
-      const cy = rect.top + rect.height / 2;
-      setOverlayVars({ cx, cy });
-      try {
-        const c = window.getComputedStyle(btn).backgroundColor;
-        setOverlayBg(c || "var(--brand)");
-      } catch {}
-      setIsOverlayOpen(true);
-    }
+    // Logique de soumission du paiement
+    console.log("Paiement soumis:", values);
   };
 
   return (
     <>
-      <DonateOverlay
-        open={isOverlayOpen}
-        cx={overlayVars.cx}
-        cy={overlayVars.cy}
-        background={overlayBg}
-        summary={summarySentence}
-        values={values}
-        onClose={() => setIsOverlayOpen(false)}
+      <AppBar
+        onMenu={() => setIsMenuOpen(true)}
+        currentMosque={values.mosqueName}
+        onMosqueSelect={() => setShowMosqueSelector(true)}
       />
-      <AppBar 
-        onMenu={() => setIsMenuOpen(true)} 
+      <MosqueDisplay
         currentMosque={values.mosqueName}
         onMosqueSelect={() => setShowMosqueSelector(true)}
       />
       <SideMenu isOpen={isMenuOpen} onClose={() => setIsMenuOpen(false)} />
-      <MosqueSelectorModal 
+      <MosqueSelectorModal
         isOpen={showMosqueSelector}
         onClose={() => setShowMosqueSelector(false)}
         currentMosque={values.mosqueName}
@@ -85,8 +69,8 @@ export default function StepPaymentPage() {
             <div className="flex items-center justify-between">
               <div className="app-title">Paiement sécurisé</div>
             </div>
-            
-            {/* Section carte bancaire */}
+
+            {/* Section carte bancaire et autres paiements */}
             <div className="section-box space-y-2">
               <Input
                 value={values.cardNumber}
@@ -135,14 +119,15 @@ export default function StepPaymentPage() {
                 />
               </div>
             </div>
-            
+
             {/* Actions */}
             <div className="pt-0">
-              <div className="grid grid-cols-2 gap-3">
+              <div className="grid grid-cols-2 gap-3"> {/* Changed to grid for Retour button */}
                 <button
-                  onClick={() => router.push("/step-personal-v2")}
-                  className="btn-secondary pressable w-full text-[16px] font-[700] focus-visible:outline-none"
+                  onClick={() => router.push("/step-personal-v2")} // Navigate back to personal V2
+                  className="btn-secondary pressable w-full text-[16px] font-[700] focus-visible:outline-none flex items-center justify-center gap-2"
                 >
+                  <ArrowLeft size={18} />
                   Retour
                 </button>
                 <button

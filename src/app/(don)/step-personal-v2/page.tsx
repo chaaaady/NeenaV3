@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useFormContext } from "react-hook-form";
 import { useRouter } from "next/navigation";
 import { ArrowRight, ArrowLeft } from "lucide-react";
-import { AppBar, SegmentedControl, Input, SideMenu, MosqueSelectorModal } from "@/components";
+import { AppBar, MosqueDisplay, SegmentedControl, Input, SideMenu, MosqueSelectorModal } from "@/components";
 import { Switch } from "@/components/Switch";
 import { DonationFormValues } from "@/lib/schema";
 import { useDonationFlow } from "@/features/donation/useDonationFlow";
@@ -27,6 +27,10 @@ export default function StepPersonalV2Page() {
     <>
       <AppBar 
         onMenu={() => setIsMenuOpen(true)} 
+        currentMosque={values.mosqueName}
+        onMosqueSelect={() => setShowMosqueSelector(true)}
+      />
+      <MosqueDisplay
         currentMosque={values.mosqueName}
         onMosqueSelect={() => setShowMosqueSelector(true)}
       />

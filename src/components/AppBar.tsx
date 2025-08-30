@@ -18,7 +18,6 @@ export function AppBar({
   onMosqueSelect?: () => void;
 }) {
   const [isMenuPressed, setIsMenuPressed] = useState(false);
-  const [isMosquePressed, setIsMosquePressed] = useState(false);
 
   const handleMenuClick = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -34,28 +33,6 @@ export function AppBar({
         {/* Logo Neena à gauche */}
         <div className="header-left">
           <div className="logo-neena">Neena</div>
-        </div>
-
-        {/* Sélecteur de mosquée absolument centré */}
-        <div className="header-center-absolute">
-          <button
-            onClick={onMosqueSelect}
-            onMouseDown={() => setIsMosquePressed(true)}
-            onMouseUp={() => setIsMosquePressed(false)}
-            onMouseLeave={() => setIsMosquePressed(false)}
-            className={cn(
-              "mosque-selector-modern",
-              isMosquePressed && "pressed"
-            )}
-            aria-label="Changer de mosquée"
-          >
-            <div className="mosque-info">
-              <span className="mosque-label">Mosquée</span>
-              <span className="mosque-name">
-                {currentMosque || "Sélectionner"}
-              </span>
-            </div>
-          </button>
         </div>
 
         {/* Menu à droite */}
@@ -76,6 +53,27 @@ export function AppBar({
         </div>
       </div>
     </header>
+  );
+}
+
+export function MosqueDisplay({ 
+  currentMosque,
+  onMosqueSelect
+}: { 
+  currentMosque?: string;
+  onMosqueSelect?: () => void;
+}) {
+  return (
+    <div className="mosque-display-container">
+      <div 
+        className="mosque-display"
+        onClick={onMosqueSelect}
+      >
+        <span className="mosquée-text">
+          Mosquée de {currentMosque || "Sélectionner"}
+        </span>
+      </div>
+    </div>
   );
 }
 

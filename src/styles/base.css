@@ -190,7 +190,45 @@
     } 
   }
 
-  /* Nouveau Header Moderne */
+  /* Double Header Moderne */
+  .double-header {
+    position: sticky;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 50;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+  }
+
+  /* Premier header - Logo et Menu */
+  .header-primary {
+    background: rgba(255, 255, 255, 0.98);
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    border-bottom: 1px solid rgba(15, 23, 42, 0.06);
+    box-shadow: 0 2px 8px rgba(15, 23, 42, 0.08), 0 4px 16px rgba(15, 23, 42, 0.12);
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    transition: all var(--motion-base) var(--ease-inout);
+  }
+
+  /* Second header - Sélecteur de mosquée */
+  .header-secondary {
+    background: rgba(248, 250, 252, 0.95);
+    backdrop-filter: blur(16px) saturate(160%);
+    -webkit-backdrop-filter: blur(16px) saturate(160%);
+    border-bottom: 1px solid rgba(15, 23, 42, 0.04);
+    box-shadow: 0 1px 4px rgba(15, 23, 42, 0.06);
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    transition: all var(--motion-base) var(--ease-inout);
+  }
+
+  /* Header Moderne Simplifié */
   .modern-header {
     position: sticky;
     top: 0;
@@ -209,7 +247,7 @@
   }
 
   .header-container {
-    height: 52px;
+    height: 48px;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -237,10 +275,10 @@
 
   .logo-neena {
     font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-    font-size: 20px;
+    font-size: 18px;
     font-weight: 700;
-    line-height: 24px;
-    letter-spacing: -0.5px;
+    line-height: 22px;
+    letter-spacing: -0.3px;
     color: var(--text);
     white-space: nowrap;
     cursor: pointer;
@@ -249,75 +287,6 @@
 
   .logo-neena:hover {
     opacity: 0.8;
-  }
-
-  /* Section centre - Sélecteur de mosquée absolument centré */
-  .header-center-absolute {
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    max-width: 280px;
-  }
-
-  .mosque-selector-modern {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    padding: 8px 14px;
-    border-radius: 12px;
-    background: rgba(15, 23, 42, 0.02);
-    border: 1px solid rgba(15, 23, 42, 0.08);
-    cursor: pointer;
-    transition: all var(--motion-base) var(--ease-out);
-    min-width: 0;
-    max-width: 100%;
-    box-shadow: 0 1px 3px rgba(15, 23, 42, 0.04);
-  }
-
-  .mosque-selector-modern:hover {
-    background: rgba(15, 23, 42, 0.04);
-    border-color: rgba(15, 23, 42, 0.12);
-    transform: translateY(-1px);
-    box-shadow: 0 2px 6px rgba(15, 23, 42, 0.08);
-  }
-
-  .mosque-selector-modern.pressed {
-    transform: translateY(0);
-    background: rgba(15, 23, 42, 0.06);
-    border-color: rgba(15, 23, 42, 0.14);
-    box-shadow: 0 1px 2px rgba(15, 23, 42, 0.06);
-  }
-
-  .mosque-info {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    min-width: 0;
-    flex: 1;
-  }
-
-  .mosque-label {
-    font-size: 10px;
-    font-weight: 500;
-    line-height: 12px;
-    color: var(--text-soft);
-    text-transform: uppercase;
-    letter-spacing: 0.6px;
-  }
-
-  .mosque-name {
-    font-size: 13px;
-    font-weight: 600;
-    line-height: 16px;
-    color: var(--text);
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    max-width: 200px;
   }
 
   /* Section droite - Menu */
@@ -333,9 +302,9 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 36px;
-    height: 36px;
-    border-radius: 10px;
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
     background: transparent;
     border: none;
     cursor: pointer;
@@ -356,6 +325,47 @@
   .menu-button:focus-visible {
     outline: none;
     box-shadow: 0 0 0 2px var(--focus), 0 0 0 4px rgba(14, 165, 233, 0.1);
+  }
+
+  /* Affichage de la mosquée entre header et carte */
+  .mosque-display-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 12px 16px;
+    background: rgba(248, 250, 252, 0.8);
+    border-bottom: 1px solid rgba(15, 23, 42, 0.04);
+  }
+
+  .mosque-display {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 6px 12px;
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.8);
+    border: 1px solid rgba(15, 23, 42, 0.06);
+    cursor: pointer;
+    transition: all var(--motion-base) var(--ease-out);
+    min-width: 0;
+    max-width: 280px;
+  }
+
+  .mosque-display:hover {
+    background: rgba(255, 255, 255, 0.95);
+    border-color: rgba(15, 23, 42, 0.10);
+    transform: translateY(-1px);
+  }
+
+  .mosquée-text {
+    font-size: 13px;
+    font-weight: 500;
+    line-height: 16px;
+    color: var(--text);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 240px;
   }
 
   /* Stepper */
