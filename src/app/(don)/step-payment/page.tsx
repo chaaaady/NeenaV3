@@ -43,15 +43,18 @@ export default function StepPaymentPage() {
       <div className="app-container">
         {/* Récapitulatif sur fond blanc (esthétique améliorée) */}
         <div className="app-card mb-3">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3 min-w-0">
-              <div className="w-8 h-8 rounded-full bg-[var(--surface-2)] border border-[var(--border)] flex items-center justify-center text-[var(--text-soft)] flex-shrink-0">
-                <Receipt size={16} />
-              </div>
-              <div className="min-w-0">
-                <div className="text-[13px] text-[var(--text-muted)]">Récapitulatif</div>
-                <div className="text-[15px] text-[var(--text)] leading-relaxed whitespace-normal break-words">{summarySentence}</div>
-              </div>
+          <div className="space-y-3">
+            <div className="text-[13px] text-[var(--text-muted)]">Récapitulatif</div>
+            <div className="text-[15px] text-[var(--text)] leading-relaxed whitespace-normal break-words">{summarySentence}</div>
+            
+            {/* Couvrir les frais intégré dans le récap */}
+            <div className="flex items-center justify-between gap-3 pt-2 border-t border-[var(--border)]">
+              <span className="flex-1 text-[14px] leading-snug text-[var(--text)] font-[500]">Je rajoute {formatEuro(values.amount * 0.029)} pour que 100% de mon don aille à la mosquée</span>
+              <Switch
+                checked={values.coverFees}
+                onChange={(v: boolean) => form.setValue("coverFees", v, { shouldDirty: true })}
+                ariaLabel="Couvrir les frais"
+              />
             </div>
           </div>
         </div>
@@ -99,18 +102,6 @@ export default function StepPaymentPage() {
               </div>
             </div>
 
-            {/* Couvrir les frais */}
-            <div className="section-box">
-              <div className="flex items-center justify-between gap-3">
-                <span className="flex-1 text-[14px] leading-snug text-[var(--text)] font-[500]">Je rajoute {formatEuro(values.amount * 0.029)} pour que 100% de mon don aille à la mosquée</span>
-                <Switch
-                  checked={values.coverFees}
-                  onChange={(v: boolean) => form.setValue("coverFees", v, { shouldDirty: true })}
-                  ariaLabel="Couvrir les frais"
-                />
-              </div>
-            </div>
-
             {/* Bouton Valider en pleine largeur */}
             <div className="pt-0">
               <button
@@ -128,7 +119,7 @@ export default function StepPaymentPage() {
             {/* Options de paiement alternatives */}
             <div className="space-y-2">
               <div className="text-[13px] text-[var(--text-muted)] text-center">Ou payer avec</div>
-              <div className="space-y-2">
+              <div className="grid grid-cols-2 gap-3">
                 <button className="w-full py-3 px-4 rounded-12 bg-[var(--surface-2)] border border-[var(--border)] flex items-center justify-center gap-2 text-[14px] font-[500] text-[var(--text-soft)] hover:bg-[var(--surface-2)] transition-colors">
                   <Apple size={18} />
                   <span>Apple Pay</span>
