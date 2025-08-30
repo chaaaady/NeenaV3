@@ -25,7 +25,7 @@ function DuaaContent() {
 
   return (
     <>
-      <AppBar title="Neena" onMenu={() => setIsMenuOpen(true)} onTitleClick={() => router.push("/")} />
+      <AppBar onMenu={() => setIsMenuOpen(true)} />
       <SideMenu isOpen={isMenuOpen} onClose={() => setIsMenuOpen(false)} />
       <div className="app-container">
         <div className="app-card">
