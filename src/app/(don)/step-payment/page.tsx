@@ -35,8 +35,8 @@ export default function StepPaymentPage() {
             {amount}<span className="text-[16px] font-[500] text-[var(--text-muted)] ml-1">{freqSuffix}</span>
           </div>
           {values.coverFees && (
-            <div className="text-[12px] text-[var(--text-muted)] mt-1">
-              (dont {formatEuro(feesAmount)} de frais)
+            <div className="mt-2 flex justify-center">
+              <span className="px-2.5 py-1 rounded-full bg-[var(--surface-2)] border border-[var(--border)] text-[12px] text-[var(--text-muted)]">+{formatEuro(feesAmount)} de frais</span>
             </div>
           )}
         </div>
@@ -46,8 +46,8 @@ export default function StepPaymentPage() {
       <div className="text-center">
         <div className="text-[32px] font-[700] text-[var(--text)]">{amount}</div>
         {values.coverFees && (
-          <div className="text-[12px] text-[var(--text-muted)] mt-1">
-            (dont {formatEuro(feesAmount)} de frais)
+          <div className="mt-2 flex justify-center">
+            <span className="px-2.5 py-1 rounded-full bg-[var(--surface-2)] border border-[var(--border)] text-[12px] text-[var(--text-muted)]">+{formatEuro(feesAmount)} de frais</span>
           </div>
         )}
       </div>
@@ -69,8 +69,8 @@ export default function StepPaymentPage() {
       <div className="app-container">
         {/* Récapitulatif avec montant en gros */}
         <div className="app-card mb-3">
-          <div className="space-y-4">
-            <div className="text-[13px] text-[var(--text-muted)] text-center">Mosquée de {values.mosqueName}</div>
+          <div className="space-y-3">
+            <div className="text-[12px] tracking-wide uppercase text-[var(--text-muted)] text-center">Mosquée de {values.mosqueName}</div>
             {getAmountDisplay()}
           </div>
         </div>
