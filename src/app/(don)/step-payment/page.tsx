@@ -31,24 +31,25 @@ export default function StepPaymentPage() {
       const freqSuffix = values.frequency === "Vendredi" ? "/semaine" : "/mois";
       return (
         <div className="text-center">
-          <div className="text-[32px] font-[700] text-[var(--text)] inline-flex items-baseline">
-            <span>{amount}</span>
-            <span className="text-[16px] font-[500] text-[var(--text-muted)] ml-1">{freqSuffix}</span>
-            {values.coverFees && (
-              <span className="ml-2 px-2 py-[2px] rounded-full bg-[var(--surface-2)] border border-[var(--border)] text-[11px] leading-none align-middle text-[var(--text-muted)]">+{formatEuro(feesAmount)} de frais</span>
-            )}
+          <div className="text-[32px] font-[700] text-[var(--text)]">
+            {amount}<span className="text-[16px] font-[500] text-[var(--text-muted)] ml-1">{freqSuffix}</span>
           </div>
+          {values.coverFees && (
+            <div className="mt-1 flex justify-center">
+              <span className="px-2 py-[1px] rounded-full bg-[var(--surface-2)] border border-[var(--border)] text-[11px] leading-none align-middle text-[var(--text-muted)]">+{formatEuro(feesAmount)} de frais</span>
+            </div>
+          )}
         </div>
       );
     }
     return (
       <div className="text-center">
-        <div className="text-[32px] font-[700] text-[var(--text)] inline-flex items-baseline">
-          <span>{amount}</span>
-          {values.coverFees && (
-            <span className="ml-2 px-2 py-[2px] rounded-full bg-[var(--surface-2)] border border-[var(--border)] text-[11px] leading-none align-middle text-[var(--text-muted)]">+{formatEuro(feesAmount)} de frais</span>
-          )}
-        </div>
+        <div className="text-[32px] font-[700] text-[var(--text)]">{amount}</div>
+        {values.coverFees && (
+          <div className="mt-1 flex justify-center">
+            <span className="px-2 py-[1px] rounded-full bg-[var(--surface-2)] border border-[var(--border)] text-[11px] leading-none align-middle text-[var(--text-muted)]">+{formatEuro(feesAmount)} de frais</span>
+          </div>
+        )}
       </div>
     );
   };
