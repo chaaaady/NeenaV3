@@ -5,6 +5,7 @@ import { useSearchParams } from "next/navigation";
 import { AppBar, SideMenu } from "@/components";
 import { Input } from "@/components";
 import { Mail, MapPin, Check, X, Car, Users, Accessibility, Languages, Clock } from "lucide-react";
+import Image from "next/image";
 
 const MOSQUE_NAME = "Mosquée de Créteil";
 const MOSQUE_ADDRESS = "5 Rue Jean Gabin, 94000 Créteil";
@@ -33,8 +34,8 @@ export default function MosqueCreteilPage() {
         {/* Hero */}
         <div className="app-card">
           <div className="space-y-3">
-            <div className="w-full rounded-12 overflow-hidden border border-[var(--border)]">
-              <img src={heroImg} alt={MOSQUE_NAME} className="w-full h-[180px] object-cover" />
+            <div className="w-full rounded-12 overflow-hidden border border-[var(--border)] relative h-[180px]">
+              <Image src={heroImg} alt={MOSQUE_NAME} fill sizes="(max-width: 600px) 100vw, 600px" className="object-cover" />
             </div>
             <div className="app-title">{MOSQUE_NAME}</div>
             <div className="text-[14px] text-[var(--text-muted)] flex items-center gap-2">
