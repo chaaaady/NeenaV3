@@ -70,7 +70,7 @@ export default function StepPaymentPage() {
         {/* Récapitulatif avec montant en gros */}
         <div className="app-card mb-3">
           <div className="space-y-3">
-            <div className="text-[12px] tracking-wide uppercase text-[var(--text-muted)] text-center">Mosquée de {values.mosqueName}</div>
+            <div className="text-[12px] tracking-wide uppercase text-[var(--text)] text-center">Mosquée de {values.mosqueName}</div>
             {getAmountDisplay()}
           </div>
         </div>
