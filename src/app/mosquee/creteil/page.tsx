@@ -12,6 +12,14 @@ const MOSQUE_ADDRESS = "5 Rue Jean Gabin, 94000 Créteil";
 const MAPS_URL = `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(MOSQUE_ADDRESS)}`;
 
 export default function MosqueCreteilPage() {
+  return (
+    <Suspense fallback={<div />}> 
+      <MosqueCreteilContent />
+    </Suspense>
+  );
+}
+
+function MosqueCreteilContent() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [newsletterEmail, setNewsletterEmail] = useState("");
   const params = useSearchParams();
@@ -21,7 +29,7 @@ export default function MosqueCreteilPage() {
     const url = params.get("img");
     return (
       url ||
-      "https://images.unsplash.com/photo-1527964275784-0045f1eead42?q=80&w=1200&auto=format&fit=crop" // generic mosque image fallback
+      "https://images.unsplash.com/photo-1527964275784-0045f1eead42?q=80&w=1200&auto=format&fit=crop"
     );
   }, [params]);
 
@@ -29,7 +37,7 @@ export default function MosqueCreteilPage() {
     <>
       <AppBar onMenu={() => setIsMenuOpen(true)} />
       <SideMenu isOpen={isMenuOpen} onClose={() => setIsMenuOpen(false)} />
-      <Suspense>
+
       <div className="app-container">
         {/* Hero */}
         <div className="app-card">
@@ -129,7 +137,7 @@ export default function MosqueCreteilPage() {
           </div>
         </div>
       </div>
-      </Suspense>
+
       {/* Sticky donate button */}
       <a href="/step-amount-v2" className="sticky-donate btn-primary pressable">
         Faire un don
