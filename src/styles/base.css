@@ -1060,3 +1060,8 @@
     to { transform: translateY(0); opacity: 1; } 
   }
 } 
+
+  .dock-minimal {
+    background: color-mix(in oklab, var(--bg) 90%, transparent);
+    border-top: 1px solid var(--border);
+  } 

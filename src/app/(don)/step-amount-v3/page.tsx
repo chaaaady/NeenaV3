@@ -3,7 +3,7 @@
 import { useState, useMemo, useEffect } from "react";
 import { useFormContext } from "react-hook-form";
 import { useRouter } from "next/navigation";
-import { ArrowRight, ArrowLeft } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import { AppBar, Input, SideMenu, MosqueSelectorModal, SegmentedControl } from "@/components";
 import { formatEuro } from "@/lib/currency";
 import { DonationFormValues } from "@/lib/schema";
@@ -52,7 +52,9 @@ export default function StepAmountV3Page() {
           <span className="amount-currency">€</span>
           {suffix && <span className="amount-suffix">{suffix}</span>}
         </div>
-        <div className="mt-1 text-[12px] uppercase tracking-wide text-[var(--text-muted)]">Mosquée de {values.mosqueName || "Sélectionner"}</div>
+        <div className="mt-1 text-[12px] uppercase tracking-wide">
+          <button onClick={() => setShowMosqueSelector(true)} className="mosque-title-link">Mosquée de {values.mosqueName || "Sélectionner"}</button>
+        </div>
       </div>
     );
   }, [values.amount, values.frequency, values.mosqueName]);
@@ -80,7 +82,6 @@ export default function StepAmountV3Page() {
           <div className="space-y-5">
             <div className="flex items-center justify-between">
               <div className="app-title">Montant du don</div>
-              <button onClick={() => setShowMosqueSelector(true)} className="mosque-title-link">mosquée de {values.mosqueName || "Sélectionner"}</button>
             </div>
 
             {hero}
@@ -130,20 +131,15 @@ export default function StepAmountV3Page() {
           </div>
         </div>
 
-        <div className="docked-actions">
+        <div className="docked-actions dock-minimal">
           <div className="container">
-            <div className="grid">
-              <button onClick={() => router.push("/step-amount")} className="btn-secondary pressable">
-                <ArrowLeft size={18} />
-              </button>
-              <button
-                onClick={handleNext}
-                disabled={!(typeof values.amount === "number" && Number.isFinite(values.amount) && values.amount > 0)}
-                className="btn-primary pressable"
-              >
-                Continuer <ArrowRight size={18} />
-              </button>
-            </div>
+            <button
+              onClick={handleNext}
+              disabled={!(typeof values.amount === "number" && Number.isFinite(values.amount) && values.amount > 0)}
+              className="btn-primary pressable w-full"
+            >
+              Continuer <ArrowRight size={18} />
+            </button>
           </div>
         </div>
       </div>
