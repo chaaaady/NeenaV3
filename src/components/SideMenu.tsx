@@ -74,6 +74,12 @@ export function SideMenu({ isOpen, onClose }: { isOpen: boolean; onClose: () => 
               <span className="text-[13px] font-[600] text-[var(--text-muted)]">Montant</span>
             </span>
           </Link>
+          <Link href="/step-all-v4" className="block" onClick={onClose}>
+            <span className="w-full flex items-center justify-between p-4 rounded-[var(--radius-all)] hover:bg-[var(--surface-2)] transition-colors text-left text-[16px] font-[700] text-[var(--text)]">
+              V4
+              <span className="text-[13px] font-[600] text-[var(--text-muted)]">Tout-en-un</span>
+            </span>
+          </Link>
         </nav>
       </div>
     </div>
