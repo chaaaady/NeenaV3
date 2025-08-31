@@ -67,7 +67,7 @@ export default function MosqueCreteilPage() {
         {/* Jumu'a section (below prayer times) */}
         <div className="app-card mt-4">
           <div className="space-y-3">
-            <div className="app-title">Jumu'a</div>
+            <div className="app-title">Jumu&apos;a</div>
             <div className="section-box">
               <JumaaCard />
             </div>
@@ -189,7 +189,7 @@ function PrayerTimesCard({ city, country }: { city: string; country: string }) {
         const json = await res.json();
         if (!json || json.code !== 200) throw new Error("API error");
         if (!cancelled) setTimes(json.data.timings);
-      } catch (e) {
+      } catch {
         if (!cancelled) setError("Impossible de charger les horaires");
       } finally {
         if (!cancelled) setLoading(false);
@@ -200,8 +200,8 @@ function PrayerTimesCard({ city, country }: { city: string; country: string }) {
   }, [city, country]);
 
   const { nextName, nextTime, list } = useMemo(() => {
-    if (!times) return { nextName: null as string | null, nextTime: null as string | null, list: [] as Array<{ key: string; label: string; time: string; isNext: boolean }> };
-    const order = [
+    if (!times) return { nextName: null as string | null, nextTime: null as string | null, list: [] as Array<{ key: string; label: string; time: string; isNext: boolean; date?: Date }> };
+    const order: Array<{ key: keyof typeof times; label: string }> = [
       { key: "Fajr", label: "Fajr" },
       { key: "Sunrise", label: "Shurûq" },
       { key: "Dhuhr", label: "Dhuhr" },
@@ -213,11 +213,11 @@ function PrayerTimesCard({ city, country }: { city: string; country: string }) {
     let nextK: string | null = null;
     let nextT: string | null = null;
 
-    const items = order.map(({ key, label }) => {
-      const t = times[key];
+    const items: Array<{ key: string; label: string; time: string; date: Date }> = order.map(({ key, label }) => {
+      const t = times[key] as string;
       const [hh, mm] = (t || "00:00").split(":").map((x: string) => parseInt(x, 10));
       const dt = new Date(); dt.setHours(hh, mm, 0, 0);
-      return { key, label, time: t, date: dt } as any;
+      return { key, label, time: t, date: dt };
     });
 
     for (const it of items) {
