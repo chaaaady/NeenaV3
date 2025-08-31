@@ -56,21 +56,9 @@ export function SideMenu({ isOpen, onClose }: { isOpen: boolean; onClose: () => 
 
       <div className="p-4 space-y-2">
         <nav className="space-y-2">
-          <Link href="/step-amount" className="block" onClick={onClose}>
-            <span className="w-full flex items-center justify-between p-4 rounded-[var(--radius-all)] hover:bg-[var(--surface-2)] transition-colors text-left text-[16px] font-[700] text-[var(--text)]">
-              V1
-              <span className="text-[13px] font-[600] text-[var(--text-muted)]">Montant</span>
-            </span>
-          </Link>
           <Link href="/step-amount-v2" className="block" onClick={onClose}>
             <span className="w-full flex items-center justify-between p-4 rounded-[var(--radius-all)] hover:bg-[var(--surface-2)] transition-colors text-left text-[16px] font-[700] text-[var(--text)]">
               V2
-              <span className="text-[13px] font-[600] text-[var(--text-muted)]">Montant</span>
-            </span>
-          </Link>
-          <Link href="/step-amount-v3" className="block" onClick={onClose}>
-            <span className="w-full flex items-center justify-between p-4 rounded-[var(--radius-all)] hover:bg-[var(--surface-2)] transition-colors text-left text-[16px] font-[700] text-[var(--text)]">
-              V3
               <span className="text-[13px] font-[600] text-[var(--text-muted)]">Montant</span>
             </span>
           </Link>
