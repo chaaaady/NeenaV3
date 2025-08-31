@@ -76,7 +76,23 @@
     --safari-ui-h: 60px;
   }
 
-  :root[data-theme="dark"],
+  /* Dark mode tokens */
+  :root[data-theme="dark"] {
+    --bg: #0B1220;
+    --card: #0E172A;
+    --surface-2: #111827;
+    --border: #1F2937;
+    --text: #F3F4F6;
+    --text-muted: #D1D5DB;
+    --text-soft: #9CA3AF;
+    --brand: #FFFFFF;
+    --brand-weak: rgba(255,255,255,0.9);
+    --success: #22C55E;
+    --success-strong: #16A34A;
+    --focus: #38BDF8;
+    --shadow-color: rgba(0,0,0,0.4);
+  }
+
   @media (prefers-color-scheme: dark) {
     :root:not([data-theme="light"]) {
       --bg: #0B1220;
@@ -92,8 +108,6 @@
       --success-strong: #16A34A;
       --focus: #38BDF8;
       --shadow-color: rgba(0,0,0,0.4);
-      /* component surfaces */
-      /* inputs, cards use var(--card) */
     }
   }
 
