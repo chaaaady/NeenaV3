@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo, useEffect } from "react";
+import { useState, useMemo, useEffect, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import { AppBar, SideMenu } from "@/components";
 import { Input } from "@/components";
@@ -29,7 +29,7 @@ export default function MosqueCreteilPage() {
     <>
       <AppBar onMenu={() => setIsMenuOpen(true)} />
       <SideMenu isOpen={isMenuOpen} onClose={() => setIsMenuOpen(false)} />
-
+      <Suspense>
       <div className="app-container">
         {/* Hero */}
         <div className="app-card">
@@ -129,7 +129,7 @@ export default function MosqueCreteilPage() {
           </div>
         </div>
       </div>
-
+      </Suspense>
       {/* Sticky donate button */}
       <a href="/step-amount-v2" className="sticky-donate btn-primary pressable">
         Faire un don
