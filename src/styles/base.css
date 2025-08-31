@@ -1065,3 +1065,27 @@
     background: color-mix(in oklab, var(--bg) 90%, transparent);
     border-top: 1px solid var(--border);
   } 
+
+  .v4 .modern-header {
+    background: transparent;
+  }
+  .v4 .modern-header .header-container {
+    background: rgba(255, 255, 255, 0.86);
+    backdrop-filter: saturate(160%) blur(12px);
+    -webkit-backdrop-filter: saturate(160%) blur(12px);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+  } 
+
+  .sticky-donate {
+    position: fixed;
+    right: 16px;
+    bottom: calc(16px + env(safe-area-inset-bottom));
+    z-index: 60;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    height: 44px;
+    padding: 0 16px;
+    border-radius: 12px;
+    box-shadow: var(--shadow-elevated);
+  } 

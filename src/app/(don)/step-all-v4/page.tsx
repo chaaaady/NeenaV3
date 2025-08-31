@@ -50,7 +50,7 @@ export default function StepAllV4Page() {
   const isActive = (amt: number) => values.amount === amt && otherAmountInput.trim() === "";
 
   return (
-    <>
+    <div className="v4">
       <AppBar onMenu={() => setIsMenuOpen(true)} />
       <SideMenu isOpen={isMenuOpen} onClose={() => setIsMenuOpen(false)} />
       <MosqueSelectorModal
@@ -293,7 +293,7 @@ export default function StepAllV4Page() {
           </div>
         </div>
       </div>
-    </>
+    </div>
   );
 }
 
