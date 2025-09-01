@@ -248,13 +248,7 @@ function PrayerTimesCard({ slug, url }: { slug?: string; url?: string }) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [issues, setIssues] = useState<Array<{ field: string; message: string }>>([]);
-  const [now, setNow] = useState<Date>(new Date());
-
-  useEffect(() => {
-    // Met à jour l'heure courante sans seconds (toutes les 30s)
-    const id = setInterval(() => setNow(new Date()), 30000);
-    return () => clearInterval(id);
-  }, []);
+  // No live clock needed in list
 
   useEffect(() => {
     let cancelled = false;

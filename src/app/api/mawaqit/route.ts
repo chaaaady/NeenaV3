@@ -273,7 +273,7 @@ export async function GET(req: Request) {
       return NextResponse.json({ ok: true, used, count, timings, flat, issues, debug: dbg, cached: false });
     }
     return NextResponse.json({ ok: true, used, timings, flat, issues, cached: false });
-  } catch (_e) {
+  } catch {
     // Fallback to HTML scraping if playwright path fails
     try {
       const base = directUrl ?? `https://mawaqit.net/fr/${slug}`;
