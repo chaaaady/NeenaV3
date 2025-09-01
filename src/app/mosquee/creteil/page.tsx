@@ -2,14 +2,18 @@
 
 import { useState, useMemo, useEffect, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
+import Image from "next/image";
 import { AppBar, SideMenu } from "@/components";
 import { Input } from "@/components";
 import { Mail, MapPin, Check, X, Car, Users, Accessibility, Languages, Clock } from "lucide-react";
-import Image from "next/image";
 
 const MOSQUE_NAME = "Mosquée de Créteil";
 const MOSQUE_ADDRESS = "5 Rue Jean Gabin, 94000 Créteil";
 const MAPS_URL = `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(MOSQUE_ADDRESS)}`;
+const ASSO_NAME = "Association Mosquée de Créteil";
+const ASSO_REG_LINK = "https://www.journal-officiel.gouv.fr/associations/";
+const ASSO_PRESIDENT = "Nom du Président";
+const ASSO_CREATED_AT = "01/01/2010";
 
 export default function MosqueCreteilPage() {
   return (
@@ -33,12 +37,16 @@ function MosqueCreteilContent() {
     );
   }, [params]);
 
+  // Mawaqit slug/url (override via query if needed)
+  const mawaqitSlug = (params.get("slug") || "mosquee-sahaba-creteil").trim();
+  const mawaqitUrl = params.get("url") || undefined;
+
   return (
     <>
       <AppBar onMenu={() => setIsMenuOpen(true)} />
       <SideMenu isOpen={isMenuOpen} onClose={() => setIsMenuOpen(false)} />
 
-      <div className="app-container">
+      <div className="app-container pb-24">
         {/* Hero */}
         <div className="app-card">
           <div className="space-y-3">
@@ -63,13 +71,16 @@ function MosqueCreteilContent() {
           </div>
         </div>
 
-        {/* Horaires (Aladhan) */}
+        {/* Bandeau prochaine prière (hors carte des horaires) */}
+        <div className="app-card mt-4">
+          <NextPrayerBanner slug={mawaqitSlug} url={mawaqitUrl} />
+        </div>
+
+        {/* Horaires (API interne) */}
         <div className="app-card mt-4">
           <div className="space-y-3">
             <div className="app-title">Horaires de prière</div>
-            <div className="section-box">
-              <PrayerTimesCard city="Creteil" country="France" />
-            </div>
+            <PrayerTimesCard slug={mawaqitSlug} url={mawaqitUrl} />
           </div>
         </div>
 
@@ -77,9 +88,7 @@ function MosqueCreteilContent() {
         <div className="app-card mt-4">
           <div className="space-y-3">
             <div className="app-title">Jumu&apos;a</div>
-            <div className="section-box">
-              <JumaaCard />
-            </div>
+            <JumaaCard />
           </div>
         </div>
 
@@ -87,12 +96,14 @@ function MosqueCreteilContent() {
         <div className="app-card mt-4">
           <div className="space-y-3">
             <div className="app-title">Informations pratiques</div>
-            <div className="grid gap-3 section-box">
+            <div className="grid gap-3">
               <InfoItem icon={<Car size={16} />} label="Parking" value={true} />
               <InfoItem icon={<Users size={16} />} label="Salle femmes" value={true} />
               <InfoItem icon={<Accessibility size={16} />} label="Accès PMR" value={true} />
               <InfoItem icon={<Languages size={16} />} label="Langue du khutba" text="Français" />
               <InfoItem icon={<Users size={16} />} label="Nombre de khutbas" text="2" />
+              <InfoItem icon={<Users size={16} />} label="Capacité de la mosquée" text="~800 fidèles" />
+              <InfoItem icon={<Car size={16} />} label="Capacité du parking" text="~120 places" />
             </div>
           </div>
         </div>
@@ -130,6 +141,31 @@ function MosqueCreteilContent() {
           </div>
         </div>
 
+        {/* Légales */}
+        <div className="app-card mt-4">
+          <div className="space-y-3">
+            <div className="app-title">Informations légales</div>
+            <div className="grid gap-2">
+              <div className="summary-row">
+                <span className="text-[14px] font-[600] text-[var(--text)]">Association</span>
+                <span className="text-[14px] text-[var(--text)]">{ASSO_NAME}</span>
+              </div>
+              <div className="summary-row">
+                <span className="text-[14px] font-[600] text-[var(--text)]">Président</span>
+                <span className="text-[14px] text-[var(--text)]">{ASSO_PRESIDENT}</span>
+              </div>
+              <div className="summary-row">
+                <span className="text-[14px] font-[600] text-[var(--text)]">Date de création</span>
+                <span className="text-[14px] text-[var(--text)]">{ASSO_CREATED_AT}</span>
+              </div>
+              <div className="summary-row">
+                <span className="text-[14px] font-[600] text-[var(--text)]">Registre légal</span>
+                <a className="text-[14px] text-green-700 underline" href={ASSO_REG_LINK} target="_blank" rel="noopener noreferrer">Consulter</a>
+              </div>
+            </div>
+          </div>
+        </div>
+
         {/* Footer */}
         <div className="app-card mt-4">
           <div className="text-[13px] text-[var(--text-muted)]">
@@ -138,10 +174,24 @@ function MosqueCreteilContent() {
         </div>
       </div>
 
-      {/* Sticky donate button */}
-      <a href="/step-amount-v2" className="sticky-donate btn-primary pressable">
-        Faire un don
-      </a>
+      {/* Sticky action bar */}
+      <div className="sticky-actions">
+        <div className="w-full bg-[var(--surface)]/95 backdrop-blur-md border-t border-[var(--border)] shadow-[0_-8px_24px_rgba(0,0,0,0.08)] pb-safe">
+          <div className="mx-auto max-w-[900px] px-4 py-3">
+            <div className="grid grid-cols-2 gap-3">
+              <a
+                href={MAPS_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="btn-secondary pressable w-full h-12 flex items-center justify-center text-center"
+              >
+                Itinéraire
+              </a>
+              <a href="/step-amount-v2" className="btn-primary pressable w-full h-12 flex items-center justify-center text-center">Faire un don</a>
+            </div>
+          </div>
+        </div>
+      </div>
     </>
   );
 }
@@ -182,10 +232,29 @@ function JumaaCard() {
   );
 }
 
-function PrayerTimesCard({ city, country }: { city: string; country: string }) {
-  const [times, setTimes] = useState<Record<string, string> | null>(null);
+type PrayerValue = string | { adhan?: string; iqama?: string; wait?: number } | null | undefined;
+type MawaqitTimings = {
+  Fajr?: PrayerValue;
+  Sunrise?: PrayerValue;
+  Dhuhr?: PrayerValue;
+  Asr?: PrayerValue;
+  Maghrib?: PrayerValue;
+  Isha?: PrayerValue;
+  Jumua?: PrayerValue;
+};
+
+function PrayerTimesCard({ slug, url }: { slug?: string; url?: string }) {
+  const [times, setTimes] = useState<MawaqitTimings | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [issues, setIssues] = useState<Array<{ field: string; message: string }>>([]);
+  const [now, setNow] = useState<Date>(new Date());
+
+  useEffect(() => {
+    // Met à jour l'heure courante sans seconds (toutes les 30s)
+    const id = setInterval(() => setNow(new Date()), 30000);
+    return () => clearInterval(id);
+  }, []);
 
   useEffect(() => {
     let cancelled = false;
@@ -193,11 +262,17 @@ function PrayerTimesCard({ city, country }: { city: string; country: string }) {
       try {
         setLoading(true);
         setError(null);
-        const url = `https://api.aladhan.com/v1/timingsByCity?city=${encodeURIComponent(city)}&country=${encodeURIComponent(country)}&method=12`;
-        const res = await fetch(url, { cache: "no-store" });
-        const json = await res.json();
-        if (!json || json.code !== 200) throw new Error("API error");
-        if (!cancelled) setTimes(json.data.timings);
+        const qs = new URLSearchParams();
+        if (slug) qs.set("slug", slug);
+        if (url) qs.set("url", url);
+        const res = await fetch(`/api/mawaqit?${qs.toString()}`, { cache: "no-store" });
+        const json: { ok: boolean; timings?: MawaqitTimings; flat?: Record<string, string>; issues?: Array<{ field: string; message: string }>; error?: string } = await res.json();
+        if (!json.ok || (!json.timings && !json.flat)) throw new Error(json.error || "API error");
+        if (!cancelled) {
+          const flat = json.flat && Object.keys(json.flat).length > 0 ? (json.flat as unknown as MawaqitTimings) : null;
+          setTimes(flat || json.timings || null);
+          setIssues(json.issues || []);
+        }
       } catch {
         if (!cancelled) setError("Impossible de charger les horaires");
       } finally {
@@ -206,40 +281,63 @@ function PrayerTimesCard({ city, country }: { city: string; country: string }) {
     };
     fetchTimes();
     return () => { cancelled = true; };
-  }, [city, country]);
+  }, [slug, url]);
 
-  const { nextName, nextTime, list } = useMemo(() => {
-    if (!times) return { nextName: null as string | null, nextTime: null as string | null, list: [] as Array<{ key: string; label: string; time: string; isNext: boolean; date?: Date }> };
-    const order: Array<{ key: keyof typeof times; label: string }> = [
+  const { nextName, nextTime, nextDate, list } = useMemo(() => {
+    const labels: Array<{ key: keyof MawaqitTimings; label: string }> = [
       { key: "Fajr", label: "Fajr" },
-      { key: "Sunrise", label: "Shurûq" },
       { key: "Dhuhr", label: "Dhuhr" },
       { key: "Asr", label: "Asr" },
       { key: "Maghrib", label: "Maghrib" },
       { key: "Isha", label: "Isha" },
     ];
-    const now = new Date();
+    if (!times) return { nextName: null as string | null, nextTime: null as string | null, nextDate: null as Date | null, list: [] as Array<{ key: string; label: string; time: string; isNext: boolean }> };
+    type Item = { key: string; label: string; time: string; date: Date };
+    const items: Item[] = labels
+      .map(({ key, label }) => {
+        const raw = times[key];
+        let t = "";
+        if (typeof raw === "string") {
+          t = raw.trim();
+        } else if (raw && typeof raw === "object") {
+          const r = raw as { adhan?: string; iqama?: string };
+          t = (r.adhan || r.iqama || "").trim();
+        }
+        const [hh, mm] = (t || "00:00").split(":").map((x) => parseInt(x, 10));
+        const dt = new Date(); dt.setHours(hh, mm, 0, 0);
+        return { key: String(key), label, time: t, date: dt };
+      })
+      .filter((i) => !!i.time);
+
     let nextK: string | null = null;
     let nextT: string | null = null;
-
-    const items: Array<{ key: string; label: string; time: string; date: Date }> = order.map(({ key, label }) => {
-      const t = times[key] as string;
-      const [hh, mm] = (t || "00:00").split(":").map((x: string) => parseInt(x, 10));
-      const dt = new Date(); dt.setHours(hh, mm, 0, 0);
-      return { key, label, time: t, date: dt };
-    });
-
+    let nextD: Date | null = null;
     for (const it of items) {
       if (it.date.getTime() > now.getTime()) { nextK = it.label; nextT = it.time; break; }
     }
-    if (!nextK) { nextK = items[0].label; nextT = items[0].time; }
+    if (!nextK && items.length > 0) { nextK = items[0].label; nextT = items[0].time; }
+    if (nextT) {
+      const [hh, mm] = nextT.split(":").map((x) => parseInt(x, 10));
+      const d = new Date(); d.setHours(hh, mm, 0, 0);
+      if (d.getTime() <= now.getTime()) d.setDate(d.getDate() + 1);
+      nextD = d;
+    }
 
     const listed = items.map((it) => ({ key: it.key, label: it.label, time: it.time, isNext: it.label === nextK }));
-    return { nextName: nextK, nextTime: nextT, list: listed };
-  }, [times]);
+    return { nextName: nextK, nextTime: nextT, nextDate: nextD, list: listed };
+  }, [times, now]);
 
   if (loading) {
-    return <div className="text-[14px] text-[var(--text-muted)]">Chargement des horaires…</div>;
+    return (
+      <div className="grid gap-2">
+        {Array.from({ length: 5 }).map((_, i) => (
+          <div key={i} className="summary-row">
+            <span className="h-4 w-20 bg-[var(--skeleton)] rounded" />
+            <span className="h-4 w-14 bg-[var(--skeleton)] rounded" />
+          </div>
+        ))}
+      </div>
+    );
   }
   if (error) {
     return <div className="text-[14px] text-red-600">{error}</div>;
@@ -250,10 +348,7 @@ function PrayerTimesCard({ city, country }: { city: string; country: string }) {
 
   return (
     <div className="space-y-3">
-      <div className="flex items-center gap-2 text-[14px] text-[var(--text)]">
-        <Clock size={16} />
-        <span>Prochaine prière: <strong>{nextName}</strong> à <strong>{nextTime}</strong></span>
-      </div>
+      {/* Banner déplacé en dehors de la carte des horaires */}
       <div className="grid gap-2">
         {list.map((it) => (
           <div key={it.key} className={`summary-row ${it.isNext ? "ring-2 ring-[var(--focus)]" : ""}`}>
@@ -261,6 +356,126 @@ function PrayerTimesCard({ city, country }: { city: string; country: string }) {
             <span className="text-[14px] text-[var(--text)]">{it.time}</span>
           </div>
         ))}
+      </div>
+      {issues.length > 0 && (
+        <div className="rounded-12 border border-yellow-500/40 bg-yellow-500/10 p-2">
+          <div className="text-[13px] font-[600] text-yellow-700">Vérifications</div>
+          <ul className="mt-1 text-[12px] text-yellow-800 list-disc list-inside">
+            {issues.map((it, idx) => (
+              <li key={`${it.field}-${idx}`}>{it.field}: {it.message}</li>
+            ))}
+          </ul>
+        </div>
+      )}
+    </div>
+  );
+}
+
+function NextPrayerBanner({ slug, url }: { slug?: string; url?: string }) {
+  const [times, setTimes] = useState<MawaqitTimings | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [now, setNow] = useState<Date>(new Date());
+
+  useEffect(() => {
+    const id = setInterval(() => setNow(new Date()), 30000);
+    return () => clearInterval(id);
+  }, []);
+
+  useEffect(() => {
+    let cancelled = false;
+    const fetchTimes = async () => {
+      try {
+        setLoading(true);
+        setError(null);
+        const qs = new URLSearchParams();
+        if (slug) qs.set("slug", slug);
+        if (url) qs.set("url", url);
+        const res = await fetch(`/api/mawaqit?${qs.toString()}`, { cache: "no-store" });
+        const json: { ok: boolean; timings?: MawaqitTimings; flat?: Record<string, string>; error?: string } = await res.json();
+        if (!json.ok || (!json.timings && !json.flat)) throw new Error(json.error || "API error");
+        if (!cancelled) {
+          const flat = json.flat && Object.keys(json.flat).length > 0 ? (json.flat as unknown as MawaqitTimings) : null;
+          setTimes(flat || json.timings || null);
+        }
+      } catch {
+        if (!cancelled) setError("Impossible de charger les horaires");
+      } finally {
+        if (!cancelled) setLoading(false);
+      }
+    };
+    fetchTimes();
+    return () => { cancelled = true; };
+  }, [slug, url]);
+
+  const data = useMemo(() => {
+    const labels: Array<{ key: keyof MawaqitTimings; label: string }> = [
+      { key: "Fajr", label: "Fajr" },
+      { key: "Dhuhr", label: "Dhuhr" },
+      { key: "Asr", label: "Asr" },
+      { key: "Maghrib", label: "Maghrib" },
+      { key: "Isha", label: "Isha" },
+    ];
+    if (!times) return { nextName: null as string | null, nextTime: null as string | null, nextDate: null as Date | null };
+    type Item = { key: string; label: string; time: string; date: Date };
+    const items: Item[] = labels.map(({ key, label }) => {
+      const raw = times[key];
+      let t = "";
+      if (typeof raw === "string") t = raw.trim();
+      else if (raw && typeof raw === "object") {
+        const r = raw as { adhan?: string; iqama?: string };
+        t = (r.adhan || r.iqama || "").trim();
+      }
+      const [hh, mm] = (t || "00:00").split(":").map((x) => parseInt(x, 10));
+      const dt = new Date(); dt.setHours(hh, mm, 0, 0);
+      return { key: String(key), label, time: t, date: dt };
+    }).filter((i) => !!i.time);
+
+    let nextK: string | null = null;
+    let nextT: string | null = null;
+    let nextDT: Date | null = null;
+    for (const it of items) {
+      if (it.date.getTime() > now.getTime()) { nextK = it.label; nextT = it.time; nextDT = it.date; break; }
+    }
+    if (!nextK && items.length > 0) { nextK = items[0].label; nextT = items[0].time; nextDT = items[0].date; }
+    if (nextDT && nextDT.getTime() <= now.getTime()) { const d = new Date(nextDT); d.setDate(d.getDate() + 1); nextDT = d; }
+    return { nextName: nextK, nextTime: nextT, nextDate: nextDT };
+  }, [times, now]);
+
+  if (loading) return <div className="text-[14px] text-[var(--text-muted)]">Chargement…</div>;
+  if (error || !data.nextName) return <div className="text-[14px] text-red-600">{error || "Indisponible"}</div>;
+
+  return (
+    <div className="w-full">
+      <div className="flex items-center justify-between text-[13px] text-[var(--text-muted)]">
+        <span>
+          {now.toLocaleDateString("fr-FR", { weekday: "long", day: "2-digit", month: "long", year: "numeric" })}
+        </span>
+        <span>
+          {now.toLocaleTimeString("fr-FR", { hour: "2-digit", minute: "2-digit", hour12: false })}
+        </span>
+      </div>
+      <div className="mt-2 flex items-center gap-2 text-[14px] text-[var(--text)]">
+        <Clock size={16} />
+        <span>
+          Prochaine prière: <strong>{data.nextName}</strong> à <strong>{data.nextTime}</strong>
+          {data.nextDate && (
+            <>
+              {" "}— dans{" "}
+              <strong>
+                {(() => {
+                  const ms = Math.max(0, data.nextDate!.getTime() - now.getTime());
+                  const totalMin = Math.ceil(ms / 60000);
+                  const h = Math.floor(totalMin / 60);
+                  const m = totalMin % 60;
+                  if (h <= 0) return `${m} min`;
+                  if (m === 0) return `${h} h`;
+                  return `${h} h ${m} min`;
+                })()}
+              </strong>
+            </>
+          )}
+        </span>
       </div>
     </div>
   );

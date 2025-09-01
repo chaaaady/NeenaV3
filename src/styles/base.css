@@ -269,7 +269,7 @@
     top: 0;
     left: 0;
     right: 0;
-    z-index: 50;
+    z-index: 100;
     background: transparent;
     width: 100%;
     margin: 0;
@@ -1076,6 +1076,14 @@
     border-bottom: 1px solid rgba(0, 0, 0, 0.06);
   } 
 
+  /* Scroll-aware header effect */
+  .header-scrolled .header-container {
+    background: rgba(255, 255, 255, 0.86);
+    backdrop-filter: saturate(160%) blur(12px);
+    -webkit-backdrop-filter: saturate(160%) blur(12px);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+  }
+
   .sticky-donate {
     position: fixed;
     right: 16px;
@@ -1089,3 +1097,16 @@
     border-radius: 12px;
     box-shadow: var(--shadow-elevated);
   } 
+
+  /* Full-width sticky action bar (edge-to-edge) */
+  .sticky-actions {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 60;
+  }
+
+  .pb-safe {
+    padding-bottom: env(safe-area-inset-bottom);
+  }

@@ -13,7 +13,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="fr">
+    <html lang="fr" data-theme="light" suppressHydrationWarning>
       <body className="antialiased bg-[var(--bg)] text-[var(--text)]">
         <Script id="theme-init" strategy="beforeInteractive">
           {`
