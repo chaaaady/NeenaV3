@@ -283,7 +283,7 @@ function PrayerTimesCard({ slug, url }: { slug?: string; url?: string }) {
     return () => { cancelled = true; };
   }, [slug, url]);
 
-  const { nextName, nextTime, nextDate, list } = useMemo(() => {
+  const { list } = useMemo(() => {
     const labels: Array<{ key: keyof MawaqitTimings; label: string }> = [
       { key: "Fajr", label: "Fajr" },
       { key: "Dhuhr", label: "Dhuhr" },
@@ -291,7 +291,7 @@ function PrayerTimesCard({ slug, url }: { slug?: string; url?: string }) {
       { key: "Maghrib", label: "Maghrib" },
       { key: "Isha", label: "Isha" },
     ];
-    if (!times) return { nextName: null as string | null, nextTime: null as string | null, nextDate: null as Date | null, list: [] as Array<{ key: string; label: string; time: string; isNext: boolean }> };
+    if (!times) return { list: [] as Array<{ key: string; label: string; time: string; isNext: boolean }> };
     type Item = { key: string; label: string; time: string; date: Date };
     const items: Item[] = labels
       .map(({ key, label }) => {
@@ -309,23 +309,10 @@ function PrayerTimesCard({ slug, url }: { slug?: string; url?: string }) {
       })
       .filter((i) => !!i.time);
 
-    let nextK: string | null = null;
-    let nextT: string | null = null;
-    let nextD: Date | null = null;
-    for (const it of items) {
-      if (it.date.getTime() > now.getTime()) { nextK = it.label; nextT = it.time; break; }
-    }
-    if (!nextK && items.length > 0) { nextK = items[0].label; nextT = items[0].time; }
-    if (nextT) {
-      const [hh, mm] = nextT.split(":").map((x) => parseInt(x, 10));
-      const d = new Date(); d.setHours(hh, mm, 0, 0);
-      if (d.getTime() <= now.getTime()) d.setDate(d.getDate() + 1);
-      nextD = d;
-    }
-
-    const listed = items.map((it) => ({ key: it.key, label: it.label, time: it.time, isNext: it.label === nextK }));
-    return { nextName: nextK, nextTime: nextT, nextDate: nextD, list: listed };
-  }, [times, now]);
+    // no next in this card — banner handles it
+    const listed = items.map((it) => ({ key: it.key, label: it.label, time: it.time, isNext: false }));
+    return { list: listed };
+  }, [times]);
 
   if (loading) {
     return (

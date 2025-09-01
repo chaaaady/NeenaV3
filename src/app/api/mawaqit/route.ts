@@ -273,7 +273,7 @@ export async function GET(req: Request) {
       return NextResponse.json({ ok: true, used, count, timings, flat, issues, debug: dbg, cached: false });
     }
     return NextResponse.json({ ok: true, used, timings, flat, issues, cached: false });
-  } catch (e) {
+  } catch (_e) {
     // Fallback to HTML scraping if playwright path fails
     try {
       const base = directUrl ?? `https://mawaqit.net/fr/${slug}`;
@@ -325,14 +325,14 @@ function runPythonScraper(targetUrl?: string): Promise<Record<string, Prayer>> {
         try {
           const json = JSON.parse(out);
           resolve(json);
-        } catch (e) {
-          reject(e);
+        } catch (err) {
+          reject(err);
         }
       });
     });
 
   // Prefer python3, then fallback to python
-  return trySpawn("python3").catch((e) => {
+  return trySpawn("python3").catch((_e) => {
     // If python3 not found, try python
     return trySpawn("python");
   });
