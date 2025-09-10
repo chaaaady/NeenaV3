@@ -32,7 +32,7 @@ export default function Component() {
               <Button
                 className="group size-8 md:hidden"
                 variant="ghost"
-                size="icon"
+                size="sm"
               >
                 <svg
                   className="pointer-events-none"
