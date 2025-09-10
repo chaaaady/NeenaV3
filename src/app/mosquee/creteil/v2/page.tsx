@@ -1,5 +1,6 @@
 "use client";
 
+import { Suspense } from "react";
 import Image from "next/image";
 import { useSearchParams } from "next/navigation";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
@@ -14,6 +15,14 @@ const MOSQUE_ADDRESS = "5 Rue Jean Gabin, 94000 Créteil";
 const MAPS_URL = `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(MOSQUE_ADDRESS)}`;
 
 export default function MosqueCreteilV2Page() {
+  return (
+    <Suspense fallback={<div />}> 
+      <V2Content />
+    </Suspense>
+  );
+}
+
+function V2Content() {
   const params = useSearchParams();
   const hero = params.get("img") || "/hero-creteil.png";
 
@@ -48,7 +57,7 @@ export default function MosqueCreteilV2Page() {
           </div>
         </CardContent>
       </Card>
-
+      
       {/* Horaire & Prière actuelle (placeholder for brevity) */}
       <div className="grid gap-4 mt-4">
         <Card>
@@ -70,7 +79,7 @@ export default function MosqueCreteilV2Page() {
             </div>
           </CardContent>
         </Card>
-
+        
         {/* Horaires de prière (table simplifiée) */}
         <Card>
           <CardHeader>
@@ -96,7 +105,7 @@ export default function MosqueCreteilV2Page() {
             </div>
           </CardContent>
         </Card>
-
+        
         {/* Jumu'a */}
         <Card>
           <CardHeader>
@@ -108,7 +117,7 @@ export default function MosqueCreteilV2Page() {
             <div className="summary-row"><span className="text-[14px] font-[600]">Langues du khutba</span><span className="text-[14px]">Français, Arabe</span></div>
           </CardContent>
         </Card>
-
+        
         {/* Bénévolat & Newsletter */}
         <Card>
           <CardHeader>
@@ -119,7 +128,7 @@ export default function MosqueCreteilV2Page() {
             <Button variant="secondary">Devenir bénévole</Button>
           </CardContent>
         </Card>
-
+        
         <Card>
           <CardHeader>
             <div className="text-[15px] font-[700]">Newsletter</div>
