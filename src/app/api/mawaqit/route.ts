@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { spawn } from "node:child_process";
+import path from "node:path";
 
 type Prayer = { adhan?: string; iqama?: string; wait?: number };
 type Timings = {
@@ -251,10 +252,10 @@ export async function GET(req: Request) {
   try {
     // If explicitly requested, use the local Python Playwright scraper (executes JS, more reliable)
     if (mode === "playwright") {
-      console.log("Using Python Playwright scraper...");
+      console.warn("Using Python Playwright scraper...");
       try {
         const py = await runPythonScraper(base);
-        console.log("Python scraper result:", py);
+        console.warn("Python scraper result:", py);
         // Expect JSON with keys Fajr/Sunrise/Dhuhr/Jumua/Asr/Maghrib/Isha (adhan/iqama/wait)
         const timings: Timings = {
           Fajr: py.Fajr,
@@ -265,7 +266,7 @@ export async function GET(req: Request) {
           Maghrib: py.Maghrib,
           Isha: py.Isha,
         };
-        console.log("Processed timings:", timings);
+        console.warn("Processed timings:", timings);
         CACHE[key] = { at: now, dayKey, data: timings };
         const flat = toFlat(timings);
         const issues = validateTimingsFlat(flat);
@@ -345,27 +346,27 @@ export async function GET(req: Request) {
 
 function runPythonScraper(targetUrl?: string): Promise<Record<string, Prayer>> {
   const args = ["scrape_prayer_times.py", ...(targetUrl ? [targetUrl] : [])];
-  console.log("Running Python scraper with args:", args);
-  console.log("Current working directory:", process.cwd());
-  console.log("Script path:", require('path').join(process.cwd(), "scrape_prayer_times.py"));
-  console.log("PATH:", process.env.PATH);
+  console.warn("Running Python scraper with args:", args);
+  console.warn("Current working directory:", process.cwd());
+  console.warn("Script path:", path.join(process.cwd(), "scrape_prayer_times.py"));
+  console.warn("PATH:", process.env.PATH);
   
   const trySpawn = (cmd: string) =>
     new Promise<Record<string, Prayer>>((resolve, reject) => {
-      console.log(`Trying to spawn: ${cmd}`);
+      console.warn(`Trying to spawn: ${cmd}`);
       const p = spawn(cmd, args, { cwd: process.cwd() });
       let out = "";
       let err = "";
       
       p.stdout.on("data", (d) => {
         const data = d.toString();
-        console.log("Python stdout:", data);
+        console.warn("Python stdout:", data);
         out += data;
       });
       
       p.stderr.on("data", (d) => {
         const data = d.toString();
-        console.log("Python stderr:", data);
+        console.error("Python stderr:", data);
         err += data;
       });
       
@@ -375,9 +376,9 @@ function runPythonScraper(targetUrl?: string): Promise<Record<string, Prayer>> {
       });
       
       p.on("close", (code) => {
-        console.log(`Python process closed with code: ${code}`);
-        console.log("Python output:", out);
-        console.log("Python errors:", err);
+        console.warn(`Python process closed with code: ${code}`);
+        console.warn("Python output:", out);
+        console.error("Python errors:", err);
         
         if (code !== 0) {
           const errorMsg = err || `${cmd} exited ${code}`;
@@ -387,7 +388,7 @@ function runPythonScraper(targetUrl?: string): Promise<Record<string, Prayer>> {
         
         try {
           const json = JSON.parse(out);
-          console.log("Successfully parsed Python output:", json);
+          console.warn("Successfully parsed Python output:", json);
           
           // Post-traitement pour gérer Dhuhr vs Jumua
           const processed = processPrayerTimes(json);
@@ -402,7 +403,7 @@ function runPythonScraper(targetUrl?: string): Promise<Record<string, Prayer>> {
 
   // Use absolute path to python3
   return trySpawn("/Users/humanappeal/Desktop/NeenaV3-1/venv/bin/python3").catch((_e) => {
-    console.log("Virtual env python3 failed, trying absolute python3...");
+    console.warn("Virtual env python3 failed, trying absolute python3...");
     return trySpawn("/usr/bin/python3");
   });
 }
@@ -421,11 +422,11 @@ function processPrayerTimes(rawTimings: Record<string, Prayer>): Record<string, 
     // Le vendredi seulement, Jumua remplace Dhuhr
     // On supprime Dhuhr pour éviter la confusion
     delete processed.Dhuhr;
-    console.log("Vendredi détecté: Jumua priorisé, Dhuhr supprimé");
+    console.warn("Vendredi détecté: Jumua priorisé, Dhuhr supprimé");
   } else {
     // Les autres jours, on garde Dhuhr ET Jumua
     // Même s'ils ont les mêmes horaires, c'est normal
-    console.log("Jour non-vendredi: Dhuhr et Jumua conservés (même si horaires identiques)");
+    console.warn("Jour non-vendredi: Dhuhr et Jumua conservés (même si horaires identiques)");
   }
   
   return processed;

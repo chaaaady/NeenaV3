@@ -404,7 +404,7 @@ function PrayerTimesCard({ slug, url }: { slug?: string; url?: string }) {
             <div className="w-[64px] text-center text-[11px] text-[var(--text-muted)]">Adhan</div>
             <div className="w-[64px] text-center text-[11px] text-[var(--text-muted)]">Iqama</div>
           </div>
-          {data.items.map((item, idx) => {
+          {data.items.map((item) => {
             const minutes = (t: string) => {
               const [hh, mm] = (t || "").split(":").map((x) => parseInt(x || "0", 10));
               return hh * 60 + mm;

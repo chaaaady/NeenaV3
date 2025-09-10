@@ -14,7 +14,7 @@ function toMinutes(time: string): number {
 
 function selectTime(p: PrayerValue): string {
   if (!p) return "";
-  if (typeof (p as any) === "string") return String(p);
+  if (typeof p === "string") return String(p);
   const v = p as { adhan?: string; iqama?: string };
   return (v.adhan && v.adhan.trim()) || (v.iqama && v.iqama.trim()) || "";
 }
@@ -42,7 +42,7 @@ export default function CurrentPrayerSection({ slug, url, embedded }: Props) {
         const json: { ok: boolean; timings?: Timings; error?: string } = await res.json();
         if (!json.ok || !json.timings) throw new Error(json.error || "API error");
         if (!cancelled) setTimings(json.timings);
-      } catch (_e) {
+      } catch {
         if (!cancelled) setError("Impossible de charger les horaires");
       } finally {
         if (!cancelled) setLoading(false);

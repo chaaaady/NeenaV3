@@ -15,7 +15,7 @@ export default function CurrentTimeSection({ embedded }: Props = {}) {
   try {
     // Affiche seulement jour/mois/année hégiriens (sans le jour de semaine)
     hijriFull = new Intl.DateTimeFormat("fr-FR-u-ca-islamic", { year: "numeric", month: "long", day: "numeric" }).format(now);
-  } catch (_e) {
+  } catch {
     hijriFull = "—"; // fallback
   }
 

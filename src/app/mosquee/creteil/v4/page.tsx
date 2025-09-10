@@ -27,7 +27,7 @@ export default function MosqueCreteilV4Page() {
             <div className="flex items-center justify-between">
               <div>
                 <div className="text-[12px] text-[var(--text-muted)]">mercredi 12 mars 2025</div>
-                <div className="text-[12px] text-[var(--text-muted)] mt-1">11 Sha'ban 1446</div>
+                <div className="text-[12px] text-[var(--text-muted)] mt-1">11 Sha&apos;ban 1446</div>
               </div>
               <div className="text-[28px] font-[900]">13:54</div>
             </div>
