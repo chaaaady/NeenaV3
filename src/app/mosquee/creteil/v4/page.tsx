@@ -8,9 +8,6 @@ import { Separator } from "@/components/ui/separator";
 import { Accordion, AccordionItem } from "@/components/ui/accordion";
 import { MapPin, Mail } from "lucide-react";
 
-const MOSQUE_NAME = "Mosquée de Créteil";
-const MOSQUE_ADDRESS = "5 Rue Jean Gabin, 94000 Créteil";
-
 export default function MosqueCreteilV4Page() {
   return (
     <main className="app-container pb-24">
