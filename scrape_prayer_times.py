@@ -1,175 +1,162 @@
 # scrape_prayer_times.py
-# Usage: python scrape_mawaqit.py
+# Usage: python scrape_prayer_times.py
 # Output: JSON imprimé en console avec adhan, iqama (si dispo) et wait_minutes (si "+N" ou calculable)
 
 import json
 import re
-from datetime import datetime, timedelta
-from playwright.sync_api import sync_playwright
+import requests
+from bs4 import BeautifulSoup
 
 TARGETS = [
     "https://mawaqit.net/fr/mosquee-sahaba-creteil",        # page demandée
-    "https://mawaqit.net/fr/m/mosquee-sahaba-creteil",      # fallback mobile (souvent plus “scrapable”)
+    "https://mawaqit.net/fr/m/mosquee-sahaba-creteil",      # fallback mobile (souvent plus "scrapable")
 ]
 
-PRAYER_LABELS = {
-    "Fajr": ["Fajr", "الفجر"],
-    "Sunrise": ["Chourouk", "Chorouq", "Chorouk", "Shourouk", "Sunrise", "الشروق"],
-    "Dhuhr": ["Dhuhr", "Dohr", "Duhur", "Zuhr", "Dohor", "الظهر"],
-    "Asr": ["Asr", "العصر"],
-    "Maghrib": ["Maghrib", "Maghreb", "المغرب"],
-    "Isha": ["Isha", "Ishaa", "العشاء", "عشاء"],
-    "Jumua": ["Jumua", "Jumu’", "Jumu'u", "Jumu’a", "Jumu'a", "Vendredi", "الجمعة"],
-}
-
-TIME_RE = re.compile(r"\b([01]?\d|2[0-3]):([0-5]\d)\b")
-WAIT_RE = re.compile(r"\+(\d{1,2})\b")  # +10, +5, etc.
-
-
-def _parse_times_block(block_text, prayer_name=None):
+def extract_from_html(html_content):
     """
-    Extrait depuis un bloc de texte:
-      - adhan: HH:MM (1er horaire)
-      - iqama: HH:MM si un 2e horaire est présent
-      - wait_minutes: si “+N” est trouvé OU calculé (iqama - adhan)
-    """
-    adhan = None
-    iqama = None
-    wait_minutes = None
-
-    # Cherche un "+N"
-    m_wait = WAIT_RE.search(block_text)
-    if m_wait:
-        wait_minutes = int(m_wait.group(1))
-
-    # Récupère toutes les times HH:MM
-    times = TIME_RE.findall(block_text)
-    times = [f"{h.zfill(2)}:{m}" for h, m in times]
-
-    # Filtrer par fenêtre plausible selon la prière
-    if prayer_name:
-        def to_min(s):
-            hh, mm = s.split(":")
-            return int(hh) * 60 + int(mm)
-
-        # Fenêtres grossières (minutes depuis 00:00)
-        WINDOWS = {
-            "Fajr": (180, 480),       # 03:00 - 08:00
-            "Sunrise": (300, 570),    # 05:00 - 09:30
-            "Dhuhr": (660, 930),      # 11:00 - 15:30
-            "Jumua": (660, 990),      # 11:00 - 16:30 (vendredi)
-            "Asr": (840, 1170),       # 14:00 - 19:30
-            "Maghrib": (1020, 1320),  # 17:00 - 22:00
-            "Isha": (1140, 1560),     # 19:00 - 26:00 (02:00 next day)
-        }
-        start, end = WINDOWS.get(prayer_name, (0, 2000))
-        filt = []
-        for t in times:
-            m = to_min(t)
-            if start <= m <= end or (end > 1440 and (m + 1440) <= end):
-                filt.append(t)
-        if filt:
-            times = filt
-
-    if times:
-        adhan = times[0]
-        if len(times) >= 2:
-            iqama = times[1]
-            # Si pas de +N explicite, on calcule le delta (minutes) si plausible
-            if wait_minutes is None:
-                try:
-                    ah = datetime.strptime(adhan, "%H:%M")
-                    iq = datetime.strptime(iqama, "%H:%M")
-                    # Si iqama est antérieure (cas rares de chevauchement), ajoute 24h
-                    if iq < ah:
-                        iq += timedelta(days=1)
-                    wait_minutes = int((iq - ah).total_seconds() // 60)
-                except Exception:
-                    pass
-
-    # Si pas d’iqama mais on a +N et adhan, on peut reconstruire iqama théorique
-    if iqama is None and wait_minutes is not None and adhan:
-        try:
-            ah = datetime.strptime(adhan, "%H:%M")
-            iq = (ah + timedelta(minutes=wait_minutes)).time()
-            iqama = iq.strftime("%H:%M")
-        except Exception:
-            pass
-
-    return {"adhan": adhan, "iqama": iqama, "wait_minutes": wait_minutes}
-
-
-def extract_from_dom_text(dom_text):
-    """
-    Cherche pour chaque prière un segment de texte proche contenant les HH:MM et/ou +N.
-    Stratégie simple et robuste: on prend une slice de texte après le mot-clé.
+    Extrait les horaires depuis le HTML en cherchant la variable confData
     """
     results = {}
-
-    # Normaliser espaces
-    text = re.sub(r"[ \t]+", " ", dom_text)
-    # On travaille ligne à ligne pour limiter le bruit
-    lines = [l.strip() for l in text.splitlines() if l.strip()]
-
-    # Recompose un “voisinage” autour de chaque prière
-    joined = "\n".join(lines)
-
-    for p, labels in PRAYER_LABELS.items():
-        # Construire une alternance sûre des labels
-        alt = "|".join([re.escape(x) for x in labels])
-        pattern = re.compile(rf"(?:{alt})\b(.{{0,160}})", re.IGNORECASE | re.DOTALL)
-        m = pattern.search(joined)
-        block = ""
-        if m:
-            block = f"{labels[0]} {m.group(1)}"
-        else:
-            # fallback: ligne par ligne, on prend la ligne où un des labels apparait et les 2 suivantes
-            for i, l in enumerate(lines):
-                if re.search(rf"\b(?:{alt})\b", l, re.IGNORECASE):
-                    block = " ".join(lines[i:i+3])
-                    break
-
-        if block:
-            parsed = _parse_times_block(block, p)
-            # On ne retient que si au moins adhan ou iqama détecté
-            if parsed["adhan"] or parsed["iqama"] or parsed["wait_minutes"] is not None:
-                results[p] = parsed
-
+    
+    # Chercher la variable confData dans le HTML
+    conf_data_match = re.search(r'var\s+confData\s*=\s*({.*?});', html_content, re.DOTALL)
+    if conf_data_match:
+        try:
+            conf_data_str = conf_data_match.group(1)
+            # Nettoyer le JSON (supprimer les commentaires et caractères invalides)
+            conf_data_str = re.sub(r'//.*?\n', '\n', conf_data_str)
+            conf_data_str = re.sub(r'/\*.*?\*/', '', conf_data_str, flags=re.DOTALL)
+            
+            conf_data = json.loads(conf_data_str)
+            
+            # Mapping des indices du tableau times
+            # times = [Fajr, Dhuhr, Asr, Maghrib, Isha]
+            if 'times' in conf_data and len(conf_data['times']) >= 5:
+                # Récupérer les wait_minutes depuis iqamaCalendar
+                wait_times = None
+                if 'iqamaCalendar' in conf_data and len(conf_data['iqamaCalendar']) > 0:
+                    # Prendre le premier mois (mois actuel)
+                    current_month = conf_data['iqamaCalendar'][0]
+                    if len(current_month) > 0:
+                        # Prendre le premier jour du mois
+                        first_day = current_month['1']
+                        if len(first_day) >= 5:  # [Fajr, Dhuhr, Asr, Maghrib, Isha]
+                            wait_times = first_day
+                
+                # Valeurs par défaut si pas de wait_times
+                if not wait_times:
+                    wait_times = [10, 10, 10, 5, 5]  # [Fajr, Dhuhr, Asr, Maghrib, Isha]
+                
+                results["Fajr"] = {
+                    "adhan": conf_data['times'][0],
+                    "iqama": calculate_iqama(conf_data['times'][0], wait_times[0]),
+                    "wait_minutes": wait_times[0]
+                }
+                
+                results["Dhuhr"] = {
+                    "adhan": conf_data['times'][1],
+                    "iqama": calculate_iqama(conf_data['times'][1], wait_times[1]),
+                    "wait_minutes": wait_times[1]
+                }
+                
+                results["Asr"] = {
+                    "adhan": conf_data['times'][2],
+                    "iqama": calculate_iqama(conf_data['times'][2], wait_times[2]),
+                    "wait_minutes": wait_times[2]
+                }
+                
+                results["Maghrib"] = {
+                    "adhan": conf_data['times'][3],
+                    "iqama": calculate_iqama(conf_data['times'][3], wait_times[3]),
+                    "wait_minutes": wait_times[3]
+                }
+                
+                results["Isha"] = {
+                    "adhan": conf_data['times'][4],
+                    "iqama": calculate_iqama(conf_data['times'][4], wait_times[4]),
+                    "wait_minutes": wait_times[4]
+                }
+            
+            # Ajouter Sunrise/Chourouk
+            if 'shuruq' in conf_data:
+                results["Sunrise"] = {
+                    "adhan": conf_data['shuruq'],
+                    "iqama": None,
+                    "wait_minutes": None
+                }
+            
+            # Ajouter Jumua
+            if 'jumua' in conf_data:
+                results["Jumua"] = {
+                    "adhan": conf_data['jumua'],
+                    "iqama": calculate_iqama(conf_data['jumua'], 10),  # Wait par défaut pour Jumua
+                    "wait_minutes": 10
+                }
+                
+        except Exception as e:
+            print(f"Failed to parse confData: {e}")
+    
     return results
 
+def calculate_iqama(adhan_time, wait_minutes):
+    """
+    Calcule l'iqama en ajoutant wait_minutes à adhan_time
+    """
+    if not adhan_time or not wait_minutes:
+        return None
+    
+    try:
+        # Parser l'heure adhan (format HH:MM)
+        hours, minutes = map(int, adhan_time.split(':'))
+        
+        # Convertir wait_minutes en nombre entier (gérer le format "+10")
+        if isinstance(wait_minutes, str):
+            wait_minutes = int(wait_minutes.replace('+', ''))
+        else:
+            wait_minutes = int(wait_minutes)
+        
+        # Ajouter les minutes d'attente
+        total_minutes = hours * 60 + minutes + wait_minutes
+        
+        # Convertir en heures et minutes
+        new_hours = total_minutes // 60
+        new_minutes = total_minutes % 60
+        
+        # Formater en HH:MM
+        return f"{new_hours:02d}:{new_minutes:02d}"
+        
+    except Exception:
+        return None
 
 def scrape():
-    with sync_playwright() as pw:
-        browser = pw.chromium.launch(headless=True)
-        page = browser.new_page()
-        aggregate = {}
-
-        for url in TARGETS:
-            page.goto(url, wait_until="domcontentloaded", timeout=30000)
-            # Laisse du temps aux widgets/JS
-            try:
-                page.wait_for_load_state("networkidle", timeout=5000)
-            except Exception:
-                pass
-            page.wait_for_timeout(1500)
-
-            body_text = page.locator("body").inner_text()
-
-            partial = extract_from_dom_text(body_text)
-            aggregate.update({k: v for k, v in partial.items() if v})
-
-            # Si on a les prières essentielles, on peut s’arrêter
-            REQUIRED = ["Fajr", "Dhuhr", "Asr", "Maghrib", "Isha"]
-            if all(p in aggregate for p in REQUIRED):
-                break
-
-        browser.close()
-
-    # Ne renvoyer que les prières d'intérêt (incluant Sunrise si trouvé)
-    order = ["Fajr", "Sunrise", "Dhuhr", "Jumua", "Asr", "Maghrib", "Isha"]
-    ordered = {p: aggregate.get(p) for p in order}
-    return ordered
-
+    aggregate = {}
+    
+    for url in TARGETS:
+        try:
+            # Supprimer le print de debug
+            # print(f"Trying URL: {url}")
+            response = requests.get(url, timeout=30)
+            response.raise_for_status()
+            
+            html_content = response.text
+            partial = extract_from_html(html_content)
+            
+            if partial:
+                aggregate.update(partial)
+                # Supprimer le print de debug
+                # print(f"Successfully extracted from {url}")
+                
+                # Si on a les prières essentielles, on peut s'arrêter
+                REQUIRED = ["Fajr", "Dhuhr", "Asr", "Maghrib", "Isha"]
+                if all(p in aggregate for p in REQUIRED):
+                    break
+                    
+        except Exception as e:
+            # Supprimer le print de debug
+            # print(f"Failed to scrape {url}: {e}")
+            continue
+    
+    return aggregate
 
 if __name__ == "__main__":
     data = scrape()

@@ -97,31 +97,51 @@ type ValidationIssue = { field: string; message: string };
 function validateTimingsFlat(flat: Record<string, string>): ValidationIssue[] {
   const issues: ValidationIssue[] = [];
   const need = ["Fajr", "Dhuhr", "Asr", "Maghrib", "Isha"];
+  
   for (const k of need) {
-    if (!flat[k]) issues.push({ field: k, message: `${k} manquant` });
+    if (!flat[k]) {
+      // Cas spécial : si Dhuhr est manquant mais Jumua est présent, c'est OK
+      if (k === "Dhuhr" && flat["Jumua"]) {
+        continue; // Pas d'erreur si Jumua remplace Dhuhr
+      }
+      issues.push({ field: k, message: `${k} manquant` });
+    }
   }
+  
   const re = /^([01]?\d|2[0-3]):([0-5]\d)$/;
   for (const [k, v] of Object.entries(flat)) {
     if (v && !re.test(v)) {
       issues.push({ field: k, message: `format invalide: ${v}` });
     }
   }
+  
   // Vérif ordre croissant approximatif dans la journée
+  // Remplacer Dhuhr par Jumua si nécessaire pour la validation
   const order = ["Fajr", "Dhuhr", "Asr", "Maghrib", "Isha"];
   const toMinutes = (s?: string) => {
     if (!s) return null;
     const [h, m] = s.split(":").map((x) => parseInt(x, 10));
     return h * 60 + m;
   };
+  
   let prev: number | null = null;
   for (const k of order) {
-    const t = toMinutes(flat[k]);
+    let t: number | null = null;
+    
+    if (k === "Dhuhr" && !flat[k] && flat["Jumua"]) {
+      // Utiliser Jumua comme alternative à Dhuhr pour la validation
+      t = toMinutes(flat["Jumua"]);
+    } else {
+      t = toMinutes(flat[k]);
+    }
+    
     if (t == null) continue;
     if (prev != null && t < prev) {
       issues.push({ field: k, message: `${k} avant précédent` });
     }
     prev = t;
   }
+  
   return issues;
 }
 
@@ -206,7 +226,8 @@ export async function GET(req: Request) {
   const slug = (searchParams.get("slug") || "mosquee-sahaba-creteil").trim();
   const directUrl = searchParams.get("url");
   const debug = searchParams.get("debug") === "1" || searchParams.get("debug") === "true";
-  const mode = searchParams.get("mode") || "playwright";
+  const force = searchParams.get("force") === "1" || searchParams.get("force") === "true";
+  const mode = searchParams.get("mode") || "playwright"; // Forcer Playwright pour tester
   const base = directUrl ?? `https://mawaqit.net/fr/${slug}`;
   const embed = directUrl
     ? `${directUrl}${directUrl.includes("?") ? "&" : "?"}showOnlyTimes=true&embed=true`
@@ -218,7 +239,7 @@ export async function GET(req: Request) {
   const now = Date.now();
   const dayKey = getDayKeyLocal();
   const cached = CACHE[key];
-  if (!debug && cached && cached.dayKey === dayKey) {
+  if (!debug && !force && cached && cached.dayKey === dayKey) {
     const flat = toFlat(cached.data);
     const issues = validateTimingsFlat(flat);
     return NextResponse.json({ ok: true, timings: cached.data, flat, issues, cached: true });
@@ -230,21 +251,33 @@ export async function GET(req: Request) {
   try {
     // If explicitly requested, use the local Python Playwright scraper (executes JS, more reliable)
     if (mode === "playwright") {
-      const py = await runPythonScraper(base);
-      // Expect JSON with keys Fajr/Sunrise/Dhuhr/Jumua/Asr/Maghrib/Isha (adhan/iqama/wait)
-      const timings: Timings = {
-        Fajr: py.Fajr,
-        Sunrise: py.Sunrise,
-        Dhuhr: py.Dhuhr,
-        Jumua: py.Jumua,
-        Asr: py.Asr,
-        Maghrib: py.Maghrib,
-        Isha: py.Isha,
-      };
-      CACHE[key] = { at: now, dayKey, data: timings };
-      const flat = toFlat(timings);
-      const issues = validateTimingsFlat(flat);
-      return NextResponse.json({ ok: true, used: "playwright", timings, flat, issues, cached: false });
+      console.log("Using Python Playwright scraper...");
+      try {
+        const py = await runPythonScraper(base);
+        console.log("Python scraper result:", py);
+        // Expect JSON with keys Fajr/Sunrise/Dhuhr/Jumua/Asr/Maghrib/Isha (adhan/iqama/wait)
+        const timings: Timings = {
+          Fajr: py.Fajr,
+          Sunrise: py.Sunrise,
+          Dhuhr: py.Dhuhr,
+          Jumua: py.Jumua,
+          Asr: py.Asr,
+          Maghrib: py.Maghrib,
+          Isha: py.Isha,
+        };
+        console.log("Processed timings:", timings);
+        CACHE[key] = { at: now, dayKey, data: timings };
+        const flat = toFlat(timings);
+        const issues = validateTimingsFlat(flat);
+        return NextResponse.json({ ok: true, used: "playwright", timings, flat, issues, cached: false });
+      } catch (pyError) {
+        console.error("Python scraper failed:", pyError);
+        // Don't fall through to HTML scraping for playwright mode
+        return NextResponse.json(
+          { ok: false, error: `Python scraper failed: ${pyError}`, used: "playwright_failed" },
+          { status: 500 }
+        );
+      }
     }
     // 1) embed (souvent statique), 2) base, 3) mobile
     let html = await fetchHtml(embed);
@@ -312,29 +345,89 @@ export async function GET(req: Request) {
 
 function runPythonScraper(targetUrl?: string): Promise<Record<string, Prayer>> {
   const args = ["scrape_prayer_times.py", ...(targetUrl ? [targetUrl] : [])];
+  console.log("Running Python scraper with args:", args);
+  console.log("Current working directory:", process.cwd());
+  console.log("Script path:", require('path').join(process.cwd(), "scrape_prayer_times.py"));
+  console.log("PATH:", process.env.PATH);
+  
   const trySpawn = (cmd: string) =>
     new Promise<Record<string, Prayer>>((resolve, reject) => {
+      console.log(`Trying to spawn: ${cmd}`);
       const p = spawn(cmd, args, { cwd: process.cwd() });
       let out = "";
       let err = "";
-      p.stdout.on("data", (d) => (out += d.toString()));
-      p.stderr.on("data", (d) => (err += d.toString()));
-      p.on("error", (er) => reject(er));
+      
+      p.stdout.on("data", (d) => {
+        const data = d.toString();
+        console.log("Python stdout:", data);
+        out += data;
+      });
+      
+      p.stderr.on("data", (d) => {
+        const data = d.toString();
+        console.log("Python stderr:", data);
+        err += data;
+      });
+      
+      p.on("error", (er) => {
+        console.error("Python spawn error:", er);
+        reject(er);
+      });
+      
       p.on("close", (code) => {
-        if (code !== 0) return reject(new Error(err || `${cmd} exited ${code}`));
+        console.log(`Python process closed with code: ${code}`);
+        console.log("Python output:", out);
+        console.log("Python errors:", err);
+        
+        if (code !== 0) {
+          const errorMsg = err || `${cmd} exited ${code}`;
+          console.error("Python failed:", errorMsg);
+          return reject(new Error(errorMsg));
+        }
+        
         try {
           const json = JSON.parse(out);
-          resolve(json);
-        } catch (err) {
-          reject(err);
+          console.log("Successfully parsed Python output:", json);
+          
+          // Post-traitement pour gérer Dhuhr vs Jumua
+          const processed = processPrayerTimes(json);
+          
+          resolve(processed);
+        } catch (parseErr) {
+          console.error("Failed to parse Python output:", parseErr);
+          reject(parseErr);
         }
       });
     });
 
-  // Prefer python3, then fallback to python
-  return trySpawn("python3").catch((_e) => {
-    // If python3 not found, try python
-    return trySpawn("python");
+  // Use absolute path to python3
+  return trySpawn("/Users/humanappeal/Desktop/NeenaV3-1/venv/bin/python3").catch((_e) => {
+    console.log("Virtual env python3 failed, trying absolute python3...");
+    return trySpawn("/usr/bin/python3");
   });
+}
+
+/**
+ * Post-traitement des horaires de prière pour gérer Dhuhr vs Jumua
+ */
+function processPrayerTimes(rawTimings: Record<string, Prayer>): Record<string, Prayer> {
+  const processed = { ...rawTimings };
+  
+  // Vérifier si c'est le vendredi
+  const today = new Date();
+  const isFriday = today.getDay() === 5; // 0 = dimanche, 5 = vendredi
+  
+  if (isFriday && processed.Jumua && processed.Dhuhr) {
+    // Le vendredi seulement, Jumua remplace Dhuhr
+    // On supprime Dhuhr pour éviter la confusion
+    delete processed.Dhuhr;
+    console.log("Vendredi détecté: Jumua priorisé, Dhuhr supprimé");
+  } else {
+    // Les autres jours, on garde Dhuhr ET Jumua
+    // Même s'ils ont les mêmes horaires, c'est normal
+    console.log("Jour non-vendredi: Dhuhr et Jumua conservés (même si horaires identiques)");
+  }
+  
+  return processed;
 }
 
