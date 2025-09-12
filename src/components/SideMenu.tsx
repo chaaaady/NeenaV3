@@ -56,22 +56,118 @@ export function SideMenu({ isOpen, onClose }: { isOpen: boolean; onClose: () => 
 
       <div className="p-4 space-y-2">
         <nav className="space-y-2">
+          {/* Mosquée - Créteil (versions) */}
+          <div className="px-2 pt-2 pb-1 text-[12px] font-[700] text-[var(--text-muted)]">Mosquée · Créteil</div>
           <Link href="/mosquee/creteil" className="block" onClick={onClose}>
-            <span className="w-full flex items-center justify-between p-4 rounded-[var(--radius-all)] hover:bg-[var(--surface-2)] transition-colors text-left text-[16px] font-[700] text-[var(--text)]">
-              Mosquée
-              <span className="text-[13px] font-[600] text-[var(--text-muted)]">Créteil</span>
+            <span className="w-full flex items-center justify-between p-3 rounded-[var(--radius-all)] hover:bg-[var(--surface-2)] transition-colors text-left text-[15px] font-[700] text-[var(--text)]">
+              V1
+              <span className="text-[13px] font-[600] text-[var(--text-muted)]">Page mosquée</span>
+            </span>
+          </Link>
+          <Link href="/mosquee/creteil/v2" className="block" onClick={onClose}>
+            <span className="w-full flex items-center justify-between p-3 rounded-[var(--radius-all)] hover:bg-[var(--surface-2)] transition-colors text-left text-[15px] font-[700] text-[var(--text)]">
+              V2
+              <span className="text-[13px] font-[600] text-[var(--text-muted)]">Page mosquée</span>
+            </span>
+          </Link>
+          <Link href="/mosquee/creteil/v3" className="block" onClick={onClose}>
+            <span className="w-full flex items-center justify-between p-3 rounded-[var(--radius-all)] hover:bg-[var(--surface-2)] transition-colors text-left text-[15px] font-[700] text-[var(--text)]">
+              V3
+              <span className="text-[13px] font-[600] text-[var(--text-muted)]">Page mosquée</span>
+            </span>
+          </Link>
+
+          {/* Don - Montant */}
+          <div className="px-2 pt-3 pb-1 text-[12px] font-[700] text-[var(--text-muted)]">Don · Montant</div>
+          <Link href="/step-amount" className="block" onClick={onClose}>
+            <span className="w-full flex items-center justify-between p-3 rounded-[var(--radius-all)] hover:bg-[var(--surface-2)] transition-colors text-left text-[15px] font-[700] text-[var(--text)]">
+              V1
+              <span className="text-[13px] font-[600] text-[var(--text-muted)]">Montant</span>
             </span>
           </Link>
           <Link href="/step-amount-v2" className="block" onClick={onClose}>
-            <span className="w-full flex items-center justify-between p-4 rounded-[var(--radius-all)] hover:bg-[var(--surface-2)] transition-colors text-left text-[16px] font-[700] text-[var(--text)]">
+            <span className="w-full flex items-center justify-between p-3 rounded-[var(--radius-all)] hover:bg-[var(--surface-2)] transition-colors text-left text-[15px] font-[700] text-[var(--text)]">
               V2
               <span className="text-[13px] font-[600] text-[var(--text-muted)]">Montant</span>
             </span>
           </Link>
+          <Link href="/step-amount-v3" className="block" onClick={onClose}>
+            <span className="w-full flex items-center justify-between p-3 rounded-[var(--radius-all)] hover:bg-[var(--surface-2)] transition-colors text-left text-[15px] font-[700] text-[var(--text)]">
+              V3
+              <span className="text-[13px] font-[600] text-[var(--text-muted)]">Montant</span>
+            </span>
+          </Link>
+
+          {/* Don - Infos personnelles */}
+          <div className="px-2 pt-3 pb-1 text-[12px] font-[700] text-[var(--text-muted)]">Don · Infos personnelles</div>
+          <Link href="/step-personal" className="block" onClick={onClose}>
+            <span className="w-full flex items-center justify-between p-3 rounded-[var(--radius-all)] hover:bg-[var(--surface-2)] transition-colors text-left text-[15px] font-[700] text-[var(--text)]">
+              V1
+              <span className="text-[13px] font-[600] text-[var(--text-muted)]">Infos</span>
+            </span>
+          </Link>
+          <Link href="/step-personal-v2" className="block" onClick={onClose}>
+            <span className="w-full flex items-center justify-between p-3 rounded-[var(--radius-all)] hover:bg-[var(--surface-2)] transition-colors text-left text-[15px] font-[700] text-[var(--text)]">
+              V2
+              <span className="text-[13px] font-[600] text-[var(--text-muted)]">Infos</span>
+            </span>
+          </Link>
+          <Link href="/step-personal-v3" className="block" onClick={onClose}>
+            <span className="w-full flex items-center justify-between p-3 rounded-[var(--radius-all)] hover:bg-[var(--surface-2)] transition-colors text-left text-[15px] font-[700] text-[var(--text)]">
+              V3
+              <span className="text-[13px] font-[600] text-[var(--text-muted)]">Infos</span>
+            </span>
+          </Link>
+          {/* Variante alternative existante */}
+          <Link href="/step-personal-V2" className="block" onClick={onClose}>
+            <span className="w-full flex items-center justify-between p-3 rounded-[var(--radius-all)] hover:bg-[var(--surface-2)] transition-colors text-left text-[15px] font-[700] text-[var(--text)]">
+              V2 (alt)
+              <span className="text-[13px] font-[600] text-[var(--text-muted)]">Infos</span>
+            </span>
+          </Link>
+
+          {/* Don - Paiement */}
+          <div className="px-2 pt-3 pb-1 text-[12px] font-[700] text-[var(--text-muted)]">Don · Paiement</div>
+          <Link href="/step-payment" className="block" onClick={onClose}>
+            <span className="w-full flex items-center justify-between p-3 rounded-[var(--radius-all)] hover:bg-[var(--surface-2)] transition-colors text-left text-[15px] font-[700] text-[var(--text)]">
+              V1
+              <span className="text-[13px] font-[600] text-[var(--text-muted)]">Paiement</span>
+            </span>
+          </Link>
+          <Link href="/step-payment-v2" className="block" onClick={onClose}>
+            <span className="w-full flex items-center justify-between p-3 rounded-[var(--radius-all)] hover:bg-[var(--surface-2)] transition-colors text-left text-[15px] font-[700] text-[var(--text)]">
+              V2
+              <span className="text-[13px] font-[600] text-[var(--text-muted)]">Paiement</span>
+            </span>
+          </Link>
+          <Link href="/step-payment-v3" className="block" onClick={onClose}>
+            <span className="w-full flex items-center justify-between p-3 rounded-[var(--radius-all)] hover:bg-[var(--surface-2)] transition-colors text-left text-[15px] font-[700] text-[var(--text)]">
+              V3
+              <span className="text-[13px] font-[600] text-[var(--text-muted)]">Paiement</span>
+            </span>
+          </Link>
+
+          {/* Flow tout-en-un */}
+          <div className="px-2 pt-3 pb-1 text-[12px] font-[700] text-[var(--text-muted)]">Tout-en-un</div>
           <Link href="/step-all-v4" className="block" onClick={onClose}>
-            <span className="w-full flex items-center justify-between p-4 rounded-[var(--radius-all)] hover:bg-[var(--surface-2)] transition-colors text-left text-[16px] font-[700] text-[var(--text)]">
+            <span className="w-full flex items-center justify-between p-3 rounded-[var(--radius-all)] hover:bg-[var(--surface-2)] transition-colors text-left text-[15px] font-[700] text-[var(--text)]">
               V4
-              <span className="text-[13px] font-[600] text-[var(--text-muted)]">Tout-en-un</span>
+              <span className="text-[13px] font-[600] text-[var(--text-muted)]">Étapes combinées</span>
+            </span>
+          </Link>
+
+          {/* Autres */}
+          <div className="px-2 pt-3 pb-1 text-[12px] font-[700] text-[var(--text-muted)]">Autres</div>
+          <Link href="/duaa" className="block" onClick={onClose}>
+            <span className="w-full flex items-center justify-between p-3 rounded-[var(--radius-all)] hover:bg-[var(--surface-2)] transition-colors text-left text-[15px] font-[700] text-[var(--text)]">
+              Duaa
+              <span className="text-[13px] font-[600] text-[var(--text-muted)]">Flux prières</span>
+            </span>
+          </Link>
+          <Link href="/benevolat" className="block" onClick={onClose}>
+            <span className="w-full flex items-center justify-between p-3 rounded-[var(--radius-all)] hover:bg-[var(--surface-2)] transition-colors text-left text-[15px] font-[700] text-[var(--text)]">
+              Bénévolat
+              <span className="text-[13px] font-[600] text-[var(--text-muted)]">Rejoindre</span>
             </span>
           </Link>
         </nav>
