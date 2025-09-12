@@ -3,45 +3,69 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { DonationFormValues, defaultDonationValues } from "@/lib/schema";
+import { Input, SegmentedControl, Switch } from "@/components";
+
+type DonorKind = "Personnel" | "Entreprise";
 
 export default function Page() {
   const router = useRouter();
   const [values, setValues] = useState<DonationFormValues>({ ...defaultDonationValues });
+  const [donorKind, setDonorKind] = useState<DonorKind>("Personnel");
 
   const update = (k: keyof DonationFormValues) => (val: string) => setValues((v) => ({ ...v, [k]: val }));
-  const canContinue = !!(values.firstName && values.lastName && values.email);
+
+  const canContinue = donorKind === "Entreprise"
+    ? !!(values.companyName && values.companySiret && values.email)
+    : !!(values.firstName && values.lastName && values.email);
 
   return (
     <main className="app-container pb-24" style={{ paddingBottom: 'calc(env(safe-area-inset-bottom) + 120px)' }}>
       <div className="app-card mt-2">
-        <div className="space-y-4">
-          <div className="app-title">Informations personnelles (V5)</div>
-          <div className="grid gap-3">
-            <label className="block">
-              <span className="block text-[13px] text-[var(--text-muted)] mb-1">Prénom</span>
-              <input className="app-input w-full" value={values.firstName} onChange={(e) => update("firstName")(e.target.value)} placeholder="Votre prénom" />
-            </label>
-            <label className="block">
-              <span className="block text-[13px] text-[var(--text-muted)] mb-1">Nom</span>
-              <input className="app-input w-full" value={values.lastName} onChange={(e) => update("lastName")(e.target.value)} placeholder="Votre nom" />
-            </label>
-            <label className="block">
-              <span className="block text-[13px] text-[var(--text-muted)] mb-1">Email</span>
-              <input className="app-input w-full" type="email" value={values.email} onChange={(e) => update("email")(e.target.value)} placeholder="vous@exemple.com" />
-            </label>
-            <label className="block">
-              <span className="block text-[13px] text-[var(--text-muted)] mb-1">Adresse</span>
-              <input className="app-input w-full" value={values.address} onChange={(e) => update("address")(e.target.value)} placeholder="Adresse complète" />
-            </label>
+        <div className="space-y-5">
+          <div className="app-title">Informations personnelles</div>
+
+          <SegmentedControl
+            options={["Personnel", "Entreprise"]}
+            value={donorKind}
+            onChange={(v: string) => {
+              const kind = (v as DonorKind);
+              setDonorKind(kind);
+              // sync schema field
+              setValues((prev) => ({ ...prev, donorType: kind } as DonationFormValues));
+            }}
+          />
+
+          {donorKind === "Entreprise" ? (
+            <div className="grid gap-3">
+              <Input placeholder="Raison sociale" value={values.companyName} onChange={update("companyName")} />
+              <Input placeholder="SIRET" value={values.companySiret} onChange={update("companySiret")} />
+              <Input type="email" placeholder="Email" value={values.email} onChange={update("email")} />
+              <Input placeholder="Adresse" value={values.address} onChange={update("address")} />
+            </div>
+          ) : (
+            <div className="grid gap-3">
+              <div className="grid gap-3 md:grid-cols-2 md:gap-3">
+                <Input placeholder="Prénom" value={values.firstName} onChange={update("firstName")} />
+                <Input placeholder="Nom" value={values.lastName} onChange={update("lastName")} />
+              </div>
+              <Input type="email" placeholder="Email" value={values.email} onChange={update("email")} />
+              <Input placeholder="Adresse" value={values.address} onChange={update("address")} />
+            </div>
+          )}
+
+          <div className="section-box flex items-center justify-between">
+            <span className="text-[15px]">Je souhaite recevoir un reçu fiscal</span>
+            <Switch checked={values.wantsReceipt} onCheckedChange={(checked) => setValues((v) => ({ ...v, wantsReceipt: !!checked }))} />
           </div>
-          <div className="mt-2 flex gap-3">
-            <a href="/step-amount-v2" className="btn-secondary pressable flex-1 text-center py-3">Retour</a>
+
+          <div className="mt-1 grid grid-cols-2 gap-3">
+            <a href="/step-amount-v2" className="btn-secondary pressable w-full text-center py-3">← Retour</a>
             <button
               disabled={!canContinue}
               onClick={() => canContinue && router.push("/step-payment")}
-              className="btn-primary pressable flex-1 py-3 disabled:opacity-60 disabled:cursor-not-allowed"
+              className="btn-primary pressable w-full py-3 disabled:opacity-60 disabled:cursor-not-allowed"
             >
-              Continuer vers paiement
+              Continuer →
             </button>
           </div>
         </div>
