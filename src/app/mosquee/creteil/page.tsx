@@ -4,6 +4,7 @@ import { useState, useMemo, useEffect, useRef, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import Image from "next/image";
 import { AppBar, SideMenu } from "@/components";
+import { CardDS, CardDSBody, CardDSHeader, SectionHeader, SummaryRow } from "@/components/ds";
 import CurrentPrayerSection from "@/components/CurrentPrayerSection";
 import CurrentTimeSection from "@/components/CurrentTimeSection";
 import { Input } from "@/components";
@@ -139,20 +140,28 @@ function MosqueCreteilContent() {
 
         {/* Next Prayer section removed */}
 
-        {/* Horaires (API interne) */}
-        <div className="app-card mt-4">
-          <div className="space-y-3">
-            <div className="app-title">Horaires de prière</div>
+        {/* Horaires (API interne) — DS primitives */}
+        <div className="mt-4">
+          <CardDS>
+            <CardDSHeader>
+              <SectionHeader title="Horaires de prière" subtitle="Source Mawaqit" />
+            </CardDSHeader>
+            <CardDSBody>
               <PrayerTimesCard slug={mawaqitSlug} url={mawaqitUrl} />
-          </div>
+            </CardDSBody>
+          </CardDS>
         </div>
 
-        {/* Jumu'a section (below prayer times) */}
-        <div className="app-card mt-4">
-          <div className="space-y-3">
-            <div className="app-title">Jumu&apos;a</div>
+        {/* Jumu'a section — DS primitives */}
+        <div className="mt-4">
+          <CardDS>
+            <CardDSHeader>
+              <SectionHeader title="Jumu’a" />
+            </CardDSHeader>
+            <CardDSBody>
               <JumaaCard />
-          </div>
+            </CardDSBody>
+          </CardDS>
         </div>
 
         {/* Informations pratiques */}
