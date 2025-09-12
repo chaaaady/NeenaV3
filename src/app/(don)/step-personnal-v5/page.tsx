@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { useFormContext } from "react-hook-form";
 import { DonationFormValues, defaultDonationValues } from "@/lib/schema";
 import { AppBar, SideMenu, Input, SegmentedControl, Switch } from "@/components";
 
@@ -9,6 +10,7 @@ type DonorKind = "Personnel" | "Entreprise";
 
 export default function Page() {
   const router = useRouter();
+  const form = useFormContext<DonationFormValues>();
   const [values, setValues] = useState<DonationFormValues>({ ...defaultDonationValues });
   const [donorKind, setDonorKind] = useState<DonorKind>("Personnel");
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -41,25 +43,25 @@ export default function Page() {
 
           {donorKind === "Entreprise" ? (
             <div className="grid gap-3">
-              <Input placeholder="Raison sociale" value={values.companyName} onChange={update("companyName")} />
-              <Input placeholder="SIRET" value={values.companySiret} onChange={update("companySiret")} />
-              <Input type="email" placeholder="Email" value={values.email} onChange={update("email")} />
-              <Input placeholder="Adresse" value={values.address} onChange={update("address")} />
+              <Input placeholder="Raison sociale" value={values.companyName} onChange={(v) => { update("companyName")(v); form.setValue("companyName", v as string, { shouldDirty: true }); }} />
+              <Input placeholder="SIRET" value={values.companySiret} onChange={(v) => { update("companySiret")(v); form.setValue("companySiret", v as string, { shouldDirty: true }); }} />
+              <Input type="email" placeholder="Email" value={values.email} onChange={(v) => { update("email")(v); form.setValue("email", v as string, { shouldDirty: true }); }} />
+              <Input placeholder="Adresse" value={values.address} onChange={(v) => { update("address")(v); form.setValue("address", v as string, { shouldDirty: true }); }} />
             </div>
           ) : (
             <div className="grid gap-3">
               <div className="grid gap-3 md:grid-cols-2 md:gap-3">
-                <Input placeholder="Prénom" value={values.firstName} onChange={update("firstName")} />
-                <Input placeholder="Nom" value={values.lastName} onChange={update("lastName")} />
+                <Input placeholder="Prénom" value={values.firstName} onChange={(v) => { update("firstName")(v); form.setValue("firstName", v as string, { shouldDirty: true }); }} />
+                <Input placeholder="Nom" value={values.lastName} onChange={(v) => { update("lastName")(v); form.setValue("lastName", v as string, { shouldDirty: true }); }} />
               </div>
-              <Input type="email" placeholder="Email" value={values.email} onChange={update("email")} />
-              <Input placeholder="Adresse" value={values.address} onChange={update("address")} />
+              <Input type="email" placeholder="Email" value={values.email} onChange={(v) => { update("email")(v); form.setValue("email", v as string, { shouldDirty: true }); }} />
+              <Input placeholder="Adresse" value={values.address} onChange={(v) => { update("address")(v); form.setValue("address", v as string, { shouldDirty: true }); }} />
             </div>
           )}
 
           <div className="section-box flex items-center justify-between">
             <span className="text-[15px]">Je souhaite recevoir un reçu fiscal</span>
-            <Switch checked={values.wantsReceipt} onCheckedChange={(checked) => setValues((v) => ({ ...v, wantsReceipt: !!checked }))} />
+            <Switch checked={values.wantsReceipt} onCheckedChange={(checked) => { setValues((v) => ({ ...v, wantsReceipt: !!checked })); form.setValue("wantsReceipt", !!checked, { shouldDirty: true }); }} />
           </div>
 
           <div className="mt-1 grid grid-cols-2 gap-3">
