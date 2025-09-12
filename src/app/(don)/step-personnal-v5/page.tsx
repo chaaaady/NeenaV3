@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { DonationFormValues, defaultDonationValues } from "@/lib/schema";
-import { Input, SegmentedControl, Switch } from "@/components";
+import { AppBar, SideMenu, Input, SegmentedControl, Switch } from "@/components";
 
 type DonorKind = "Personnel" | "Entreprise";
 
@@ -11,6 +11,7 @@ export default function Page() {
   const router = useRouter();
   const [values, setValues] = useState<DonationFormValues>({ ...defaultDonationValues });
   const [donorKind, setDonorKind] = useState<DonorKind>("Personnel");
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const update = (k: keyof DonationFormValues) => (val: string) => setValues((v) => ({ ...v, [k]: val }));
 
@@ -19,7 +20,10 @@ export default function Page() {
     : !!(values.firstName && values.lastName && values.email);
 
   return (
-    <main className="app-container pb-24" style={{ paddingBottom: 'calc(env(safe-area-inset-bottom) + 120px)' }}>
+    <>
+      <AppBar onMenu={() => setIsMenuOpen(true)} />
+      <SideMenu isOpen={isMenuOpen} onClose={() => setIsMenuOpen(false)} />
+      <main className="app-container pb-24" style={{ paddingBottom: 'calc(env(safe-area-inset-bottom) + 120px)' }}>
       <div className="app-card mt-2">
         <div className="space-y-5">
           <div className="app-title">Informations personnelles</div>
@@ -70,7 +74,8 @@ export default function Page() {
           </div>
         </div>
       </div>
-    </main>
+      </main>
+    </>
   );
 }
 
