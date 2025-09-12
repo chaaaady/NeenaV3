@@ -49,11 +49,11 @@ function V4Content() {
       />
 
       {/* Hero (style V1, composants shadcn pour la carte) */}
-      <Card className="rounded-[12px]" style={{ boxShadow: 'var(--shadow-card)' }}>
+      <Card className="rounded-[16px] border border-[var(--border)]" style={{ boxShadow: '0 8px 24px rgba(15,23,42,0.12), 0 2px 8px rgba(15,23,42,0.08)' }}>
         <CardContent className="p-0">
           <div
             ref={heroRef}
-            className="w-full rounded-12 overflow-hidden relative h-[260px]"
+            className="w-full rounded-16 overflow-hidden relative h-[260px]"
             onMouseEnter={() => setIsHeroPaused(true)}
             onMouseLeave={() => setIsHeroPaused(false)}
             onTouchStart={() => setIsHeroPaused(true)}
@@ -99,7 +99,7 @@ function V4Content() {
 
       {/* Heure & Prière actuelle (proche V1, encapsulé dans cartes shadcn) */}
       <div className="grid gap-4 mt-4">
-        <Card className="rounded-[12px]" style={{ boxShadow: 'var(--shadow-card)' }}>
+        <Card className="rounded-[16px] border border-[var(--border)]" style={{ boxShadow: '0 8px 24px rgba(15,23,42,0.12), 0 2px 8px rgba(15,23,42,0.08)' }}>
           <CardHeader>
             <div className="text-[15px] font-[700]">Heure et prière actuelles</div>
           </CardHeader>
@@ -117,7 +117,7 @@ function V4Content() {
         </Card>
 
         {/* Horaires simplifiés */}
-        <Card className="rounded-[12px]" style={{ boxShadow: 'var(--shadow-card)' }}>
+        <Card className="rounded-[16px] border border-[var(--border)]" style={{ boxShadow: '0 8px 24px rgba(15,23,42,0.12), 0 2px 8px rgba(15,23,42,0.08)' }}>
           <CardHeader>
             <div className="flex items-center justify-between">
               <div className="text-[15px] font-[700]">Horaires de prière</div>
@@ -143,7 +143,7 @@ function V4Content() {
         </Card>
 
         {/* Jumu'a */}
-        <Card className="rounded-[12px]" style={{ boxShadow: 'var(--shadow-card)' }}>
+        <Card className="rounded-[16px] border border-[var(--border)]" style={{ boxShadow: '0 8px 24px rgba(15,23,42,0.12), 0 2px 8px rgba(15,23,42,0.08)' }}>
           <CardHeader>
             <div className="text-[15px] font-[700]">Jumu&apos;a</div>
           </CardHeader>
@@ -155,7 +155,7 @@ function V4Content() {
         </Card>
 
         {/* Bénévolat & Newsletter */}
-        <Card className="rounded-[12px]" style={{ boxShadow: 'var(--shadow-card)' }}>
+        <Card className="rounded-[16px] border border-[var(--border)]" style={{ boxShadow: '0 8px 24px rgba(15,23,42,0.12), 0 2px 8px rgba(15,23,42,0.08)' }}>
           <CardHeader>
             <div className="text-[15px] font-[700]">Bénévolat</div>
           </CardHeader>
@@ -165,7 +165,7 @@ function V4Content() {
           </CardContent>
         </Card>
 
-        <Card className="rounded-[12px]" style={{ boxShadow: 'var(--shadow-card)' }}>
+        <Card className="rounded-[16px] border border-[var(--border)]" style={{ boxShadow: '0 8px 24px rgba(15,23,42,0.12), 0 2px 8px rgba(15,23,42,0.08)' }}>
           <CardHeader>
             <div className="text-[15px] font-[700]">Newsletter</div>
           </CardHeader>
