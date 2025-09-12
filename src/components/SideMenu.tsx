@@ -76,6 +76,12 @@ export function SideMenu({ isOpen, onClose }: { isOpen: boolean; onClose: () => 
               <span className="text-[13px] font-[600] text-[var(--text-muted)]">Page mosquée</span>
             </span>
           </Link>
+          <Link href="/mosquee/creteil/v4" className="block" onClick={onClose}>
+            <span className="w-full flex items-center justify-between p-3 rounded-[var(--radius-all)] hover:bg-[var(--surface-2)] transition-colors text-left text-[15px] font-[700] text-[var(--text)]">
+              V4
+              <span className="text-[13px] font-[600] text-[var(--text-muted)]">Page mosquée</span>
+            </span>
+          </Link>
 
           {/* Don - Montant */}
           <div className="px-2 pt-3 pb-1 text-[12px] font-[700] text-[var(--text-muted)]">Don · Montant</div>
