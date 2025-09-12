@@ -82,6 +82,12 @@ export function SideMenu({ isOpen, onClose }: { isOpen: boolean; onClose: () => 
               <span className="text-[13px] font-[600] text-[var(--text-muted)]">Infos</span>
             </span>
           </Link>
+          <Link href="/step-personnal-v5" className="block" onClick={onClose}>
+            <span className="w-full flex items-center justify-between p-3 rounded-[var(--radius-all)] hover:bg-[var(--surface-2)] transition-colors text-left text-[15px] font-[700] text-[var(--text)]">
+              V5 (test)
+              <span className="text-[13px] font-[600] text-[var(--text-muted)]">Infos</span>
+            </span>
+          </Link>
 
           {/* Don - Paiement */}
           <div className="px-2 pt-3 pb-1 text-[12px] font-[700] text-[var(--text-muted)]">Don · Paiement</div>
