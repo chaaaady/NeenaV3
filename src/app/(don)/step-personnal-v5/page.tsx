@@ -61,7 +61,7 @@ export default function Page() {
 
           <div className="section-box flex items-center justify-between">
             <span className="text-[15px]">Je souhaite recevoir un reçu fiscal</span>
-            <Switch checked={values.wantsReceipt} onCheckedChange={(checked) => { setValues((v) => ({ ...v, wantsReceipt: !!checked })); form.setValue("wantsReceipt", !!checked, { shouldDirty: true }); }} />
+            <Switch checked={values.wantsReceipt} onChange={(checked) => { setValues((v) => ({ ...v, wantsReceipt: !!checked })); form.setValue("wantsReceipt", !!checked, { shouldDirty: true }); }} />
           </div>
 
           <div className="mt-1 grid grid-cols-2 gap-3">
