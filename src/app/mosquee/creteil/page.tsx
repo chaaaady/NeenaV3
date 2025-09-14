@@ -4,6 +4,9 @@ import { useState, useMemo, useEffect, useRef, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import Image from "next/image";
 import { AppBar, SideMenu } from "@/components";
+import { GlobalHeader } from "@/components/headers/GlobalHeader";
+import { SectionHeader as StickySectionHeader } from "@/components/headers/SectionHeader";
+import { useActiveSection } from "@/hooks/useActiveSection";
 import { CardDS, CardDSBody, CardDSHeader, SectionHeader, SummaryRow } from "@/components/ds";
 import CurrentPrayerSection from "@/components/CurrentPrayerSection";
 import CurrentTimeSection from "@/components/CurrentTimeSection";
@@ -70,8 +73,9 @@ function MosqueCreteilContent() {
 
   return (
     <>
-      <AppBar onMenu={() => setIsMenuOpen(true)} />
+      <GlobalHeader onMenuClick={() => setIsMenuOpen(true)} />
       <SideMenu isOpen={isMenuOpen} onClose={() => setIsMenuOpen(false)} />
+      <StickySectionHeader title={useActiveSection().activeTitle} />
 
       <div className="app-container pb-24" style={{ paddingBottom: 'calc(env(safe-area-inset-bottom) + 120px)' }}>
         {/* Hero */}
@@ -128,7 +132,7 @@ function MosqueCreteilContent() {
         </div>
 
         {/* Heure & dates + Prière actuelle (fusionnées) */}
-        <div className="app-card mt-4">
+        <div id="hero-end" className="app-card mt-4" data-observe-section data-section-title="Horaires & Prière">
           <div className="space-y-4">
             <CurrentTimeSection embedded />
             <CurrentPrayerSection slug={mawaqitSlug} url={mawaqitUrl} embedded />
@@ -138,7 +142,7 @@ function MosqueCreteilContent() {
         {/* Next Prayer section removed */}
 
         {/* Horaires (API interne) — DS primitives */}
-        <div className="mt-4">
+        <div className="mt-4" id="horaires" data-observe-section data-section-title="Horaires de prière">
           <CardDS>
             <CardDSHeader>
               <SectionHeader title="Horaires de prière" subtitle="Source Mawaqit" />
@@ -150,7 +154,7 @@ function MosqueCreteilContent() {
         </div>
 
         {/* Jumu'a section — DS primitives */}
-        <div className="mt-4">
+        <div className="mt-4" id="jumuah" data-observe-section data-section-title="Jumu’a">
           <CardDS>
             <CardDSHeader>
               <SectionHeader title="Jumu’a" />
@@ -162,7 +166,7 @@ function MosqueCreteilContent() {
         </div>
 
         {/* Informations pratiques */}
-        <div className="app-card mt-4">
+        <div className="app-card mt-4" id="infos" data-observe-section data-section-title="Informations pratiques">
           <div className="space-y-3">
             <div className="app-title">Informations pratiques</div>
             <div className="grid gap-3">
@@ -175,7 +179,7 @@ function MosqueCreteilContent() {
         </div>
 
         {/* Informations légales */}
-        <div className="app-card mt-4">
+        <div className="app-card mt-4" id="legales" data-observe-section data-section-title="Informations légales">
           <div className="space-y-3">
             <div className="app-title">Informations légales</div>
             <div className="grid gap-3">
@@ -203,7 +207,7 @@ function MosqueCreteilContent() {
         </div>
 
         {/* Bénévolat */}
-        <div className="app-card mt-4">
+        <div className="app-card mt-4" id="benevolat" data-observe-section data-section-title="Bénévolat">
           <div className="space-y-3">
             <div className="app-title">Bénévolat</div>
             <p className="text-[13px] text-[var(--text-muted)]">Rejoignez l’équipe pour soutenir l’organisation des prières, Jumu’a et événements.</p>
@@ -216,7 +220,7 @@ function MosqueCreteilContent() {
         </div>
 
         {/* Newsletter */}
-        <div className="app-card mt-4">
+        <div className="app-card mt-4" id="newsletter" data-observe-section data-section-title="Newsletter">
           <div className="space-y-3">
             <div className="app-title">Newsletter</div>
             <p className="text-[13px] text-[var(--text-muted)]">Recevez les horaires & annonces importantes (1 à 2 emails/mois).</p>
