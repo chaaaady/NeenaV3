@@ -34,6 +34,7 @@ function MosqueCreteilContent() {
   const [newsletterEmail, setNewsletterEmail] = useState("");
   const [heroInView, setHeroInView] = useState(true);
   const params = useSearchParams();
+  const { activeTitle } = useActiveSection();
 
   // Hero image (configurable via ?img=...)
   const heroImages = useMemo(() => {
@@ -75,8 +76,8 @@ function MosqueCreteilContent() {
     <>
       <GlobalHeader onMenuClick={() => setIsMenuOpen(true)} />
       <SideMenu isOpen={isMenuOpen} onClose={() => setIsMenuOpen(false)} />
-      {/* Mini header should appear only after hero is passed; positioned below global header */}
-      <StickySectionHeader title={useActiveSection().activeTitle} />
+      {/* Mini header visible only after hero ends */}
+      {!heroInView && <StickySectionHeader title={activeTitle} />}
 
       <div className="app-container pb-24" style={{ paddingBottom: 'calc(env(safe-area-inset-bottom) + 120px)' }}>
         {/* Hero */}
