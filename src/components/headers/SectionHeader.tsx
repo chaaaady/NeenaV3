@@ -18,13 +18,10 @@ export function SectionHeader({ title }: { title: string | null }) {
         transition: reduce ? undefined : "transform 180ms ease, opacity 180ms ease",
       }}
     >
-      <div className="mx-auto w-full" style={{ maxWidth: 560, paddingLeft: 16, paddingRight: 16, paddingTop: 8, paddingBottom: 8 }}>
+      <div className="mx-auto w-full" style={{ maxWidth: 560, paddingLeft: 16, paddingRight: 16, paddingTop: 6, paddingBottom: 6 }}>
         <div className="grid grid-cols-[1fr_auto] items-center gap-3">
           <div className="text-[15px] font-[800] text-[var(--text)] truncate">{title}</div>
-          <div className="flex items-center gap-2">
-            <a href="#map" className="btn-secondary pressable h-9 px-4 flex items-center justify-center">Itinéraire</a>
-            <a href="/step-amount-v2" className="btn-primary pressable h-9 px-4 flex items-center justify-center">Faire un don</a>
-          </div>
+          <a href="/step-amount-v2" className="btn-primary pressable h-8 px-3 flex items-center justify-center text-[13px] font-[700]">Faire un don</a>
         </div>
       </div>
     </div>

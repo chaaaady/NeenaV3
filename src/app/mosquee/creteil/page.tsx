@@ -82,12 +82,9 @@ function MosqueCreteilContent() {
 
   return (
     <>
-      {heroInView && !hasScrolled && (
-        <GlobalHeader onMenuClick={() => setIsMenuOpen(true)} />
-      )}
       <SideMenu isOpen={isMenuOpen} onClose={() => setIsMenuOpen(false)} />
       {/* Mini header visible only after hero ends */}
-      {!heroInView && <StickySectionHeader title={activeTitle} />}
+      {!heroInView && <StickySectionHeader title={MOSQUE_NAME} />}
 
       <div className="app-container pb-24" style={{ paddingBottom: 'calc(env(safe-area-inset-bottom) + 120px)' }}>
         {/* Hero */}
@@ -101,6 +98,10 @@ function MosqueCreteilContent() {
               onTouchStart={() => setIsHeroPaused(true)}
               onTouchEnd={() => setIsHeroPaused(false)}
             >
+              {/* Global header overlayed on hero only */}
+              <div className="absolute inset-x-0 top-0 z-50">
+                <GlobalHeader onMenuClick={() => setIsMenuOpen(true)} />
+              </div>
               {heroImages.map((src, i) => (
                 <Image
                   key={src}
