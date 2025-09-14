@@ -277,6 +277,14 @@
     transition: all var(--motion-base) var(--ease-inout);
   }
 
+  /* Apple-like frosted translucent bar by default */
+  .modern-header .header-container {
+    background: rgba(255, 255, 255, 0.72);
+    backdrop-filter: saturate(180%) blur(24px);
+    -webkit-backdrop-filter: saturate(180%) blur(24px);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+  }
+
   .header-container {
     height: 48px;
     display: flex;
@@ -1070,18 +1078,19 @@
     background: transparent;
   }
   .v4 .modern-header .header-container {
-    background: rgba(255, 255, 255, 0.86);
-    backdrop-filter: saturate(160%) blur(12px);
-    -webkit-backdrop-filter: saturate(160%) blur(12px);
+    background: rgba(255, 255, 255, 0.78);
+    backdrop-filter: saturate(180%) blur(24px);
+    -webkit-backdrop-filter: saturate(180%) blur(24px);
     border-bottom: 1px solid rgba(0, 0, 0, 0.06);
   } 
 
   /* Scroll-aware header effect */
   .header-scrolled .header-container {
-    background: rgba(255, 255, 255, 0.86);
-    backdrop-filter: saturate(160%) blur(12px);
-    -webkit-backdrop-filter: saturate(160%) blur(12px);
-    border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+    background: rgba(255, 255, 255, 0.88);
+    backdrop-filter: saturate(180%) blur(24px);
+    -webkit-backdrop-filter: saturate(180%) blur(24px);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
   }
 
   .sticky-donate {
