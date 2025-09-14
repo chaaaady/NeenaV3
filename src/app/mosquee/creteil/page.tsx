@@ -35,6 +35,7 @@ function MosqueCreteilContent() {
   const [heroInView, setHeroInView] = useState(true);
   const params = useSearchParams();
   const { activeTitle } = useActiveSection();
+  const [hasScrolled, setHasScrolled] = useState(false);
 
   // Hero image (configurable via ?img=...)
   const heroImages = useMemo(() => {
@@ -72,9 +73,18 @@ function MosqueCreteilContent() {
     return () => observer.disconnect();
   }, []);
 
+  useEffect(() => {
+    const onScroll = () => setHasScrolled(window.scrollY > 8);
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
   return (
     <>
-      <GlobalHeader onMenuClick={() => setIsMenuOpen(true)} />
+      {heroInView && !hasScrolled && (
+        <GlobalHeader onMenuClick={() => setIsMenuOpen(true)} />
+      )}
       <SideMenu isOpen={isMenuOpen} onClose={() => setIsMenuOpen(false)} />
       {/* Mini header visible only after hero ends */}
       {!heroInView && <StickySectionHeader title={activeTitle} />}
