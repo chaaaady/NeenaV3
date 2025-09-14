@@ -3,7 +3,7 @@
 import { useState, useMemo, useEffect, useRef, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import Image from "next/image";
-import { AppBar, SideMenu } from "@/components";
+import { SideMenu } from "@/components";
 import { GlobalHeader } from "@/components/headers/GlobalHeader";
 import { SectionHeader as StickySectionHeader } from "@/components/headers/SectionHeader";
 import { useActiveSection } from "@/hooks/useActiveSection";

@@ -3,25 +3,15 @@
 import { useEffect, useRef, useState } from "react";
 
 export function SectionHeader({ title }: { title: string | null }) {
-  const [mounted, setMounted] = useState(false);
-  const ref = useRef<HTMLDivElement | null>(null);
-
-  useEffect(() => {
-    setMounted(true);
-    return () => setMounted(false);
-  }, []);
-
   const reduce = typeof window !== "undefined" && window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
   if (!title) return null;
 
   return (
     <div
-      ref={ref}
       role="region"
       aria-live="polite"
       className={
-        "fixed left-0 right-0 z-[90] will-change-transform " +
+        "fixed left-0 right-0 z-[49] will-change-transform " +
         "bg-white/70 backdrop-blur-xl backdrop-saturate-150 border-b border-black/5 " +
         "top-[var(--global-header-h,0px)]"
       }
