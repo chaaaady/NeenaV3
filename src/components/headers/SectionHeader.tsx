@@ -11,9 +11,8 @@ export function SectionHeader({ title }: { title: string | null }) {
       role="region"
       aria-live="polite"
       className={
-        "fixed left-0 right-0 z-[49] will-change-transform " +
-        "bg-white/70 backdrop-blur-xl backdrop-saturate-150 border-b border-black/5 " +
-        "top-[var(--global-header-h,0px)]"
+        "fixed left-0 right-0 top-0 z-50 will-change-transform " +
+        "bg-white/70 backdrop-blur-xl backdrop-saturate-150 border-b border-black/5"
       }
       style={{
         transition: reduce ? undefined : "transform 180ms ease, opacity 180ms ease",
