@@ -275,14 +275,19 @@
     margin: 0;
     padding: 0;
     transition: all var(--motion-base) var(--ease-inout);
+    isolation: isolate;
   }
 
-  /* Apple-like frosted translucent bar by default */
-  .modern-header .header-container {
-    background: rgba(255, 255, 255, 0.72);
-    backdrop-filter: saturate(180%) blur(24px);
-    -webkit-backdrop-filter: saturate(180%) blur(24px);
+  /* Apple-like frosted translucent bar (full-bleed) */
+  .modern-header::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: rgba(255, 255, 255, 0.5);
+    backdrop-filter: saturate(180%) blur(30px);
+    -webkit-backdrop-filter: saturate(180%) blur(30px);
     border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+    pointer-events: none;
   }
 
   .header-container {
@@ -1077,20 +1082,17 @@
   .v4 .modern-header {
     background: transparent;
   }
-  .v4 .modern-header .header-container {
-    background: rgba(255, 255, 255, 0.78);
-    backdrop-filter: saturate(180%) blur(24px);
-    -webkit-backdrop-filter: saturate(180%) blur(24px);
-    border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+  .v4 .modern-header::before {
+    background: rgba(255, 255, 255, 0.58);
+    backdrop-filter: saturate(180%) blur(30px);
+    -webkit-backdrop-filter: saturate(180%) blur(30px);
   } 
 
   /* Scroll-aware header effect */
-  .header-scrolled .header-container {
-    background: rgba(255, 255, 255, 0.88);
-    backdrop-filter: saturate(180%) blur(24px);
-    -webkit-backdrop-filter: saturate(180%) blur(24px);
+  .header-scrolled::before {
+    background: rgba(255, 255, 255, 0.72);
     border-bottom: 1px solid rgba(0, 0, 0, 0.08);
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
   }
 
   .sticky-donate {
