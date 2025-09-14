@@ -83,8 +83,8 @@ function MosqueCreteilContent() {
   return (
     <>
       <SideMenu isOpen={isMenuOpen} onClose={() => setIsMenuOpen(false)} />
-      {/* Mini header visible only after hero ends */}
-      {!heroInView && <StickySectionHeader title={MOSQUE_NAME} />}
+      {/* Mini header visible only after hero ends; hidden again when hero re-enters */}
+      {!heroInView ? <StickySectionHeader title={MOSQUE_NAME} /> : null}
 
       <div className="app-container pb-24" style={{ paddingBottom: 'calc(env(safe-area-inset-bottom) + 120px)' }}>
         {/* Hero */}

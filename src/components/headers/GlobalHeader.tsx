@@ -32,7 +32,7 @@ export function GlobalHeader({ onMenuClick }: GlobalHeaderProps) {
   return (
     <div
       className={
-        "sticky top-0 z-50 w-full " +
+        "fixed top-0 left-0 right-0 z-[60] w-full " +
         (scrolled
           ? "bg-white/70 backdrop-blur-xl backdrop-saturate-150 border-b border-black/5"
           : "bg-white/35 backdrop-blur-sm")
