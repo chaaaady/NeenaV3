@@ -23,14 +23,29 @@ export function GlobalHeader({ onMenuClick, logo, navItems }: GlobalHeaderProps)
   useLayoutEffect(() => {
     if (!ref.current) return;
     const el = ref.current;
-    const ro = new (window as any).ResizeObserver?.((entries: any) => {
-      const h = entries[0]?.contentRect?.height ?? el.offsetHeight;
+    const ResizeObserverCtor = (window as any).ResizeObserver as typeof ResizeObserver | undefined;
+    let ro: ResizeObserver | null = null;
+
+    const update = (height?: number) => {
+      const h = (typeof height === "number" ? height : el.offsetHeight) || 0;
       document.documentElement.style.setProperty("--global-header-h", `${h}px`);
-    });
-    ro?.observe(el);
-    const h = el.offsetHeight;
-    document.documentElement.style.setProperty("--global-header-h", `${h}px`);
-    return () => ro?.disconnect();
+    };
+
+    if (ResizeObserverCtor) {
+      ro = new ResizeObserverCtor((entries: any) => {
+        const entry = entries?.[0];
+        const h = entry?.contentRect?.height;
+        update(h);
+      });
+      ro.observe(el);
+      update();
+      return () => ro && ro.disconnect();
+    } else {
+      update();
+      const onResize = () => update();
+      window.addEventListener("resize", onResize, { passive: true });
+      return () => window.removeEventListener("resize", onResize);
+    }
   }, []);
 
   return (
