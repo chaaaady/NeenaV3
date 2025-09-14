@@ -44,7 +44,7 @@ export default function StepAmountV2Page() {
 
   const handleNext = () => {
     if (canProceedFromAmount(values)) {
-      router.push("/step-personal-v2");
+      router.push("/step-personnal-v5");
     }
   };
 
