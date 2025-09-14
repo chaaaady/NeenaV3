@@ -75,6 +75,7 @@ function MosqueCreteilContent() {
     <>
       <GlobalHeader onMenuClick={() => setIsMenuOpen(true)} />
       <SideMenu isOpen={isMenuOpen} onClose={() => setIsMenuOpen(false)} />
+      {/* Mini header should appear only after hero is passed; positioned below global header */}
       <StickySectionHeader title={useActiveSection().activeTitle} />
 
       <div className="app-container pb-24" style={{ paddingBottom: 'calc(env(safe-area-inset-bottom) + 120px)' }}>
@@ -132,7 +133,7 @@ function MosqueCreteilContent() {
         </div>
 
         {/* Heure & dates + Prière actuelle (fusionnées) */}
-        <div id="hero-end" className="app-card mt-4" data-observe-section data-section-title="Horaires & Prière">
+        <div id="hero-end" className="app-card mt-4" data-observe-section data-section-title={MOSQUE_NAME}>
           <div className="space-y-4">
             <CurrentTimeSection embedded />
             <CurrentPrayerSection slug={mawaqitSlug} url={mawaqitUrl} embedded />
@@ -240,28 +241,7 @@ function MosqueCreteilContent() {
 
         {/* (moved sticky bar outside container to avoid stacking issues) */}
       </div>
-      {/* Sticky actions appear below header when hero is out of view */}
-      {(!heroInView) && (
-        <div className="fixed inset-x-0 z-[90] bg-white/85 backdrop-blur-md border-b border-[var(--border)] shadow-[0_8px_20px_rgba(0,0,0,0.08)]" style={{ top: 'calc(48px + env(safe-area-inset-top))' }}>
-          <div className="mx-auto w-full" style={{ maxWidth: 560, paddingLeft: 16, paddingRight: 16, paddingTop: 8, paddingBottom: 8 }}>
-            <div className="flex gap-3">
-              <a
-                href={MAPS_URL}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="btn-secondary pressable flex-1 flex items-center justify-center gap-2 py-2 h-10"
-              >
-                <MapPin size={16} />
-                Itinéraire
-              </a>
-              <a href="/step-amount-v2" className="btn-primary pressable flex-1 flex items-center justify-center gap-2 py-2 h-10">
-                <Mail size={16} />
-                Faire un don
-              </a>
-            </div>
-          </div>
-        </div>
-      )}
+      {/* Removed extra sticky action bar; SectionHeader handles CTAs */}
     </>
   );
 }

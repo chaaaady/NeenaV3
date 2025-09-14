@@ -2,6 +2,7 @@
 
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { cn } from "@/lib/cn";
+import { Menu } from "lucide-react";
 
 type GlobalHeaderProps = {
   onMenuClick?: () => void;
@@ -77,7 +78,7 @@ export function GlobalHeader({ onMenuClick, logo, navItems }: GlobalHeaderProps)
             onClick={onMenuClick}
             className="menu-button"
           >
-            <span className="i-lucide-menu w-[20px] h-[20px]" />
+            <Menu size={20} />
           </button>
         </div>
       </div>

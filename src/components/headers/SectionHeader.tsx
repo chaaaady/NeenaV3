@@ -29,12 +29,12 @@ export function SectionHeader({ title }: { title: string | null }) {
         transition: reduce ? undefined : "transform 180ms ease, opacity 180ms ease",
       }}
     >
-      <div className="mx-auto w-full" style={{ maxWidth: 560, paddingLeft: 16, paddingRight: 16, paddingTop: 10, paddingBottom: 10 }}>
-        <div className="flex items-center justify-between gap-3">
-          <div className="text-[15px] font-[700] text-[var(--text)] truncate">{title}</div>
+      <div className="mx-auto w-full" style={{ maxWidth: 560, paddingLeft: 16, paddingRight: 16, paddingTop: 8, paddingBottom: 8 }}>
+        <div className="grid grid-cols-[1fr_auto] items-center gap-3">
+          <div className="text-[15px] font-[800] text-[var(--text)] truncate">{title}</div>
           <div className="flex items-center gap-2">
-            <a href="#map" className="btn-secondary pressable h-9 px-3">Itinéraire</a>
-            <a href="/step-amount-v2" className="btn-primary pressable h-9 px-3">Donner</a>
+            <a href="#map" className="btn-secondary pressable h-9 px-4 flex items-center justify-center">Itinéraire</a>
+            <a href="/step-amount-v2" className="btn-primary pressable h-9 px-4 flex items-center justify-center">Faire un don</a>
           </div>
         </div>
       </div>
