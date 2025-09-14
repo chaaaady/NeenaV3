@@ -95,23 +95,20 @@ function MosqueCreteilContent() {
                   className={"object-cover absolute inset-0 transition-opacity duration-700 pointer-events-none " + (slide === i ? "opacity-100 z-10" : "opacity-0 z-0")}
                 />
               ))}
-              {/* Overlay title/address on image */}
-              <div className="absolute left-3 bottom-3 z-20">
-                <div className="backdrop-blur-sm bg-white/70 rounded-10 px-3 py-2 shadow-sm">
-                  <div className="text-[18px] font-[800] text-[var(--text)] leading-none">{MOSQUE_NAME}</div>
-                  <div className="mt-1 text-[12px] text-[var(--text-muted)] flex items-center gap-1">
-                    <MapPin size={14} />
-                    <span>{MOSQUE_ADDRESS}</span>
-                  </div>
-                </div>
-              </div>
               <div className="absolute bottom-2 right-2 flex gap-1 bg-white/60 rounded-full px-2 py-1">
                 {heroImages.map((_, i) => (
                   <span key={i} className={"w-2 h-2 rounded-full " + (slide === i ? "bg-[var(--text)]" : "bg-[var(--text-muted)]/60")} />
                 ))}
               </div>
             </div>
-            {/* Title/address moved into overlay above */}
+            {/* Title/address under the image */}
+            <div className="px-1">
+              <div className="text-[20px] font-[800] text-[var(--text)] leading-tight">{MOSQUE_NAME}</div>
+              <div className="mt-1 text-[13px] text-[var(--text-muted)] flex items-center gap-1">
+                <MapPin size={14} />
+                <span>{MOSQUE_ADDRESS}</span>
+              </div>
+            </div>
             <div className="flex gap-3">
               <a
                 href={MAPS_URL}
