@@ -9,16 +9,13 @@ import { HeaderSecondary } from "@/components/headers/HeaderSecondary";
 import { useMiniHeaderTrigger } from "@/hooks/useMiniHeaderTrigger";
 import CurrentPrayerSection from "@/components/CurrentPrayerSection";
 import CurrentTimeSection from "@/components/CurrentTimeSection";
-import { Input } from "@/components";
-import { Mail, MapPin, Check, X, Car, Users, Accessibility, Clock, Info, CreditCard, User, Globe } from "lucide-react";
+import { MapPin, Check, X, Car, Users, Accessibility, Clock, Info, CreditCard, User, Globe } from "lucide-react";
+import type { LucideIcon } from "lucide-react";
 
 const MOSQUE_NAME = "Mosquée de Créteil";
 const MOSQUE_ADDRESS = "5 Rue Jean Gabin, 94000 Créteil";
 const MAPS_URL = `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(MOSQUE_ADDRESS)}`;
-const ASSO_NAME = "RAM 94";
-const ASSO_REG_LINK = "https://www.journal-officiel.gouv.fr/associations/";
-const ASSO_PRESIDENT = "Karim Benaïssa";
-const ASSO_CREATED_AT = "01/01/2010";
+// Associations (kept in content via links; constants removed to avoid unused)
 
 export default function MosqueCreteilPage() {
   return (
@@ -181,7 +178,7 @@ function MosqueCreteilContent() {
                 { icon: Users, label: "Capacité mosquée", value: "200 personnes" },
                 { icon: Accessibility, label: "Accès handicapé", value: true },
               ].map((row) => {
-                const IconComp = row.icon as any;
+                const IconComp = row.icon as LucideIcon;
                 return (
                   <div key={row.label} className={"relative flex items-center w-full px-1 py-2.5"}>
                     <div className="flex items-center gap-2 flex-1 min-w-0">
@@ -252,37 +249,20 @@ function MosqueCreteilContent() {
   );
 }
 
-function InfoItem({ icon, label, value }: { icon: React.ReactNode; label: string; value: string | boolean }) {
-  const text = typeof value === "boolean" ? (value ? "Oui" : "Non") : value;
-  return (
-    <div className="flex items-center justify-between p-2 rounded-12">
-      <div className="flex items-center gap-2 text-[14px] text-[var(--text)]">
-        {icon}
-        <span>{label}</span>
-      </div>
-      <div>
-        {typeof value === "boolean" ? (
-          value ? <Check size={16} className="text-emerald-600/80" /> : <X size={16} className="text-red-500" />
-        ) : (
-          <span className="text-[14px] text-[var(--text-muted)]">{text}</span>
-        )}
-      </div>
-    </div>
-  );
-}
+// InfoItem helper removed (not used)
 
 function JumaaCard() {
   const params = useSearchParams();
   const j1s = (params.get("j1s") || "13:30").trim();
   const j1e = (params.get("j1e") || "14:10").trim();
-  const parking = (params.get("parking") || "oui").trim().toLowerCase() === 'oui';
+  const _parking = (params.get("parking") || "oui").trim().toLowerCase() === 'oui';
   const khutbasCount = parseInt((params.get("khutbas") || "1").trim(), 10) || 1;
   const languages = (params.get("langues") || "Français, Arabe").split(",").map((s) => s.trim()).filter(Boolean);
   const imamName = (params.get("imam") || "").trim();
   const khutbaLanguages = (params.get("khutba_langues") || languages.join(", ")).split(",").map((s) => s.trim()).filter(Boolean);
   const duration = (params.get("khutba_duree") || "45 min").trim();
-  const parkingNote = (params.get("parking_note") || "Respectez le voisinage et le stationnement.").trim();
-  const womenSpace = (params.get("espace_femmes") || "oui").trim();
+  const _parkingNote = (params.get("parking_note") || "Respectez le voisinage et le stationnement.").trim();
+  const _womenSpace = (params.get("espace_femmes") || "oui").trim();
   return (
     <div className="w-full">
       <div className="mt-2">
@@ -311,7 +291,7 @@ function JumaaCard() {
             { icon: Clock, label: "Durée estimée", value: duration },
           ]
             .filter((row) => !(row.hideIfEmpty && !row.value))
-            .map((row, idx, arr) => {
+            .map((row, _idx, _arr) => {
               const RowIcon = row.icon;
               return (
                 <div key={row.label} className={"relative flex items-center w-full px-1 py-2.5"}>
@@ -428,7 +408,7 @@ function PrayerTimesCard({ slug, url }: { slug?: string; url?: string }) {
             <div className="w-[64px] text-right text-[11px] text-[var(--text-muted)]">Adhan</div>
             <div className="w-[64px] text-right text-[11px] text-[var(--text-muted)]">Iqama</div>
           </div>
-          {data.items.map((item, idx) => {
+          {data.items.map((item, _idx) => {
             const minutes = (t: string) => {
               const [hh, mm] = (t || "").split(":").map((x) => parseInt(x || "0", 10));
               return hh * 60 + mm;
