@@ -2,6 +2,7 @@
 
 import React, { useEffect, useMemo, useState } from "react";
 import { useTick } from "@/hooks/useTick";
+import { NextPrayerCard } from "@/components/prayer";
 
 type PrayerKey = "Fajr" | "Dhuhr" | "Asr" | "Maghrib" | "Isha";
 type PrayerValue = { adhan?: string; iqama?: string; wait_minutes?: number | string } | null | undefined;
@@ -21,10 +22,11 @@ function selectTime(p: PrayerValue): string {
 
 type Props = { slug?: string; url?: string; embedded?: boolean };
 
-export default function CurrentPrayerSection({ slug, url, embedded }: Props) {
+export default function CurrentPrayerSection({ slug, url, embedded: _embedded }: Props) {
   const [timings, setTimings] = useState<Timings | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
+  // Tick every 30s for performance; animations handle visual continuity
   const now = useTick(30000);
   
 
@@ -58,7 +60,9 @@ export default function CurrentPrayerSection({ slug, url, embedded }: Props) {
       .map((k) => ({ key: k, at: selectTime(timings[k]), min: toMinutes(selectTime(timings[k])) }))
       .filter((x) => x.at);
     if (!points.length) return null;
+    // Compute time in minutes with second precision for smooth progress
     const nowM = now.getHours() * 60 + now.getMinutes();
+    const nowPreciseM = nowM + now.getSeconds() / 60;
     let prev = points[0];
     let next = points[points.length - 1];
     for (let i = 0; i < points.length; i++) {
@@ -69,9 +73,10 @@ export default function CurrentPrayerSection({ slug, url, embedded }: Props) {
     const start = prev.min;
     const end = next.min > start ? next.min : start + 1; // avoid zero division
     const total = Math.max(1, end - start);
-    const elapsed = Math.max(0, Math.min(total, nowM - start));
-    const fraction = elapsed / total;
-    const minutesLeft = Math.max(0, Math.ceil((end - nowM)));
+    const elapsedPrecise = Math.max(0, Math.min(total, nowPreciseM - start));
+    const fraction = elapsedPrecise / total;
+    // minutes left rounded up, computed with seconds precision
+    const minutesLeft = Math.max(0, Math.ceil((end * 60 - (now.getHours() * 3600 + now.getMinutes() * 60 + now.getSeconds())) / 60));
     return {
       currentName: prev.key,
       nextName: next.key,
@@ -86,6 +91,20 @@ export default function CurrentPrayerSection({ slug, url, embedded }: Props) {
     };
   }, [timings, now]);
 
+  // Accessibility and carousel hooks must be declared before any early return
+  // Reduced motion preference
+  const [prefersReduced, setPrefersReduced] = useState(false);
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const update = () => setPrefersReduced(!!mq.matches);
+    update();
+    mq.addEventListener("change", update);
+    return () => mq.removeEventListener("change", update);
+  }, []);
+
+  // Legacy carousel hooks removed (replaced by DayStrip/optional Carousel component)
+
   if (loading) {
     return (
       <div className="rounded-12 border border-[var(--border)] p-4 bg-white">
@@ -97,80 +116,40 @@ export default function CurrentPrayerSection({ slug, url, embedded }: Props) {
   if (error) return <div className="text-[14px] text-red-600">{error}</div>;
   if (!data) return <div className="text-[14px] text-[var(--text-muted)]">Aucune donnée disponible.</div>;
 
-  const percent = Math.round(data.fraction * 100);
+  
   const hLeft = Math.floor(data.minutesLeft / 60);
   const mLeft = data.minutesLeft % 60;
-  const displayLeft = hLeft ? `${hLeft} h ${mLeft} min` : `${mLeft} min`;
+  const displayLeft = hLeft > 0 ? `${hLeft}h et ${mLeft} min` : `${mLeft} min`;
 
-  // Smooth color between green → amber → red based on fraction
-  const lerp = (a: number, b: number, t: number) => a + (b - a) * t;
-  const lerpColor = (c1: [number, number, number], c2: [number, number, number], t: number): [number, number, number] => [
-    Math.round(lerp(c1[0], c2[0], t)),
-    Math.round(lerp(c1[1], c2[1], t)),
-    Math.round(lerp(c1[2], c2[2], t)),
-  ];
-  const GREEN: [number, number, number] = [34, 197, 94];   // tailwind green-500
-  const AMBER: [number, number, number] = [245, 158, 11];  // amber-500
-  const RED: [number, number, number] = [239, 68, 68];     // red-500
-  let rgb: [number, number, number];
-  if (data.fraction < 1 / 3) {
-    const t = data.fraction / (1 / 3);
-    rgb = lerpColor(GREEN, AMBER, Math.max(0, Math.min(1, t)));
-  } else if (data.fraction < 2 / 3) {
-    const t = (data.fraction - 1 / 3) / (1 / 3);
-    rgb = lerpColor(AMBER, RED, Math.max(0, Math.min(1, t)));
-  } else {
-    rgb = RED;
-  }
-  const fillColor = `rgba(${rgb[0]}, ${rgb[1]}, ${rgb[2]}, 0.6)`; // calm opacity
+  // Day-long circular progress: start at Fajr, end at Isha
+  const nowSeconds = now.getHours() * 3600 + now.getMinutes() * 60 + now.getSeconds();
+
+
+  // aria-live announcement around T-10 / T-0
+  const tMinusMin = Math.max(0, Math.ceil((data.endMin * 60 - nowSeconds) / 60));
+  const ariaLiveMessage = tMinusMin === 10
+    ? `Bientôt l'adhan pour ${data.nextName} dans 10 minutes`
+    : tMinusMin === 0
+      ? `C'est l'adhan pour ${data.nextName}`
+      : "";
+
+  // Compose new components
+  const lastPrayer = { key: String(data.currentName), label: String(data.currentName), timeMinutes: data.startMin };
+  const nextPrayer = { key: String(data.nextName), label: String(data.nextName), timeMinutes: data.endMin };
 
   return (
-    <section aria-label="Prière actuelle" className="space-y-3">
-      <div className={embedded ? "p-0" : "rounded-12 border border-[var(--border)] p-5 bg-white shadow-[0_8px_20px_rgba(0,0,0,0.06)]"}>
+    <section aria-label="Zone prières" className="space-y-3">
+      <NextPrayerCard
+        now={now}
+        lastPrayer={lastPrayer}
+        nextPrayer={nextPrayer}
+        etaLabel={displayLeft}
+        nextTimeLabel={`${data.endHH}:${data.endMM}`}
+        tMinusMinutes={tMinusMin}
+        prefersReducedMotion={prefersReduced}
+      />
 
-        {/* Header: current date/time shifted to time card above; keep countdown only */}
-        <div className="mt-1 flex items-center justify-center">
-          <div
-            className="text-[28px] font-[900] leading-none text-[var(--text)]"
-            role="timer"
-            aria-live="polite"
-            aria-label={`${displayLeft} restant avant la prière de ${data.nextName}`}
-          >
-            {displayLeft}
-          </div>
-        </div>
-        <div className="mt-2 text-center text-[14px] font-[800] text-[var(--text)]">
-          {displayLeft} restant avant la prière de {data.nextName}
-        </div>
-
-        {/* Timeline with base segments + smooth color fill */}
-        <div className="mt-4 relative h-3 rounded-full overflow-hidden bg-gray-200">
-          {/* Base thirds colors (soft) */}
-          <div className="absolute inset-y-0 left-0 w-1/3 bg-green-500/20" />
-          <div className="absolute inset-y-0 left-1/3 w-1/3 bg-amber-500/20" />
-          <div className="absolute inset-y-0 left-2/3 w-1/3 bg-red-500/20" />
-          {/* Smooth fill overlay */}
-          <div className="absolute inset-y-0 left-0 transition-[width,background-color] duration-500" style={{ width: `${Math.max(0, Math.min(100, percent))}%`, backgroundColor: fillColor }} />
-          {/* Subtle separators for thirds */}
-          <div className="absolute inset-y-0 left-1/3 w-px bg-white/50" />
-          <div className="absolute inset-y-0 left-2/3 w-px bg-white/50" />
-          {/* Progress cursor (neutral) */}
-          <div className="absolute -top-[3px] w-2 h-2 rounded-full bg-[var(--text)] shadow-sm transition-[left] duration-500"
-               style={{ left: `${Math.max(0, Math.min(100, percent))}%`, transform: "translateX(-50%)" }}
-               aria-hidden="true" />
-        </div>
-
-        <div className="mt-3 flex items-center justify-between text-[12px] text-[var(--text-muted)]">
-          <span className="flex flex-col items-start leading-tight">
-            <span className="text-[14px] text-[var(--text)] font-[700]">{data.currentName}</span>
-            <span>{data.startHH}:{data.startMM}</span>
-          </span>
-          <span className="flex flex-col items-end leading-tight">
-            <span className="text-[14px] text-[var(--text)] font-[700]">{data.nextName}</span>
-            <span>{data.endHH}:{data.endMM}</span>
-          </span>
-        </div>
-      </div>
+      {ariaLiveMessage ? <div aria-live="polite" className="sr-only">{ariaLiveMessage}</div> : null}
     </section>
   );
 }

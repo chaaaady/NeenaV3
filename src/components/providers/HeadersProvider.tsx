@@ -1,6 +1,6 @@
 "use client";
 
-import { createContext, useContext, useEffect, useLayoutEffect, useRef, useState } from "react";
+import { createContext, useContext, useLayoutEffect, useRef, useState } from "react";
 
 type HeadersCtx = {
   globalHeaderHeight: number;
@@ -15,16 +15,17 @@ export function HeadersProvider({ children }: { children: React.ReactNode }) {
   useLayoutEffect(() => {
     const el = document.querySelector(".header-container") as HTMLElement | null;
     if (!el) return;
-    const ro = new (window as any).ResizeObserver?.((entries: any) => {
+    const RO: typeof ResizeObserver | undefined = typeof window !== "undefined" ? (window as Window & typeof globalThis).ResizeObserver : undefined;
+    const ro = RO ? new RO((entries: ResizeObserverEntry[]) => {
       const height = entries[0]?.contentRect?.height ?? el.offsetHeight;
       setH(height);
       document.documentElement.style.setProperty("--global-header-h", `${height}px`);
-    });
-    ro?.observe(el);
+    }) : null;
+    ro?.observe?.(el);
     const height = el.offsetHeight;
     setH(height);
     document.documentElement.style.setProperty("--global-header-h", `${height}px`);
-    return () => ro?.disconnect();
+    return () => ro?.disconnect?.();
   }, []);
 
   return (

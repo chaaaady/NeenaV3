@@ -4,21 +4,20 @@ import { useState, useMemo, useEffect, useRef, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import Image from "next/image";
 import { SideMenu } from "@/components";
-import { GlobalHeader } from "@/components/headers/GlobalHeader";
-import { SectionHeader as StickySectionHeader } from "@/components/headers/SectionHeader";
-import { useActiveSection } from "@/hooks/useActiveSection";
-import { CardDS, CardDSBody, CardDSHeader, SectionHeader, SummaryRow } from "@/components/ds";
+import { HeaderPrimary } from "@/components/headers/HeaderPrimary";
+import { HeaderSecondary } from "@/components/headers/HeaderSecondary";
+import { useMiniHeaderTrigger } from "@/hooks/useMiniHeaderTrigger";
 import CurrentPrayerSection from "@/components/CurrentPrayerSection";
 import CurrentTimeSection from "@/components/CurrentTimeSection";
 import { Input } from "@/components";
-import { Mail, MapPin, Check, X, Car, Users, Accessibility, Clock, Info } from "lucide-react";
+import { Mail, MapPin, Check, X, Car, Users, Accessibility, Clock, Info, CreditCard, User, Globe } from "lucide-react";
 
 const MOSQUE_NAME = "Mosquée de Créteil";
 const MOSQUE_ADDRESS = "5 Rue Jean Gabin, 94000 Créteil";
 const MAPS_URL = `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(MOSQUE_ADDRESS)}`;
-const ASSO_NAME = "Association Mosquée de Créteil";
+const ASSO_NAME = "RAM 94";
 const ASSO_REG_LINK = "https://www.journal-officiel.gouv.fr/associations/";
-const ASSO_PRESIDENT = "Nom du Président";
+const ASSO_PRESIDENT = "Karim Benaïssa";
 const ASSO_CREATED_AT = "01/01/2010";
 
 export default function MosqueCreteilPage() {
@@ -31,11 +30,11 @@ export default function MosqueCreteilPage() {
 
 function MosqueCreteilContent() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [newsletterEmail, setNewsletterEmail] = useState("");
-  const [heroInView, setHeroInView] = useState(true);
+  const [_newsletterEmail, _setNewsletterEmail] = useState("");
+  const [_heroInView, setHeroInView] = useState(true);
   const params = useSearchParams();
-  const { activeTitle } = useActiveSection();
-  const [hasScrolled, setHasScrolled] = useState(false);
+  const [_hasScrolled, setHasScrolled] = useState(false);
+  const { visible: miniVisible } = useMiniHeaderTrigger("next-prayer");
 
   // Hero image (configurable via ?img=...)
   const heroImages = useMemo(() => {
@@ -82,11 +81,14 @@ function MosqueCreteilContent() {
 
   return (
     <>
+      {/* Global header rendered inline inside hero (sticky within hero only) */}
       <SideMenu isOpen={isMenuOpen} onClose={() => setIsMenuOpen(false)} />
-      {/* Mini header visible only after hero ends; hidden again when hero re-enters */}
-      {!heroInView ? <StickySectionHeader title={MOSQUE_NAME} /> : null}
+      {/* Header principal (section pleine largeur, non sticky) */}
+      <HeaderPrimary onMenuClick={() => setIsMenuOpen(true)} />
+      {/* Lorsque le mini-header apparaît, il se place tout en haut (top:0) et remplace visuellement le premier */}
+      <HeaderSecondary title={MOSQUE_NAME} visible={miniVisible} />
 
-      <div className="app-container pb-24" style={{ paddingBottom: 'calc(env(safe-area-inset-bottom) + 120px)' }}>
+      <div className="app-container pb-24" style={{ paddingTop: 0, paddingBottom: 'calc(env(safe-area-inset-bottom) + 120px)' }}>
         {/* Hero */}
         <div className="app-card">
           <div className="space-y-3">
@@ -98,10 +100,7 @@ function MosqueCreteilContent() {
               onTouchStart={() => setIsHeroPaused(true)}
               onTouchEnd={() => setIsHeroPaused(false)}
             >
-              {/* Global header overlayed on hero only */}
-              <div className="absolute inset-x-0 top-0 z-50">
-                <GlobalHeader onMenuClick={() => setIsMenuOpen(true)} />
-              </div>
+              {/* Removed inline copy of global header to avoid conflicts */}
               {heroImages.map((src, i) => (
                 <Image
                   key={src}
@@ -136,118 +135,113 @@ function MosqueCreteilContent() {
                 <MapPin size={16} />
                 Itinéraire
               </a>
-              <a href="/step-amount-v2" className="btn-primary pressable flex-1 flex items-center justify-center gap-2 py-3 h-11">
-                <Mail size={16} />
+              <a href="/step-amount-v2" className="pressable flex-1 flex items-center justify-center gap-2 h-11 px-4 text-white bg-[#0E3B2E] hover:bg-[#0C3528] rounded-[12px]">
+                <CreditCard size={16} />
                 Faire un don
               </a>
             </div>
           </div>
         </div>
 
-        {/* Heure & dates + Prière actuelle (fusionnées) */}
-        <div id="hero-end" className="app-card mt-4" data-observe-section data-section-title={MOSQUE_NAME}>
+        {/* Next Prayer (déclencheur du mini-header) */}
+        <div id="next-prayer" className="app-card mt-4">
           <div className="space-y-4">
-            <CurrentTimeSection embedded />
+            {/* Put the countdown/title first so it acts as the card title */}
             <CurrentPrayerSection slug={mawaqitSlug} url={mawaqitUrl} embedded />
+            <CurrentTimeSection embedded />
           </div>
         </div>
 
         {/* Next Prayer section removed */}
 
         {/* Horaires (API interne) — DS primitives */}
-        <div className="mt-4" id="horaires" data-observe-section data-section-title="Horaires de prière">
-          <CardDS>
-            <CardDSHeader>
-              <SectionHeader title="Horaires de prière" subtitle="Source Mawaqit" />
-            </CardDSHeader>
-            <CardDSBody>
-              <PrayerTimesCard slug={mawaqitSlug} url={mawaqitUrl} />
-            </CardDSBody>
-          </CardDS>
+        <div className="app-card mt-4" id="horaires" data-observe-section data-section-title="Horaires de prière">
+          <div className="app-title">Horaires de prière</div>
+          <div className="mt-2">
+            <PrayerTimesCard slug={mawaqitSlug} url={mawaqitUrl} />
+          </div>
         </div>
 
-        {/* Jumu'a section — DS primitives */}
-        <div className="mt-4" id="jumuah" data-observe-section data-section-title="Jumu’a">
-          <CardDS>
-            <CardDSHeader>
-              <SectionHeader title="Jumu’a" />
-            </CardDSHeader>
-            <CardDSBody>
-              <JumaaCard />
-            </CardDSBody>
-          </CardDS>
+        {/* Jumu'a section — harmonisée avec app-card */}
+        <div className="app-card mt-4" id="jumuah" data-observe-section data-section-title="Jumu’a">
+          <div className="app-title">Jumu’a</div>
+          <div className="mt-2">
+            <JumaaCard />
+          </div>
         </div>
 
         {/* Informations pratiques */}
         <div className="app-card mt-4" id="infos" data-observe-section data-section-title="Informations pratiques">
           <div className="space-y-3">
             <div className="app-title">Informations pratiques</div>
-            <div className="grid gap-3">
-              <InfoItem icon={<Car size={16} />} label="Parking" value={true} />
-              <InfoItem icon={<Users size={16} />} label="Capacité mosquée" value="200 personnes" />
-              <InfoItem icon={<Car size={16} />} label="Capacité parking" value="50 places" />
-              <InfoItem icon={<Accessibility size={16} />} label="Accès handicapé" value={true} />
-            </div>
-          </div>
-        </div>
-
-        {/* Informations légales */}
-        <div className="app-card mt-4" id="legales" data-observe-section data-section-title="Informations légales">
-          <div className="space-y-3">
-            <div className="app-title">Informations légales</div>
-            <div className="grid gap-3">
-              <InfoItem icon={<Mail size={16} />} label="Association" value={ASSO_NAME} />
-              <InfoItem icon={<Users size={16} />} label="Président" value={ASSO_PRESIDENT} />
-              <InfoItem icon={<Clock size={16} />} label="Création" value={ASSO_CREATED_AT} />
-              <div className="flex items-center justify-between p-2 rounded-12">
-                <div className="flex items-center gap-2 text-[14px] text-[var(--text)]">
-                  <Mail size={16} />
-                  <span>Registre légal</span>
-                </div>
             <div>
-                  <a
-                    href={ASSO_REG_LINK}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-[14px] text-green-600 hover:underline"
-                  >
-                    Voir
-                  </a>
+              {[
+                { icon: Car, label: "Parking", value: true },
+                { icon: User, label: "Espace femmes", value: true },
+                { icon: Users, label: "Capacité mosquée", value: "200 personnes" },
+                { icon: Accessibility, label: "Accès handicapé", value: true },
+              ].map((row) => {
+                const IconComp = row.icon as any;
+                return (
+                  <div key={row.label} className={"relative flex items-center w-full px-1 py-2.5"}>
+                    <div className="flex items-center gap-2 flex-1 min-w-0">
+                      <IconComp size={16} className="text-[var(--text-muted)]" />
+                      <span className="text-[14px] font-[700] text-[var(--text)] truncate">{row.label}</span>
+                    </div>
+                    <div className="w-[128px] text-[14px] font-[700] text-[var(--text)] text-right truncate">
+                      {typeof row.value === 'boolean' ? (row.value ? <Check size={16} className="text-emerald-600/80 inline-block" /> : '—') : row.value}
+                    </div>
+                  </div>
+                );
+              })}
+              {/* Légales inline */}
+              <div className={"relative flex items-center w-full px-1 py-2.5"}>
+                <div className="flex items-center gap-2 flex-1 min-w-0">
+                  <Info size={16} className="text-[var(--text-muted)]" />
+                  <span className="text-[14px] font-[700] text-[var(--text)] truncate">Informations légales</span>
+                </div>
+                <div className="w-[128px] text-right">
+                  <a href="https://www.associations.gouv.fr/" target="_blank" rel="noopener noreferrer" className="inline-flex items-center rounded-full border border-black/10 bg-neutral-200/60 px-2 py-[2px] text-[12px] text-[var(--text)] hover:bg-neutral-300/60">Voir</a>
                 </div>
               </div>
             </div>
           </div>
         </div>
 
+        {/* Informations légales supprimées (intégrées dans Infos pratiques) */}
+
         {/* Bénévolat */}
         <div className="app-card mt-4" id="benevolat" data-observe-section data-section-title="Bénévolat">
           <div className="space-y-3">
             <div className="app-title">Bénévolat</div>
-            <p className="text-[13px] text-[var(--text-muted)]">Rejoignez l’équipe pour soutenir l’organisation des prières, Jumu’a et événements.</p>
-            <div>
-              <a href="/benevolat" className="btn-secondary pressable inline-flex items-center gap-2 px-4 py-2">
+            <div className="w-full rounded-12 overflow-hidden border border-[var(--border)] h-[230px] relative">
+              <Image src="/benevolat.png" alt="Bénévolat RAM 94" fill className="object-cover" />
+            </div>
+            <p className="text-[12.5px] text-[var(--text-muted)]/90 leading-snug">Rejoignez l’équipe pour soutenir l’organisation des prières, Jumu’a et événements.</p>
+            <div className="flex justify-end">
+              <a href="/benevolat" className="pressable inline-flex items-center gap-2 h-10 px-4 text-white bg-black hover:bg-black/90 rounded-[12px]">
                 Devenir bénévole
               </a>
             </div>
           </div>
         </div>
 
-        {/* Newsletter */}
-        <div className="app-card mt-4" id="newsletter" data-observe-section data-section-title="Newsletter">
-          <div className="space-y-3">
-            <div className="app-title">Newsletter</div>
-            <p className="text-[13px] text-[var(--text-muted)]">Recevez les horaires & annonces importantes (1 à 2 emails/mois).</p>
-            <div className="flex gap-2">
-                <Input
-                type="email"
-                placeholder="Votre email"
-                value={newsletterEmail}
-                onChange={(value) => setNewsletterEmail(value)}
-                />
-              <button className="btn-primary pressable px-4 py-2" onClick={() => alert('Inscription réussie !')}>
-                S&apos;inscrire
-              </button>
-            </div>
+        {/* Petite mention association avant le footer */}
+        <div className="app-card mt-4" id="about-neena" data-observe-section>
+          <p className="text-[12.5px] text-[var(--text-muted)] leading-snug">
+            Neena est une association à but non lucratif. Notre mission est d’assurer la transition digitale des mosquées et d’aider à mieux informer leurs fidèles.
+            Nous ne prélevons aucune commission sur les dons et nous ne facturons aucun frais à la mosquée.
+          </p>
+        </div>
+
+        {/* Footer léger */}
+        <div className="mt-6 px-3 py-6 border-t border-black/5 text-[12px] text-[var(--text-muted)] flex items-center justify-between bg-[var(--surface-2)] rounded-12">
+          <span>© {new Date().getFullYear()} Mosquée de Créteil</span>
+          <div className="flex items-center gap-4 flex-wrap justify-end">
+            <a href="/confidentialite" className="hover:underline">Politique de confidentialité</a>
+            <a href="/a-propos" className="hover:underline">Qui sommes-nous ?</a>
+            <a href="/contact" className="hover:underline">Nous contacter</a>
+            <a href="/mentions-legales" className="hover:underline">Mentions légales</a>
           </div>
         </div>
 
@@ -268,7 +262,7 @@ function InfoItem({ icon, label, value }: { icon: React.ReactNode; label: string
       </div>
       <div>
         {typeof value === "boolean" ? (
-          value ? <Check size={16} className="text-green-600" /> : <X size={16} className="text-red-500" />
+          value ? <Check size={16} className="text-emerald-600/80" /> : <X size={16} className="text-red-500" />
         ) : (
           <span className="text-[14px] text-[var(--text-muted)]">{text}</span>
         )}
@@ -281,28 +275,56 @@ function JumaaCard() {
   const params = useSearchParams();
   const j1s = (params.get("j1s") || "13:30").trim();
   const j1e = (params.get("j1e") || "14:10").trim();
+  const parking = (params.get("parking") || "oui").trim().toLowerCase() === 'oui';
   const khutbasCount = parseInt((params.get("khutbas") || "1").trim(), 10) || 1;
   const languages = (params.get("langues") || "Français, Arabe").split(",").map((s) => s.trim()).filter(Boolean);
   const imamName = (params.get("imam") || "").trim();
   const khutbaLanguages = (params.get("khutba_langues") || languages.join(", ")).split(",").map((s) => s.trim()).filter(Boolean);
   const duration = (params.get("khutba_duree") || "45 min").trim();
-  const expectedCapacity = (params.get("khutba_capacite") || "—").trim();
   const parkingNote = (params.get("parking_note") || "Respectez le voisinage et le stationnement.").trim();
   const womenSpace = (params.get("espace_femmes") || "oui").trim();
-  const womenSpaceCapacity = (params.get("espace_femmes_capacite") || "—").trim();
   return (
-    <div className="grid gap-3">
-      <InfoItem icon={<Clock size={16} />} label="Heure Jumu'a" value={j1s} />
-      <InfoItem icon={<Clock size={16} />} label="Iqama Jumu'a" value={j1e} />
-      <InfoItem icon={<Users size={16} />} label="Nombre de khutbas" value={String(khutbasCount)} />
-      {imamName && <InfoItem icon={<Users size={16} />} label="Imam" value={imamName} />}
-      <InfoItem icon={<Users size={16} />} label="Langues du khutba" value={khutbaLanguages.join(", ")} />
-      <InfoItem icon={<Clock size={16} />} label="Durée estimée" value={duration} />
-      <InfoItem icon={<Users size={16} />} label="Capacité attendue" value={expectedCapacity} />
-      <InfoItem icon={<Users size={16} />} label="Espace femmes" value={womenSpace.toLowerCase() === 'oui' ? true : false} />
-      <InfoItem icon={<Users size={16} />} label="Capacité espace femmes" value={womenSpaceCapacity} />
-      <div className="p-2 rounded-12 bg-yellow-50 text-[12px] text-yellow-800">
-        {parkingNote}
+    <div className="w-full">
+      <div className="mt-2">
+        <div className="grid">
+          <div className="relative flex items-center w-full px-1 py-2.5">
+            <div className="flex items-center gap-2 flex-1 min-w-0">
+              <Clock size={16} className="text-[var(--text-muted)]" />
+              <span className="text-[14px] font-[700] text-[var(--text)] truncate">Adhan</span>
+            </div>
+            <div className="w-[128px] text-[14px] font-[700] text-[var(--text)] text-right tabular-nums">{j1s}</div>
+          </div>
+          <div className="relative flex items-center w-full px-1 py-2.5">
+            <div className="flex items-center gap-2 flex-1 min-w-0">
+              <Clock size={16} className="text-[var(--text-muted)]" />
+              <span className="text-[14px] font-[700] text-[var(--text)] truncate">Iqama</span>
+            </div>
+            <div className="w-[128px] text-[14px] font-[700] text-[var(--text)] text-right tabular-nums">{j1e}</div>
+          </div>
+        </div>
+        {/* Infos complémentaires Jumu’a — continuation sans espace */}
+        <div>
+          {[
+            { icon: Users, label: "Nombre de khutbas", value: String(khutbasCount) },
+            { icon: User, label: "Imam", value: imamName, hideIfEmpty: true },
+            { icon: Globe, label: "Langues du khutba", value: khutbaLanguages.join(", ") },
+            { icon: Clock, label: "Durée estimée", value: duration },
+          ]
+            .filter((row) => !(row.hideIfEmpty && !row.value))
+            .map((row, idx, arr) => {
+              const RowIcon = row.icon;
+              return (
+                <div key={row.label} className={"relative flex items-center w-full px-1 py-2.5"}>
+                  <div className="flex items-center gap-2 flex-1 min-w-0">
+                    <RowIcon size={16} className="text-[var(--text-muted)]" />
+                    <span className="text-[14px] font-[700] text-[var(--text)] truncate">{row.label}</span>
+                  </div>
+                  <div className="w-[128px] text-[14px] font-[700] text-[var(--text)] text-right truncate">{row.value}</div>
+                </div>
+              );
+            })}
+          <div className="mt-2 p-2 rounded-12 bg-yellow-50 text-[12px] text-yellow-800">Merci de ne pas gêner le voisinage et de vous garer sur des places appropriées.</div>
+        </div>
       </div>
     </div>
   );
@@ -398,15 +420,15 @@ function PrayerTimesCard({ slug, url }: { slug?: string; url?: string }) {
   return (
     <div className="w-full">
       {/* Horaires des prières (style fiche, progression visuelle) */}
-      <div className="mt-4">
-        <div className="grid gap-2">
+      <div className="mt-2">
+        <div className="grid">
           {/* En-tête aligné sur les colonnes des heures (au niveau de la 1ère ligne) */}
-          <div className="flex items-center w-full px-3 py-1">
+          <div className="flex items-center w-full px-1 py-1.5">
             <div className="flex-1" />
-            <div className="w-[64px] text-center text-[11px] text-[var(--text-muted)]">Adhan</div>
-            <div className="w-[64px] text-center text-[11px] text-[var(--text-muted)]">Iqama</div>
+            <div className="w-[64px] text-right text-[11px] text-[var(--text-muted)]">Adhan</div>
+            <div className="w-[64px] text-right text-[11px] text-[var(--text-muted)]">Iqama</div>
           </div>
-          {data.items.map((item) => {
+          {data.items.map((item, idx) => {
             const minutes = (t: string) => {
               const [hh, mm] = (t || "").split(":").map((x) => parseInt(x || "0", 10));
               return hh * 60 + mm;
@@ -416,31 +438,24 @@ function PrayerTimesCard({ slug, url }: { slug?: string; url?: string }) {
             const iqamaM = item.iqama ? minutes(item.iqama) : adhanM;
             const isPast = nowM > iqamaM;
             const isCurrent = nowM >= adhanM && nowM <= iqamaM;
-            const rowClass = isCurrent ? "ring-1 ring-green-500/60 bg-white" : isPast ? "bg-gray-50 opacity-90" : "bg-white";
-            const progress = isCurrent ? Math.max(0, Math.min(1, (nowM - adhanM) / Math.max(1, iqamaM - adhanM))) : 0;
             return (
-              <div key={item.key} className={`summary-row relative ${rowClass}`}>
-                <div className="flex items-center gap-2 flex-1">
+              <div key={item.key} className={"relative flex items-center w-full px-1 py-2.5"}>
+                <div className="flex items-center gap-2 flex-1 min-w-0">
                   {isPast ? (
-                    <Check size={16} className="text-green-600" />
+                    <Check size={16} className="text-emerald-600/80" />
                   ) : isCurrent ? (
-                    <span className="w-2 h-2 rounded-full bg-green-600" />
+                    <span className="w-3 h-3 rounded-full bg-white ring-2 ring-[var(--neena-green)]" />
                   ) : (
                     <Clock size={16} className="text-[var(--text-muted)]" />
                   )}
-                  <span className="text-[14px] font-[700] text-[var(--text)]">{item.label}</span>
+                  <span className="text-[14px] font-[700] text-[var(--text)] truncate">{item.label}</span>
                 </div>
-                <div className={`w-[64px] text-[14px] font-[700] ${isPast ? 'text-[var(--text-muted)]' : 'text-[var(--text)]'} text-center`}>
+                <div className={`w-[64px] text-[14px] font-[700] tabular-nums ${isPast ? 'text-[var(--text-muted)]' : 'text-[var(--text)]'} text-center`}>
                   {item.adhan}
                 </div>
-                <div className={`w-[64px] text-[14px] font-[700] ${isPast ? 'text-[var(--text-muted)]' : 'text-[var(--text)]'} text-center`}>
+                <div className={`w/[64px] text-[14px] font-[700] tabular-nums ${isPast ? 'text-[var(--text-muted)]' : 'text-[var(--text)]'} text-center`}>
                   {item.iqama || "—"}
                 </div>
-                {isCurrent && (
-                  <div className="absolute left-6 right-6 bottom-2 h-2 bg-gray-200/80 rounded-full overflow-hidden">
-                    <div className="h-full bg-gradient-to-r from-green-500 to-green-400 shadow-[0_0_6px_rgba(34,197,94,0.35)] transition-[width] duration-500" style={{ width: `${Math.round(progress * 100)}%` }} />
-                  </div>
-                )}
               </div>
             );
           })}

@@ -4,7 +4,8 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useFormContext } from "react-hook-form";
 import { DonationFormValues, defaultDonationValues } from "@/lib/schema";
-import { AppBar, SideMenu, Input, SegmentedControl, Switch } from "@/components";
+import { SideMenu, Input, SegmentedControl, Switch } from "@/components";
+import { HeaderPrimary } from "@/components/headers/HeaderPrimary";
 
 type DonorKind = "Personnel" | "Entreprise";
 
@@ -23,7 +24,7 @@ export default function Page() {
 
   return (
     <>
-      <AppBar onMenu={() => setIsMenuOpen(true)} />
+      <HeaderPrimary onMenuClick={() => setIsMenuOpen(true)} />
       <SideMenu isOpen={isMenuOpen} onClose={() => setIsMenuOpen(false)} />
       <main className="app-container pb-24" style={{ paddingBottom: 'calc(env(safe-area-inset-bottom) + 120px)' }}>
       <div className="app-card mt-2">

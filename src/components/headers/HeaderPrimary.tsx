@@ -3,11 +3,11 @@
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { Menu } from "lucide-react";
 
-type GlobalHeaderProps = { onMenuClick?: () => void; visible?: boolean; inline?: boolean };
+type HeaderPrimaryProps = { onMenuClick?: () => void };
 
-export function GlobalHeader({ onMenuClick, visible = true, inline = false }: GlobalHeaderProps) {
+export function HeaderPrimary({ onMenuClick }: HeaderPrimaryProps) {
   const ref = useRef<HTMLDivElement | null>(null);
-  const [scrolled, setScrolled] = useState(false);
+  const [_scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY >= 16);
@@ -21,7 +21,7 @@ export function GlobalHeader({ onMenuClick, visible = true, inline = false }: Gl
     if (!el) return;
     const update = () => {
       const h = el.offsetHeight || 56;
-      document.documentElement.style.setProperty("--global-header-h", `${h}px`);
+      document.documentElement.style.setProperty("--hdr-primary-h", `${h}px`);
     };
     update();
     const onResize = () => update();
@@ -32,18 +32,8 @@ export function GlobalHeader({ onMenuClick, visible = true, inline = false }: Gl
   return (
     <div
       className={
-        (inline ? "sticky top-0 left-0 right-0 z-[40] w-full " : "fixed top-0 left-0 right-0 z-[70] w-full ") +
-        "transition-all duration-200 " +
-        (scrolled
-          ? "bg-white/70 backdrop-blur-xl backdrop-saturate-150 border-b border-black/5"
-          : "bg-white/35 backdrop-blur-sm")
+        "w-full transition-all duration-200 bg-white/90"
       }
-      style={{
-        WebkitBackdropFilter: scrolled ? "saturate(150%) blur(24px)" : "blur(6px)",
-        opacity: inline ? 1 : (visible ? 1 : 0),
-        pointerEvents: inline ? "auto" : (visible ? "auto" : "none"),
-        transform: inline ? "translateY(0)" : (visible ? "translateY(0)" : "translateY(-100%)"),
-      }}
     >
       <div ref={ref} className="mx-auto flex h-14 items-center justify-between" style={{ maxWidth: 560, paddingLeft: 16, paddingRight: 16 }}>
         <div className="text-[16px] font-[800] tracking-[-0.2px]">Neena</div>

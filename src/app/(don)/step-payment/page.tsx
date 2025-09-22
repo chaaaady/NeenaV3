@@ -2,7 +2,8 @@
 
 import { useState, useRef } from "react";
 import { useFormContext } from "react-hook-form";
-import { AppBar, Input, SideMenu, MosqueSelectorModal } from "@/components";
+import { Input, SideMenu, MosqueSelectorModal } from "@/components";
+import { HeaderPrimary } from "@/components/headers/HeaderPrimary";
 import { Switch } from "@/components/Switch";
 import { DonationFormValues } from "@/lib/schema";
 import { formatEuro } from "@/lib/currency";
@@ -56,9 +57,7 @@ export default function StepPaymentPage() {
 
   return (
     <>
-      <AppBar
-        onMenu={() => setIsMenuOpen(true)}
-      />
+      <HeaderPrimary onMenuClick={() => setIsMenuOpen(true)} />
       <SideMenu isOpen={isMenuOpen} onClose={() => setIsMenuOpen(false)} />
       <MosqueSelectorModal
         isOpen={showMosqueSelector}
