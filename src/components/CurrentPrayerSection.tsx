@@ -26,8 +26,8 @@ export default function CurrentPrayerSection({ slug, url, embedded: _embedded }:
   const [timings, setTimings] = useState<Timings | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
-  // Tick every 30s for performance; animations handle visual continuity
-  const now = useTick(30000);
+  // Tick every 1s to ensure smooth progress animation
+  const now = useTick(1000);
   
 
   useEffect(() => {
