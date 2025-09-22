@@ -228,7 +228,7 @@ export async function GET(req: Request) {
   const directUrl = searchParams.get("url");
   const debug = searchParams.get("debug") === "1" || searchParams.get("debug") === "true";
   const force = searchParams.get("force") === "1" || searchParams.get("force") === "true";
-  const mode = searchParams.get("mode") || "playwright"; // Forcer Playwright pour tester
+  const mode = searchParams.get("mode") || "html"; // Par défaut: scraping HTML compatible Vercel
   const base = directUrl ?? `https://mawaqit.net/fr/${slug}`;
   const embed = directUrl
     ? `${directUrl}${directUrl.includes("?") ? "&" : "?"}showOnlyTimes=true&embed=true`
@@ -273,11 +273,8 @@ export async function GET(req: Request) {
         return NextResponse.json({ ok: true, used: "playwright", timings, flat, issues, cached: false });
       } catch (pyError) {
         console.error("Python scraper failed:", pyError);
-        // Don't fall through to HTML scraping for playwright mode
-        return NextResponse.json(
-          { ok: false, error: `Python scraper failed: ${pyError}`, used: "playwright_failed" },
-          { status: 500 }
-        );
+        // Fallback vers scraping HTML si Python n'est pas disponible (ex: Vercel)
+        // Ne pas retourner ici: on laisse le flux continuer vers la partie HTML
       }
     }
     // 1) embed (souvent statique), 2) base, 3) mobile
