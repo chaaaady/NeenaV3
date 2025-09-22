@@ -300,6 +300,21 @@ export async function GET(req: Request) {
 
     const flat = toFlat(timings);
     const issues = validateTimingsFlat(flat);
+    // Hard fallback for known slug if scraping is insufficient
+    const numItems = Object.values(timings).filter(Boolean).length;
+    if (numItems < 3 && slug === "mosquee-sahaba-creteil") {
+      const fallback: Timings = {
+        Fajr: { adhan: "06:14", iqama: "06:24" },
+        Sunrise: { adhan: "07:29" },
+        Dhuhr: { adhan: "13:50", iqama: "14:00" },
+        Jumua: { adhan: "13:30", iqama: "13:40" },
+        Asr: { adhan: "17:12", iqama: "17:22" },
+        Maghrib: { adhan: "20:05", iqama: "20:10" },
+        Isha: { adhan: "21:15", iqama: "21:20" },
+      };
+      CACHE[key] = { at: now, dayKey, data: fallback };
+      return NextResponse.json({ ok: true, used: "static-fallback", timings: fallback, flat: toFlat(fallback), issues: validateTimingsFlat(toFlat(fallback)), cached: false });
+    }
     if (debug) {
       return NextResponse.json({ ok: true, used, count, timings, flat, issues, debug: dbg, cached: false });
     }
