@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useEffect, useMemo, useState } from "react";
+import Image from "next/image";
 import { Clock } from "lucide-react";
 
 export type PrayerPoint = { key: string; label: string; timeMinutes: number };
@@ -81,7 +82,7 @@ export default function NextPrayerCard({
     <section aria-label="Prochaine prière" className="rounded-12 overflow-hidden">
       {/* Image plein cadre + overlay texte */}
       <div className="relative w-full h-[230px]">
-        <img src={imgSrc} alt={lastPrayer.label} className="absolute inset-0 w-full h-full object-cover" onError={() => setImgSrc("/hero-creteil-2.png")} />
+        <Image src={imgSrc} alt={lastPrayer.label} fill sizes="100vw" className="object-cover" onError={() => setImgSrc("/hero-creteil-2.png")} />
         {/* Date en haut à droite */}
         {fullDateLabel ? (
           <div className="absolute top-2 right-2 z-10">

@@ -9,7 +9,7 @@ import { HeaderSecondary } from "@/components/headers/HeaderSecondary";
 import { useMiniHeaderTrigger } from "@/hooks/useMiniHeaderTrigger";
 import CurrentPrayerSection from "@/components/CurrentPrayerSection";
 import CurrentTimeSection from "@/components/CurrentTimeSection";
-import { MapPin, Check, X, Car, Users, Accessibility, Clock, Info, CreditCard, User, Globe } from "lucide-react";
+import { MapPin, Check, Car, Users, Accessibility, Clock, Info, CreditCard, User, Globe } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 
 const MOSQUE_NAME = "Mosquée de Créteil";
