@@ -110,12 +110,11 @@ export default function NextPrayerCard({
         <div className="mt-3">
           <div className="relative h-[8px] rounded-full bg-neutral-200/60 dark:bg-white/10 overflow-hidden">
             <div
-              className={prefersReducedMotion ? "h-full origin-left" : "h-full origin-left"}
+              className={prefersReducedMotion ? "h-full" : "h-full"}
               style={{
-                width: "100%",
-                transform: `scaleX(${Math.max(0, Math.min(1, fraction))})`,
+                width: `${Math.round(Math.max(0, Math.min(1, fraction)) * 100)}%`,
                 backgroundColor: tMinusMinutes <= 10 ? "var(--neena-green-accent)" : "var(--neena-green)",
-                transition: prefersReducedMotion ? undefined : "transform 1000ms linear",
+                transition: prefersReducedMotion ? undefined : "width 1000ms linear",
               }}
             />
           </div>
