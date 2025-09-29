@@ -22,10 +22,6 @@ export const donationFormSchema = z.object({
   email: z.string(),
   address: z.string(),
   wantsReceipt: z.boolean(),
-  cardName: z.string(),
-  cardNumber: z.string(),
-  cardExp: z.string(),
-  cardCvc: z.string(),
   coverFees: z.boolean(),
 });
 
@@ -49,9 +45,5 @@ export const defaultDonationValues: DonationFormValues = {
   email: "",
   address: "",
   wantsReceipt: false,
-  cardName: "",
-  cardNumber: "",
-  cardExp: "",
-  cardCvc: "",
   coverFees: false,
 };

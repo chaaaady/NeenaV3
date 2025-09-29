@@ -14,6 +14,8 @@ export type NextPrayerCardProps = {
   nextTimeLabel: string; // e.g. "13:50"
   tMinusMinutes?: number; // minutes before next (for T-10 / T-0 states)
   prefersReducedMotion?: boolean;
+  fractionOverride?: number;
+  debug?: boolean;
 };
 
 export default function NextPrayerCard({
@@ -24,6 +26,8 @@ export default function NextPrayerCard({
   nextTimeLabel,
   tMinusMinutes = 9999,
   prefersReducedMotion = false,
+  fractionOverride,
+  debug = false,
 }: NextPrayerCardProps) {
   function formatHijriFull(date: Date): string {
     try {
@@ -54,15 +58,18 @@ export default function NextPrayerCard({
         return "/prayers/placeholder.png";
     }
   }
-  // Compute segment progress (between last and next), as fraction [0..1]
-  const { fraction } = useMemo(() => {
-    const nowM = now.getHours() * 60 + now.getMinutes() + now.getSeconds() / 60;
+  // Compute elapsed/total and fraction (wrap across midnight if needed)
+  const { elapsedMinutes, totalMinutes, fraction } = useMemo(() => {
+    const nowPrecise = now.getHours() * 60 + now.getMinutes() + now.getSeconds() / 60;
     const start = lastPrayer.timeMinutes;
-    const end = Math.max(start + 1, nextPrayer.timeMinutes);
-    const span = end - start;
-    const clamped = Math.max(0, Math.min(span, nowM - start));
-    return { fraction: clamped / span };
+    let end = nextPrayer.timeMinutes;
+    if (end <= start) end += 1440; // next jour
+    const total = Math.max(1, end - start);
+    const elapsed = Math.max(0, Math.min(total, nowPrecise - start));
+    return { elapsedMinutes: elapsed, totalMinutes: total, fraction: elapsed / total };
   }, [now, lastPrayer.timeMinutes, nextPrayer.timeMinutes]);
+  const effectiveFraction = Math.max(0, Math.min(1, typeof fractionOverride === 'number' ? fractionOverride : fraction));
+  const widthPctRaw = effectiveFraction * 100; // keep decimals for smooth motion
 
   // aria-live announcements around T-10 / T-0
   const ariaLiveMessage = tMinusMinutes === 10
@@ -93,7 +100,7 @@ export default function NextPrayerCard({
         ) : null}
         <div className="absolute inset-x-0 bottom-0">
           <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/55 via-black/20 to-transparent" />
-          <div className="relative p-3">
+          <div className="relative p-3" style={{ paddingBottom: `calc(env(safe-area-inset-bottom, 0px) + 12px)` }}>
             <div className="text-white/95 text-[15px] md:text-[16px] font-[600] tracking-[-0.2px] drop-shadow-[0_1px_2px_rgba(0,0,0,0.6)]">
               Prière actuelle : <span className="font-[700]">{lastPrayer.label}</span>
             </div>
@@ -108,20 +115,32 @@ export default function NextPrayerCard({
           <span><span className="font-[600]">{nextPrayer.label}</span> dans <span className="tabular-nums">{etaLabel}</span></span>
         </div>
         <div className="mt-3">
-          <div className="relative h-[8px] rounded-full bg-neutral-200/60 dark:bg-white/10 overflow-hidden">
+          {/* New progress: elapsed vs total between prayers */}
+          <div className="relative h-[10px] rounded-full bg-neutral-300 dark:bg-white/15 overflow-hidden" aria-hidden={false}>
+            {/* Fill */}
             <div
-              className={prefersReducedMotion ? "h-full" : "h-full"}
+              className="h-full"
               style={{
-                width: `${Math.round(Math.max(0, Math.min(1, fraction)) * 100)}%`,
-                backgroundColor: tMinusMinutes <= 10 ? "var(--neena-green-accent)" : "var(--neena-green)",
+                width: `${widthPctRaw}%`,
+                minWidth: widthPctRaw > 0 ? "2px" : undefined,
+                backgroundColor: tMinusMinutes <= 10 ? "#16a34a" : "#0E3B2E",
                 transition: prefersReducedMotion ? undefined : "width 1000ms linear",
               }}
+              role="progressbar"
+              aria-valuemin={0}
+              aria-valuemax={100}
+              aria-valuenow={Math.round(widthPctRaw)}
             />
           </div>
+          {debug && (
+            <div className="mt-2 text-[11px] text-[var(--text-muted)]">
+              elapsed {Math.round(elapsedMinutes)} min / total {Math.round(totalMinutes)} min → {widthPctRaw.toFixed(2)}%
+            </div>
+          )}
           {tMinusMinutes <= 10 && (
             <div className="mt-2 inline-flex items-center rounded-full border border-emerald-600/20 bg-emerald-600/10 px-2 py-[2px] text-[12px] text-emerald-700">Bientôt l’adhan</div>
           )}
-        </div>
+      </div>
       </div>
       {ariaLiveMessage ? <div aria-live="polite" className="sr-only">{ariaLiveMessage}</div> : null}
     </section>

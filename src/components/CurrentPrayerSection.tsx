@@ -2,6 +2,7 @@
 
 import React, { useEffect, useMemo, useState } from "react";
 import { useTick } from "@/hooks/useTick";
+import { useSearchParams } from "next/navigation";
 import { NextPrayerCard } from "@/components/prayer";
 
 type PrayerKey = "Fajr" | "Dhuhr" | "Asr" | "Maghrib" | "Isha";
@@ -28,6 +29,8 @@ export default function CurrentPrayerSection({ slug, url, embedded: _embedded }:
   const [loading, setLoading] = useState(true);
   // Tick every 1s to ensure smooth progress animation
   const now = useTick(1000);
+  const searchParams = useSearchParams();
+  const debugEnabled = (searchParams.get("debug") || "").toLowerCase() === "1" || (searchParams.get("debug") || "").toLowerCase() === "true";
   
 
   useEffect(() => {
@@ -55,10 +58,19 @@ export default function CurrentPrayerSection({ slug, url, embedded: _embedded }:
 
   const data = useMemo(() => {
     if (!timings) return null;
-    const order: PrayerKey[] = ["Fajr", "Dhuhr", "Asr", "Maghrib", "Isha"];
-    const points = order
-      .map((k) => ({ key: k, at: selectTime(timings[k]), min: toMinutes(selectTime(timings[k])) }))
-      .filter((x) => x.at);
+    const hasJumua = !!selectTime((timings as any)?.Jumua);
+    const base: Array<"Fajr" | "Dhuhr" | "Asr" | "Maghrib" | "Isha"> = ["Fajr", "Dhuhr", "Asr", "Maghrib", "Isha"];
+    const points = base
+      .map((k) => {
+        if (k === "Dhuhr" && hasJumua) {
+          const at = selectTime((timings as any)?.Jumua);
+          return { key: "Jumua", at, min: toMinutes(at) } as { key: string; at: string; min: number };
+        }
+        const at = selectTime((timings as any)?.[k]);
+        return { key: k, at, min: toMinutes(at) } as { key: string; at: string; min: number };
+      })
+      .filter((x) => x.at)
+      .sort((a, b) => a.min - b.min);
     if (!points.length) return null;
     // Compute time in minutes with second precision for smooth progress
     const nowM = now.getHours() * 60 + now.getMinutes();
@@ -69,9 +81,19 @@ export default function CurrentPrayerSection({ slug, url, embedded: _embedded }:
       if (points[i].min <= nowM) prev = points[i];
       if (points[i].min > nowM) { next = points[i]; break; }
     }
-    // if now after last prayer, keep next as last to avoid crash; fraction clamps to 1
-    const start = prev.min;
-    const end = next.min > start ? next.min : start + 1; // avoid zero division
+    // Handle case: before first prayer of the day → last prayer from previous day
+    if (nowM < points[0].min) {
+      prev = points[points.length - 1];
+    }
+    // Handle wrap after last prayer → next is first prayer of next day
+    let nextOffset = 0;
+    if (nowM > points[points.length - 1].min) {
+      next = points[0];
+      nextOffset = 1440;
+    }
+    // Compute segment start/end with day wrap support
+    const start = (nowM < points[0].min) ? (prev.min - 1440) : prev.min;
+    const end = next.min + nextOffset;
     const total = Math.max(1, end - start);
     const elapsedPrecise = Math.max(0, Math.min(total, nowPreciseM - start));
     const fraction = elapsedPrecise / total;
@@ -147,9 +169,19 @@ export default function CurrentPrayerSection({ slug, url, embedded: _embedded }:
         nextTimeLabel={`${data.endHH}:${data.endMM}`}
         tMinusMinutes={tMinusMin}
         prefersReducedMotion={prefersReduced}
+        fractionOverride={data.fraction}
+        debug={debugEnabled}
       />
 
       {ariaLiveMessage ? <div aria-live="polite" className="sr-only">{ariaLiveMessage}</div> : null}
+
+      {debugEnabled ? (
+        <div className="mt-2 rounded-12 border border-[var(--border)] bg-[var(--surface-1)] p-2 text-[12px] text-[var(--text-muted)]">
+          <div>current: <span className="text-[var(--text)] font-[700]">{String(data.currentName)}</span> → next: <span className="text-[var(--text)] font-[700]">{String(data.nextName)}</span></div>
+          <div>start: {data.startHH}:{data.startMM} ({data.startMin}m) · end: {data.endHH}:{data.endMM} ({data.endMin}m)</div>
+          <div>fraction: {Math.round(data.fraction * 100)}% · left: {displayLeft} · now: {now.toLocaleTimeString()}</div>
+        </div>
+      ) : null}
     </section>
   );
 }

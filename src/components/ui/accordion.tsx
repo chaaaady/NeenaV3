@@ -7,8 +7,8 @@ export function Accordion({ children, className }: { children: React.ReactNode; 
   return <div className={cn("divide-y divide-[var(--border)] rounded-12 border border-[var(--border)] bg-white", className)}>{children}</div>;
 }
 
-export function AccordionItem({ title, children }: { title: string; children: React.ReactNode }) {
-  const [open, setOpen] = React.useState(false);
+export function AccordionItem({ title, children, defaultOpen }: { title: string; children: React.ReactNode; defaultOpen?: boolean }) {
+  const [open, setOpen] = React.useState(!!defaultOpen);
   return (
     <div>
       <button

@@ -9,7 +9,7 @@ import { HeaderSecondary } from "@/components/headers/HeaderSecondary";
 import { useMiniHeaderTrigger } from "@/hooks/useMiniHeaderTrigger";
 import CurrentPrayerSection from "@/components/CurrentPrayerSection";
 import CurrentTimeSection from "@/components/CurrentTimeSection";
-import { MapPin, Check, Car, Users, Accessibility, Clock, Info, CreditCard, User, Globe } from "lucide-react";
+import { MapPin, Check, Car, Users, Accessibility, Clock, Info, CreditCard, User, Globe, Book } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 
 const MOSQUE_NAME = "Mosquée de Créteil";
@@ -177,6 +177,8 @@ function MosqueCreteilContent() {
                 { icon: User, label: "Espace femmes", value: true },
                 { icon: Users, label: "Capacité mosquée", value: "200 personnes" },
                 { icon: Accessibility, label: "Accès handicapé", value: true },
+                { icon: Globe, label: "Cours d'arabe", value: true },
+                { icon: Book, label: "Cours de religion", value: true },
               ].map((row) => {
                 const IconComp = row.icon as LucideIcon;
                 return (
@@ -430,10 +432,10 @@ function PrayerTimesCard({ slug, url }: { slug?: string; url?: string }) {
                   )}
                   <span className="text-[14px] font-[700] text-[var(--text)] truncate">{item.label}</span>
                 </div>
-                <div className={`w-[64px] text-[14px] font-[700] tabular-nums ${isPast ? 'text-[var(--text-muted)]' : 'text-[var(--text)]'} text-center`}>
+                <div className={`w-[64px] text-[14px] font-[700] tabular-nums ${isPast ? 'text-[var(--text-muted)]' : 'text-[var(--text)]'} text-right`}>
                   {item.adhan}
                 </div>
-                <div className={`w/[64px] text-[14px] font-[700] tabular-nums ${isPast ? 'text-[var(--text-muted)]' : 'text-[var(--text)]'} text-center`}>
+                <div className={`w-[64px] text-[14px] font-[700] tabular-nums ${isPast ? 'text-[var(--text-muted)]' : 'text-[var(--text)]'} text-right`}>
                   {item.iqama || "—"}
                 </div>
               </div>

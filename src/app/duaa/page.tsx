@@ -1,163 +1,122 @@
 "use client";
 
-import { useEffect, useState, Suspense } from "react";
-import { useSearchParams } from "next/navigation";
-import { AppBar, SideMenu } from "@/components";
+import { useMemo, useState } from "react";
+import { HeaderPrimary } from "@/components/headers/HeaderPrimary";
+import { SideMenu } from "@/components";
+import { GlassCard, GlassTextarea, PrimaryButton } from "@/components/ds";
 import { useDuaaFeed } from "@/features/duaa/useDuaaFeed";
-import { DUAA_INTRO } from "@/features/duaa/constants";
 
-function DuaaContent() {
-  const _params = useSearchParams();
-  const { sortedFeed, visibleCount, showMore, addPost, like, repost, addComment } = useDuaaFeed();
-  const [isComposerOpen, setIsComposerOpen] = useState(false);
-  const [composerText, setComposerText] = useState("");
-  const [openCommentId, setOpenCommentId] = useState<string | null>(null);
-  const [commentText, setCommentText] = useState("");
+export default function DuaasPage() {
+  const { sortedFeed, addPost, like } = useDuaaFeed();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [duaa, setDuaa] = useState("");
+  const [submitting, setSubmitting] = useState(false);
+  const [feedback, setFeedback] = useState<string | null>(null);
 
-  useEffect(() => {
-    // No need to add an empty post on page load
-    // Posts will be added by user interaction
-  }, []);
-  
+  const formatter = useMemo(
+    () => new Intl.DateTimeFormat("fr-FR", { dateStyle: "medium", timeStyle: "short" }),
+    []
+  );
+
+  const handleSubmit = () => {
+    const text = duaa.trim();
+    if (!text) return;
+    setSubmitting(true);
+    addPost(text, "Anonyme");
+    setDuaa("");
+    setFeedback("Votre du’a a été partagée. Qu’Allah ﷻ exauce votre invocation.");
+    setTimeout(() => setFeedback(null), 4000);
+    setSubmitting(false);
+  };
 
   return (
     <>
-      <AppBar onMenu={() => setIsMenuOpen(true)} />
+      <HeaderPrimary wide transparent overlay onMenuClick={() => setIsMenuOpen(true)} />
       <SideMenu isOpen={isMenuOpen} onClose={() => setIsMenuOpen(false)} />
-      <div className="app-container">
-        <div className="app-card">
-          <div className="space-y-2">
-            <div className="app-title">Du’a</div>
-            <div className="text-[13px] text-[var(--text-muted)]">{DUAA_INTRO}</div>
-          </div>
-          {/* Write a du’a section */}
-          <div className="app-card mt-3">
-            <div className="space-y-2">
-              <div className="text-[15px] text-[var(--text)] font-[700]">Write a du’a</div>
-              <div className="text-[13px] text-[var(--text-muted)]">Every du’a is anonymous.</div>
-              {!isComposerOpen ? (
-                <button onClick={() => setIsComposerOpen(true)} className="btn-primary text-[14px] w-full md:w-auto px-4">
-                  Write a du’a
-                </button>
-              ) : (
+
+      <div className="min-h-[100svh] w-full bg-[#0d3326]">
+        <main className="px-4 pb-28 pt-[calc(var(--hdr-primary-h)+28px)] md:px-8">
+          <div className="mx-auto flex w-full max-w-4xl flex-col gap-6">
+            <GlassCard className="border-white/20 bg-white/12 text-white">
+              <div className="space-y-4">
                 <div className="space-y-2">
-                  <textarea
-                    value={composerText}
-                    onChange={(e) => setComposerText(e.target.value)}
-                    rows={4}
-                    placeholder="Write your du’a (anonymous)"
-                    className="app-input w-full"
-                    style={{ height: 120 }}
-                  />
-                  <div className="flex items-center gap-2">
-                    <button onClick={() => setIsComposerOpen(false)} className="btn-secondary px-4 text-[14px]">Cancel</button>
-                    <button
-                      onClick={() => {
-                        const text = composerText.trim();
-                        if (!text) return;
-                        addPost(text);
-                        setComposerText("");
-                        setIsComposerOpen(false);
-                      }}
-                      disabled={!composerText.trim()}
-                      className="btn-primary px-4 text-[14px]"
-                    >
-                      Post du’a
-                    </button>
-                  </div>
+                  <p className="text-[12px] uppercase tracking-[0.24em] text-white/60">Communauté</p>
+                  <h1 className="text-[26px] font-semibold md:text-[30px]">Partagez votre du’a</h1>
+                  <p className="text-[14px] leading-relaxed text-white/70">
+                    Toutes les invocations publiées sont visibles par la communauté Neena. Elles restent anonymes et sont
+                    modérées avant diffusion.
+                  </p>
+                </div>
+
+                <GlassTextarea
+                  value={duaa}
+                  onChange={(e) => setDuaa(e.target.value)}
+                  minRows={5}
+                  placeholder="Je demande du’a pour..."
+                />
+
+                <div className="text-[12px] text-white/60">
+                  Merci d’éviter tout appel personnel, numéro de téléphone ou message sensible. Concentrez-vous sur
+                  l’invocation sincère et bienveillante.
+                </div>
+
+                {feedback ? <div className="text-[13px] text-emerald-200">{feedback}</div> : null}
+
+                <div className="flex justify-end">
+                  <PrimaryButton
+                    width="full"
+                    variant="white"
+                    onClick={handleSubmit}
+                    disabled={submitting || !duaa.trim()}
+                    className="sm:w-auto"
+                  >
+                    Publier ma du’a
+                  </PrimaryButton>
+                </div>
+              </div>
+            </GlassCard>
+
+            <div className="space-y-4">
+              <div className="flex flex-col gap-1 text-white sm:flex-row sm:items-end sm:justify-between">
+                <h2 className="text-[22px] font-semibold">Toutes les du’as</h2>
+                <span className="text-[13px] text-white/60">{sortedFeed.length} invocations partagées</span>
+              </div>
+
+              {sortedFeed.length === 0 ? (
+                <GlassCard className="border-white/15 bg-white/10 text-white/75">
+                  Aucune du’a publiée pour le moment. Soyez le premier à partager une invocation.
+                </GlassCard>
+              ) : (
+                <div className="flex flex-col gap-4">
+                  {sortedFeed.map((post) => (
+                    <GlassCard key={post.id} className="border-white/12 bg-white/10 text-white">
+                      <div className="space-y-3">
+                        <div className="flex flex-col gap-1 text-[12px] text-white/65 sm:flex-row sm:items-center sm:justify-between">
+                          <span>Posté le {formatter.format(new Date(post.createdAt))}</span>
+                          <span>{post.author ?? "Anonyme"}</span>
+                        </div>
+                        <p className="text-[15px] leading-relaxed text-white/90 whitespace-pre-line">{post.text}</p>
+                        <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+                          <span className="text-[12px] text-white/60">Dire « Amine » pour soutenir cette du’a.</span>
+                          <PrimaryButton
+                            width="full"
+                            variant="glass"
+                            onClick={() => like(post.id)}
+                            className="sm:w-auto"
+                          >
+                            Amine ({post.likes})
+                          </PrimaryButton>
+                        </div>
+                      </div>
+                    </GlassCard>
+                  ))}
                 </div>
               )}
             </div>
           </div>
-          <div className="mt-3 space-y-3">
-            <div className="text-[14px] font-[700]">Latest du’as</div>
-            {sortedFeed.length === 0 && (
-              <div className="text-[14px] text-[var(--text-muted)]">No du’a yet. Share one from the thank-you screen after donating.</div>
-            )}
-            {sortedFeed.slice(0, visibleCount).map((post) => {
-              return (
-                <div key={post.id} className="app-card">
-                  <div className="flex-1">
-                    <div className="text-[12px] text-[var(--text-muted)]">{new Date(post.createdAt).toLocaleDateString()}</div>
-                    <div className="text-[15px] mt-1">{post.text}</div>
-                    <div className="flex items-center gap-4 mt-2 text-[13px] text-[var(--text-muted)]">
-                      <button onClick={() => like(post.id)} className="hover:underline">Amine ({post.likes})</button>
-                      <button onClick={() => repost(post.id)} className="hover:underline">Repost ({post.reposts})</button>
-                      <button onClick={() => setOpenCommentId((id) => id === post.id ? null : post.id)} className="hover:underline ml-auto">Comment ({(post.comments || []).length})</button>
-                    </div>
-                    {openCommentId === post.id && (
-                      <div className="mt-2 space-y-2">
-                        <div className="text-[12px] text-[var(--text-muted)]">
-                          Comments are for du’a only. Please keep a kind, non‑judgmental spirit and avoid personal details or conversations.
-                        </div>
-                        <textarea
-                          value={commentText}
-                          onChange={(e) => setCommentText(e.target.value)}
-                          rows={3}
-                          placeholder="Write your comment"
-                          className="app-input w-full"
-                          style={{ height: 96 }}
-                        />
-                        <div className="flex items-center gap-2 justify-end">
-                          <button
-                            onClick={() => { setOpenCommentId(null); setCommentText(""); }}
-                            className="btn-secondary px-3 text-[13px]"
-                          >
-                            Cancel
-                          </button>
-                          <button
-                            onClick={() => {
-                              const text = commentText.trim();
-                              if (!text) return;
-                              addComment(post.id, text, "Anonymous");
-                              setCommentText("");
-                              setOpenCommentId(null);
-                            }}
-                            disabled={!commentText.trim()}
-                            className="btn-primary px-3 text-[13px]"
-                          >
-                            Post
-                          </button>
-                        </div>
-                      </div>
-                    )}
-                    {(post.comments || []).length > 0 && (
-                      <div className="mt-2 space-y-1">
-                        {(post.comments || []).map((c) => (
-                          <div key={c.id} className="compact-summary-row">
-                            <span className="text-[13px] font-[700]">{c.author}</span>
-                            <span className="text-[13px] text-[var(--text-muted)]">{c.text}</span>
-                          </div>
-                        ))}
-                      </div>
-                    )}
-                  </div>
-                </div>
-              );
-            })}
-
-            {visibleCount < sortedFeed.length && (
-              <div className="flex justify-center">
-                <button onClick={showMore} className="btn-secondary text-[14px] px-4">
-                  View more
-                </button>
-              </div>
-            )}
-          </div>
-        </div>
-        {/* Simple footer */}
-        <div className="mt-4 text-[13px] text-[var(--text-muted)] text-center">© {new Date().getFullYear()} Neena — Du’a community</div>
+        </main>
       </div>
     </>
-  );
-}
-
-export default function DuaaPage() {
-  return (
-    <Suspense fallback={<div>Loading...</div>}>
-      <DuaaContent />
-    </Suspense>
   );
 }
 

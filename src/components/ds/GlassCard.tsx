@@ -1,0 +1,25 @@
+"use client";
+
+import * as React from "react";
+import { cn } from "@/lib/cn";
+
+export type GlassCardProps = React.PropsWithChildren<{
+  className?: string;
+}>;
+
+export function GlassCard({ className, children }: GlassCardProps) {
+  return (
+    <div
+      className={cn(
+        "rounded-3xl border",
+        "border-white/15",
+        "bg-gradient-to-br from-white/35 to-white/20",
+        "backdrop-blur-xl shadow-2xl",
+        "p-6 md:p-7",
+        className
+      )}
+    >
+      {children}
+    </div>
+  );
+}
