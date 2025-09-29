@@ -104,7 +104,7 @@ export default function MerciPage() {
                   Merci pour votre don à la mosquée {mosqueName}.
                 </h1>
                 <p className="text-white/80 text-[15px] leading-relaxed">
-                  Qu'Allah ﷻ accepte votre sadaqa, vous comble de Sa miséricorde et la fasse rayonner au sein de la mosquée {mosqueName}.
+                  Qu&apos;Allah ﷻ accepte votre sadaqa, vous comble de Sa miséricorde et la fasse rayonner au sein de la mosquée {mosqueName}.
                 </p>
                 {amount ? (
                   <div className="text-white/70 text-[14px]">
@@ -117,16 +117,16 @@ export default function MerciPage() {
               <div className="pt-2 text-left space-y-3">
                 <div>
                   <div className="text-[15px] font-medium text-white">Partager une demande de du’a</div>
-                  <div className="text-[13px] text-white/65">Exprimez une intention ou une personne pour laquelle vous souhaitez qu’on invoque Allah. Votre message restera anonyme.</div>
+                  <div className="text-[13px] text-white/65">Exprimez une intention ou une personne pour laquelle vous souhaitez qu&apos;on invoque Allah. Votre message restera anonyme.</div>
                 </div>
                 <GlassTextarea
                   value={duaa}
                   minRows={4}
                   onChange={(e) => setDuaa(e.target.value)}
-                  placeholder="Je demande des du'a pour..."
+                  placeholder="Je demande des du&apos;a pour..."
                 />
                 <div className="text-[12px] text-white/60">
-                  Vos demandes de du'a sont visibles par la communauté et modérées. Merci de rester centrés sur l’invocation et d’éviter toute information personnelle ou propos sensibles.
+                  Vos demandes de du&apos;a sont visibles par la communauté et modérées. Merci de rester centrés sur l&apos;invocation et d&apos;éviter toute information personnelle ou propos sensibles.
                 </div>
                 {feedback ? <div className="text-[13px] text-emerald-200">{feedback}</div> : null}
                 <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">

@@ -3,17 +3,29 @@
 import * as React from "react";
 import { cn } from "@/lib/cn";
 
+type StepName = "Montant" | "Information" | "Paiement" | "Merci";
+
 export type StepLabelsProps = {
-  current: "Montant" | "Information" | "Paiement" | "Merci";
-  previous?: Array<"Montant" | "Information" | "Paiement">;
+  current: StepName;
+  previous?: StepName[];
   className?: string;
 };
 
 export function StepLabels({ current, previous = ["Montant", "Information", "Paiement"], className }: StepLabelsProps) {
-  const all = previous.includes(current as any) ? previous : [...previous, current] as const;
+  const sequence = React.useMemo(() => {
+    const ordered: StepName[] = [];
+    for (const step of previous) {
+      if (!ordered.includes(step)) ordered.push(step);
+    }
+    if (!ordered.includes(current)) {
+      ordered.push(current);
+    }
+    return ordered;
+  }, [current, previous]);
+
   return (
     <div className={cn("flex items-center gap-2", className)}>
-      {all.map((label) => {
+      {sequence.map((label) => {
         const isCurrent = label === current;
         return (
           <span

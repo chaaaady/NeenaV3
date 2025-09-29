@@ -15,6 +15,24 @@ export default function StepPaymentDSPage() {
   const form = useFormContext<DonationFormValues>();
   const router = useRouter();
   const values = form.watch();
+  const {
+    amount,
+    frequency,
+    donationType,
+    identityType = "Personnel",
+    companyName,
+    companySiret,
+    firstName,
+    lastName,
+    address,
+    wantsReceipt,
+    coverFees,
+    mosqueName,
+    email,
+  } = values;
+  const baseAmount = Number.isFinite(amount) ? amount : 0;
+  const feeAmount = coverFees ? Math.round(baseAmount * 0.012 * 100) / 100 : 0;
+  const totalAmount = baseAmount + feeAmount;
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [showMosqueSelector, setShowMosqueSelector] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
@@ -123,30 +141,14 @@ export default function StepPaymentDSPage() {
                 <GlassSection>
                   <div className="flex flex-col items-center justify-center text-white">
                     <div className="text-[28px] md:text-[32px] font-semibold leading-none">
-                      {(() => {
-                        const base = Number((values as any)?.amount) || 0;
-                        const fees = Boolean((values as any).coverFees) ? Math.round(base * 0.012 * 100) / 100 : 0;
-                        const total = base + fees;
-                        if (total <= 0) return "—";
-                        return Number.isInteger(total) ? `${total} €` : `${total.toFixed(2)} €`;
-                      })()}
+                      {totalAmount <= 0 ? "—" : Number.isInteger(totalAmount) ? `${totalAmount} €` : `${totalAmount.toFixed(2)} €`}
                     </div>
-                    {Boolean((values as any)?.frequency) && (
-                      <div className="mt-1 text-white/80 text-[13px]">
-                        {(values as any).frequency}
-                      </div>
-                    )}
+                    {frequency ? (
+                      <div className="mt-1 text-white/80 text-[13px]">{frequency}</div>
+                    ) : null}
                     {(() => {
-                      const idType = (values as any)?.identityType;
-                      const company = (values as any)?.companyName;
-                      const first = (values as any)?.firstName;
-                      const last = (values as any)?.lastName;
-                      const label = idType === "Entreprise" ? company : [first, last].filter(Boolean).join(" ");
-                      return label ? (
-                        <div className="mt-1 text-white/70 text-[13px] text-center">
-                          {label}
-                        </div>
-                      ) : null;
+                      const label = identityType === "Entreprise" ? companyName : [firstName, lastName].filter(Boolean).join(" ");
+                      return label ? <div className="mt-1 text-white/70 text-[13px] text-center">{label}</div> : null;
                     })()}
                   </div>
                 </GlassSection>
@@ -156,16 +158,18 @@ export default function StepPaymentDSPage() {
                   <div className="flex items-center justify-between gap-3">
                     <div className="flex-1 text-white/90 text-[14px] leading-relaxed text-left">
                       {(() => {
-                        const base = Number((values as any)?.amount) || 0;
-                        const feeAmt = Math.round(base * 0.012 * 100) / 100;
-                        const mosque = (values as any)?.mosqueName ? `la mosquée de ${(values as any).mosqueName}` : "la mosquée";
-                        const feeLabel = Number.isInteger(feeAmt) ? `${feeAmt} €` : `${feeAmt.toFixed(2)} €`;
-                        return <span>Je rajoute <span className="text-white font-semibold">{feeLabel}</span> pour que 100% de mon don aille à {mosque}.</span>;
+                        const mosque = mosqueName ? `la mosquée de ${mosqueName}` : "la mosquée";
+                        const feeLabel = feeAmount <= 0 ? "0 €" : Number.isInteger(feeAmount) ? `${feeAmount} €` : `${feeAmount.toFixed(2)} €`;
+                        return (
+                          <span>
+                            Je rajoute <span className="text-white font-semibold">{feeLabel}</span> pour que 100% de mon don aille à {mosque}.
+                          </span>
+                        );
                       })()}
                     </div>
                     <ToggleSwitch
-                      checked={Boolean((values as any).coverFees)}
-                      onChange={(c) => form.setValue("coverFees" as any, c, { shouldDirty: true })}
+                      checked={coverFees}
+                      onChange={(checked) => form.setValue("coverFees", checked, { shouldDirty: true })}
                       ariaLabel="Activer l'ajout pour couvrir"
                     />
                   </div>
@@ -175,27 +179,24 @@ export default function StepPaymentDSPage() {
                 <GlassSection>
                   <div className="text-white text-[15px] mb-2">Paiement sécurisé</div>
                   {(() => {
-                    const base = Number((values as any)?.amount) || 0;
-                    const fees = Boolean((values as any).coverFees) ? Math.round(base * 0.012 * 100) / 100 : 0;
-                    const total = base + fees;
                     return (
                       <StripePaymentMount
-                        amount={total}
-                        email={values.email}
+                        amount={totalAmount}
+                        email={email}
                         metadata={{
-                          mosque: values.mosqueName,
-                          frequency: values.frequency,
-                          donationType: values.donationType,
-                          identityType: (values as any).identityType,
-                          firstName: values.firstName,
-                          lastName: values.lastName,
-                          companyName: (values as any).companyName,
-                          companySiret: (values as any).companySiret,
-                          address: values.address,
-                          wantsReceipt: values.wantsReceipt,
-                          coverFees: values.coverFees,
-                          amountBase: values.amount,
-                          amountTotal: total,
+                          mosque: mosqueName,
+                          frequency,
+                          donationType,
+                          identityType,
+                          firstName,
+                          lastName,
+                          companyName,
+                          companySiret,
+                          address,
+                          wantsReceipt,
+                          coverFees,
+                          amountBase: baseAmount,
+                          amountTotal: totalAmount,
                         }}
                         onReady={(handler) => {
                           submitRef.current = handler;
@@ -204,9 +205,9 @@ export default function StepPaymentDSPage() {
                         onStatusChange={(status) => {
                           if (status === "succeeded") {
                             const query = new URLSearchParams({
-                              mosque: values.mosqueName || "",
-                              amount: total > 0 ? String(total) : "",
-                              freq: values.frequency || "",
+                              mosque: mosqueName || "",
+                              amount: totalAmount > 0 ? String(totalAmount) : "",
+                              freq: frequency || "",
                             }).toString();
                             router.push(`/merci${query ? `?${query}` : ""}`);
                           }

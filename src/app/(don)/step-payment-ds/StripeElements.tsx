@@ -114,8 +114,8 @@ export function StripePaymentForm({ clientSecret, onReady, onProcessingChange, o
         onErrorChange?.(message);
         onStatusChange?.("failed");
       }
-    } catch (err: any) {
-      const message = err?.message || "Erreur réseau lors de la confirmation.";
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : "Erreur réseau lors de la confirmation.";
       console.error("Confirm payment error", err);
       setErrorMessage(message);
       onErrorChange?.(message);

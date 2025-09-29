@@ -58,15 +58,15 @@ export default function CurrentPrayerSection({ slug, url, embedded: _embedded }:
 
   const data = useMemo(() => {
     if (!timings) return null;
-    const hasJumua = !!selectTime((timings as any)?.Jumua);
+    const hasJumua = !!selectTime(timings.Jumua ?? null);
     const base: Array<"Fajr" | "Dhuhr" | "Asr" | "Maghrib" | "Isha"> = ["Fajr", "Dhuhr", "Asr", "Maghrib", "Isha"];
     const points = base
       .map((k) => {
         if (k === "Dhuhr" && hasJumua) {
-          const at = selectTime((timings as any)?.Jumua);
+          const at = selectTime(timings.Jumua ?? null);
           return { key: "Jumua", at, min: toMinutes(at) } as { key: string; at: string; min: number };
         }
-        const at = selectTime((timings as any)?.[k]);
+        const at = selectTime(timings[k] ?? null);
         return { key: k, at, min: toMinutes(at) } as { key: string; at: string; min: number };
       })
       .filter((x) => x.at)

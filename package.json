@@ -6,7 +6,7 @@
     "dev": "next dev --turbopack",
     "build": "next build --turbopack",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint --max-warnings=0 --ext .ts,.tsx src"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.1",

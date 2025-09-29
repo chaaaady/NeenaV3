@@ -1,9 +1,17 @@
 import Stripe from "stripe";
 import { NextRequest, NextResponse } from "next/server";
 
+type ConfirmIntentBody = {
+  clientSecret: string;
+  paymentMethodId: string;
+  returnUrl?: string;
+};
+
+type ConfirmIntentResponse = { paymentIntent: Stripe.PaymentIntent } | { error: string };
+
 export async function POST(req: NextRequest) {
   try {
-    const { clientSecret, paymentMethodId, returnUrl } = await req.json();
+    const { clientSecret, paymentMethodId, returnUrl }: ConfirmIntentBody = await req.json();
     if (!clientSecret || !paymentMethodId) {
       return NextResponse.json({ error: "Missing clientSecret or paymentMethodId" }, { status: 400 });
     }
@@ -16,15 +24,17 @@ export async function POST(req: NextRequest) {
 
     const stripe = new Stripe(secretKey, { apiVersion: "2024-06-20" });
 
-    const intent = await stripe.paymentIntents.confirm(clientSecret.split("_secret")[0]!, {
+    const intentId = clientSecret.split("_secret")[0] ?? clientSecret;
+    const intent = await stripe.paymentIntents.confirm(intentId, {
       payment_method: paymentMethodId,
       return_url: returnUrl,
     });
 
-    return NextResponse.json({ paymentIntent: intent }, { status: 200 });
-  } catch (error: any) {
+    return NextResponse.json({ paymentIntent: intent } satisfies ConfirmIntentResponse, { status: 200 });
+  } catch (error) {
+    const message = error instanceof Error ? error.message : "Stripe confirmation error";
     console.error("[Stripe] Confirm error", error);
-    return NextResponse.json({ error: error?.message || "Stripe confirmation error" }, { status: 500 });
+    return NextResponse.json({ error: message }, { status: 500 });
   }
 }
 

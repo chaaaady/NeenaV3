@@ -3,6 +3,9 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { StripeElementsProvider, StripePaymentForm, StripePaymentStatus } from "./StripeElements";
 
+type MetadataPrimitive = string | number | boolean;
+export type StripeMetadata = Record<string, MetadataPrimitive>;
+
 type StripePaymentMountProps = {
   amount: number;
   email?: string;
@@ -10,7 +13,7 @@ type StripePaymentMountProps = {
   onProcessingChange?: (processing: boolean) => void;
   onStatusChange?: (status: StripePaymentStatus) => void;
   onErrorChange?: (message: string | null) => void;
-  metadata?: Record<string, string | number | boolean | null | undefined>;
+  metadata?: StripeMetadata;
 };
 
 export function StripePaymentMount({ amount, email, metadata, onReady, onProcessingChange, onStatusChange, onErrorChange }: StripePaymentMountProps) {
@@ -26,34 +29,24 @@ export function StripePaymentMount({ amount, email, metadata, onReady, onProcess
     onReadyRef.current = onReady;
   }, [onReady]);
 
-  const metadataJson = useMemo(() => {
-    try {
-      return JSON.stringify(metadata ?? {});
-    } catch {
-      return "{}";
-    }
-  }, [metadata]);
-
   const detachSubmit = useCallback(() => {
     submitHandlerRef.current = null;
     onReadyRef.current?.(null);
   }, []);
 
-  const normalizedMetadata = useMemo(() => {
-    const base: Record<string, string> = {};
+  const normalizedMetadata = useMemo<StripeMetadata>(() => {
+    const base: StripeMetadata = {};
     if (metadata) {
-      const entries = Object.entries(metadata)
-        .filter(([, value]) => value !== undefined && value !== null)
-        .sort(([a], [b]) => a.localeCompare(b));
+      const entries = Object.entries(metadata).sort(([a], [b]) => a.localeCompare(b));
       for (const [key, value] of entries) {
-        base[key] = String(value);
+        base[key] = value;
       }
     }
     if (email) {
       base.email = email;
     }
     return base;
-  }, [metadataJson, email]);
+  }, [email, metadata]);
 
   const requestKey = useMemo(() => {
     if (!amount || !Number.isFinite(amount) || amount <= 0) return null;
@@ -89,11 +82,14 @@ export function StripePaymentMount({ amount, email, metadata, onReady, onProcess
     detachSubmit();
 
     const fetchIntent = async () => {
+      const serializedMetadata = Object.fromEntries(
+        Object.entries(normalizedMetadata).map(([key, value]) => [key, String(value)])
+      );
       try {
         const res = await fetch("/api/payments/create-intent", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ amount, currency: "eur", metadata: normalizedMetadata }),
+          body: JSON.stringify({ amount, currency: "eur", metadata: serializedMetadata }),
           signal: controller.signal,
         });
 
@@ -120,8 +116,9 @@ export function StripePaymentMount({ amount, email, metadata, onReady, onProcess
           clientSecretRef.current = data.clientSecret;
           lastKeyRef.current = requestKey;
         }
-      } catch (err: any) {
-        if (cancelled || err?.name === "AbortError") return;
+      } catch (err: unknown) {
+        if (cancelled) return;
+        if (err instanceof Error && err.name === "AbortError") return;
         console.error("CreateIntent exception:", err);
         setError("Connexion Stripe indisponible. Merci de réessayer.");
         onErrorChange?.("Connexion Stripe indisponible. Merci de réessayer.");

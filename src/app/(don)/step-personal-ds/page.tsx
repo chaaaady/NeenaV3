@@ -78,10 +78,10 @@ export default function StepPersonalDSPage() {
 
   const heroImageSrc = "/hero-creteil.png";
 
-  const identityType = (values.identityType as any) || "Personnel";
+  const identityType = values.identityType || "Personnel";
 
-  const handleIdentityChange = (type: string) => {
-    form.setValue("identityType", type as any, { shouldDirty: true });
+  const handleIdentityChange = (type: "Personnel" | "Entreprise") => {
+    form.setValue("identityType", type, { shouldDirty: true });
     if (type === "Personnel") {
       // keep fields as-is
     } else if (type === "Entreprise") {
@@ -132,7 +132,7 @@ export default function StepPersonalDSPage() {
                   <GlassSegmented
                     options={["Personnel", "Entreprise"]}
                     value={identityType}
-                    onChange={handleIdentityChange}
+                    onChange={(next) => handleIdentityChange(next as "Personnel" | "Entreprise")}
                     variant="light"
                     ariaLabel="Type d'identité"
                   />
@@ -141,13 +141,13 @@ export default function StepPersonalDSPage() {
                     <div className="grid grid-cols-2 gap-x-2 gap-y-3">
                       <GlassInput
                         placeholder="Raison sociale"
-                        value={(values as any).companyName || ""}
-                        onChange={(e) => form.setValue("companyName" as any, e.target.value, { shouldDirty: true })}
+                        value={values.companyName || ""}
+                        onChange={(e) => form.setValue("companyName", e.target.value, { shouldDirty: true })}
                       />
                       <GlassInput
                         placeholder="SIRET"
-                        value={(values as any).siret || ""}
-                        onChange={(e) => form.setValue("siret" as any, e.target.value, { shouldDirty: true })}
+                        value={values.companySiret || ""}
+                        onChange={(e) => form.setValue("companySiret", e.target.value, { shouldDirty: true })}
                       />
                       <div className="col-span-2">
                         <GlassInput
@@ -160,8 +160,8 @@ export default function StepPersonalDSPage() {
                       <div className="col-span-2">
                         <GlassInput
                           placeholder="Adresse"
-                          value={(values as any).address || ""}
-                          onChange={(e) => form.setValue("address" as any, e.target.value, { shouldDirty: true })}
+                          value={values.address || ""}
+                          onChange={(e) => form.setValue("address", e.target.value, { shouldDirty: true })}
                         />
                       </div>
                     </div>
@@ -188,8 +188,8 @@ export default function StepPersonalDSPage() {
                       <div className="col-span-2">
                         <GlassInput
                           placeholder="Adresse"
-                          value={(values as any).address || ""}
-                          onChange={(e) => form.setValue("address" as any, e.target.value, { shouldDirty: true })}
+                          value={values.address || ""}
+                          onChange={(e) => form.setValue("address", e.target.value, { shouldDirty: true })}
                         />
                       </div>
                     </div>
@@ -198,8 +198,8 @@ export default function StepPersonalDSPage() {
                   <div className="flex items-center justify-between">
                     <span className="text-white/90 text-[14px]">Recevoir un reçu fiscal</span>
                     <ToggleSwitch
-                      checked={Boolean((values as any).wantReceipt)}
-                      onChange={(c) => form.setValue("wantReceipt" as any, c, { shouldDirty: true })}
+                      checked={Boolean(values.wantsReceipt)}
+                      onChange={(c) => form.setValue("wantsReceipt", c, { shouldDirty: true })}
                       ariaLabel="Recevoir un reçu fiscal"
                     />
                   </div>

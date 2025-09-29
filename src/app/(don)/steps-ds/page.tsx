@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Image from "next/image";
 import { useFormContext } from "react-hook-form";
 import { DonationFormValues } from "@/lib/schema";
@@ -41,7 +41,7 @@ export default function StepsDSPage() {
   }, [otherAmountInput]);
 
   const handlePresetClick = (amt: number) => {
-    form.setValue("amount", amt as any, { shouldDirty: true });
+    form.setValue("amount", amt, { shouldDirty: true });
     setOtherAmountInput("");
   };
   const handleOtherAmountChange = (v: string) => {
@@ -49,26 +49,25 @@ export default function StepsDSPage() {
     const num = parseFloat(v);
     if (!isNaN(num) && num > 0) {
       if (PRESET_AMOUNTS.includes(num)) {
-        form.setValue("amount", num as any, { shouldDirty: true });
+        form.setValue("amount", num, { shouldDirty: true });
         setOtherAmountInput("");
         return;
       }
-      form.setValue("amount", num as any, { shouldDirty: true });
+      form.setValue("amount", num, { shouldDirty: true });
     }
   };
 
   const totalWithFees = useMemo(() => {
     const base = Number(values.amount) || 0;
-    const fees = Boolean((values as any).coverFees) ? Math.round(base * 0.012 * 100) / 100 : 0;
+    const fees = values.coverFees ? Math.round(base * 0.012 * 100) / 100 : 0;
     const total = base + fees;
-    if (total <= 0) return "—";
-    return Number.isInteger(total) ? `${total} €` : `${total.toFixed(2)} €`;
-  }, [values.amount, (values as any).coverFees]);
+    return total <= 0 ? "—" : formatEuro(total);
+  }, [values.amount, values.coverFees]);
 
   const feeLabel = useMemo(() => {
     const base = Number(values.amount) || 0;
     const feeAmt = Math.round(base * 0.012 * 100) / 100;
-    return Number.isInteger(feeAmt) ? `${feeAmt} €` : `${feeAmt.toFixed(2)} €`;
+    return feeAmt <= 0 ? "0 €" : formatEuro(feeAmt);
   }, [values.amount]);
 
   return (
@@ -96,8 +95,8 @@ export default function StepsDSPage() {
               <div className="mt-4 space-y-6">
                 <GlassSegmented
                   options={["Unique", "Vendredi", "Mensuel"]}
-                  value={values.frequency}
-                  onChange={(v) => form.setValue("frequency", v as any, { shouldDirty: true })}
+                    value={values.frequency}
+                    onChange={(v) => form.setValue("frequency", v, { shouldDirty: true })}
                   variant="light"
                 />
                 <GlassSection>
@@ -106,7 +105,7 @@ export default function StepsDSPage() {
                   ) : (
                     <GlassAmountPills
                       amounts={PRESET_AMOUNTS}
-                      activeAmount={isPresetActive ? (values.amount as number) : undefined}
+                      activeAmount={isPresetActive ? values.amount ?? undefined : undefined}
                       onSelect={(amt) => handlePresetClick(amt)}
                     />
                   )}
@@ -115,7 +114,8 @@ export default function StepsDSPage() {
                       <input
                         value={otherAmountInput}
                         onChange={(e) => {
-                          if (isPresetActive) form.setValue("amount", NaN as any, { shouldDirty: true });
+                          if (isPresetActive) form.setValue("amount", Number.NaN, { shouldDirty: true });
+                          if (isPresetActive) form.setValue("amount", Number.NaN, { shouldDirty: true });
                           handleOtherAmountChange(e.target.value);
                         }}
                         type="tel"
@@ -133,7 +133,7 @@ export default function StepsDSPage() {
                   </div>
                   <p className="mt-3 pl-1 pr-1 text-left text-[15px] text-white leading-relaxed">
                     Votre don de {formatEuro(values.amount)}
-                    {values.frequency !== "Unique" ? (values.frequency === "Vendredi" ? "/Vendredi" : "/mois") : ""} ne vous coûtera que <strong className="font-semibold text-white">{formatEuro((values.amount as any) * 0.34)}
+                    {values.frequency !== "Unique" ? (values.frequency === "Vendredi" ? "/Vendredi" : "/mois") : ""} ne vous coûtera que <strong className="font-semibold text-white">{formatEuro((values.amount ?? 0) * 0.34)}
                     {values.frequency !== "Unique" ? (values.frequency === "Vendredi" ? "/Vendredi" : "/mois") : ""}</strong> après déduction fiscale.
                   </p>
                 </GlassSection>
@@ -146,20 +146,20 @@ export default function StepsDSPage() {
               <div className="mt-4 space-y-6">
                 <GlassSegmented
                   options={["Personnel", "Entreprise"]}
-                  value={(values as any).identityType || "Personnel"}
-                  onChange={(v) => form.setValue("identityType" as any, v, { shouldDirty: true })}
+                  value={values.identityType || "Personnel"}
+                  onChange={(v) => form.setValue("identityType", v, { shouldDirty: true })}
                   variant="light"
                 />
 
-                {((values as any).identityType || "Personnel") === "Entreprise" ? (
+                {(values.identityType || "Personnel") === "Entreprise" ? (
                   <div className="grid grid-cols-2 gap-x-2 gap-y-3">
-                    <GlassInput placeholder="Raison sociale" value={(values as any).companyName || ""} onChange={(e) => form.setValue("companyName" as any, e.target.value, { shouldDirty: true })} />
-                    <GlassInput placeholder="SIRET" value={(values as any).siret || ""} onChange={(e) => form.setValue("siret" as any, e.target.value, { shouldDirty: true })} />
+                    <GlassInput placeholder="Raison sociale" value={values.companyName || ""} onChange={(e) => form.setValue("companyName", e.target.value, { shouldDirty: true })} />
+                    <GlassInput placeholder="SIRET" value={values.companySiret || ""} onChange={(e) => form.setValue("companySiret", e.target.value, { shouldDirty: true })} />
                     <div className="col-span-2">
                       <GlassInput placeholder="Email" type="email" value={values.email || ""} onChange={(e) => form.setValue("email", e.target.value, { shouldDirty: true })} />
                     </div>
                     <div className="col-span-2">
-                      <GlassInput placeholder="Adresse" value={(values as any).address || ""} onChange={(e) => form.setValue("address" as any, e.target.value, { shouldDirty: true })} />
+                      <GlassInput placeholder="Adresse" value={values.address || ""} onChange={(e) => form.setValue("address", e.target.value, { shouldDirty: true })} />
                     </div>
                   </div>
                 ) : (
@@ -170,14 +170,14 @@ export default function StepsDSPage() {
                       <GlassInput placeholder="Email" type="email" value={values.email || ""} onChange={(e) => form.setValue("email", e.target.value, { shouldDirty: true })} />
                     </div>
                     <div className="col-span-2">
-                      <GlassInput placeholder="Adresse" value={(values as any).address || ""} onChange={(e) => form.setValue("address" as any, e.target.value, { shouldDirty: true })} />
+                      <GlassInput placeholder="Adresse" value={values.address || ""} onChange={(e) => form.setValue("address", e.target.value, { shouldDirty: true })} />
                     </div>
                   </div>
                 )}
 
                 <div className="flex items-center justify-between">
                   <span className="text-white/90 text-[14px]">Recevoir un reçu fiscal</span>
-                  <ToggleSwitch checked={Boolean((values as any).wantReceipt)} onChange={(c) => form.setValue("wantReceipt" as any, c, { shouldDirty: true })} ariaLabel="Recevoir un reçu fiscal" />
+                  <ToggleSwitch checked={values.wantsReceipt} onChange={(checked) => form.setValue("wantsReceipt", checked, { shouldDirty: true })} ariaLabel="Recevoir un reçu fiscal" />
                 </div>
               </div>
             </GlassCard>
@@ -193,14 +193,8 @@ export default function StepsDSPage() {
                       <div className="mt-1 text-white/80 text-[13px]">{values.frequency}</div>
                     )}
                     {(() => {
-                      const idType = (values as any)?.identityType;
-                      const company = (values as any)?.companyName;
-                      const first = (values as any)?.firstName;
-                      const last = (values as any)?.lastName;
-                      const label = idType === "Entreprise" ? company : [first, last].filter(Boolean).join(" ");
-                      return label ? (
-                        <div className="mt-1 text-white/70 text-[13px] text-center">{label}</div>
-                      ) : null;
+                      const label = values.identityType === "Entreprise" ? values.companyName : [values.firstName, values.lastName].filter(Boolean).join(" ");
+                      return label ? <div className="mt-1 text-white/70 text-[13px] text-center">{label}</div> : null;
                     })()}
                   </div>
                 </GlassSection>
@@ -208,7 +202,7 @@ export default function StepsDSPage() {
                   <div className="flex items-center justify-between gap-3">
                     <div className="flex-1 text-white/90 text-[14px] leading-relaxed text-left">
                       {(() => {
-                        const mosque = (values as any)?.mosqueName ? `la mosquée de ${(values as any).mosqueName}` : "la mosquée";
+                        const mosque = values.mosqueName ? `la mosquée de ${values.mosqueName}` : "la mosquée";
                         return (
                           <span>
                             Je rajoute <span className="text-white font-semibold">{feeLabel}</span> pour que 100% de mon don aille à {mosque}.
@@ -216,7 +210,7 @@ export default function StepsDSPage() {
                         );
                       })()}
                     </div>
-                    <ToggleSwitch checked={Boolean((values as any).coverFees)} onChange={(c) => form.setValue("coverFees" as any, c, { shouldDirty: true })} ariaLabel="Activer l'ajout pour couvrir" />
+                    <ToggleSwitch checked={values.coverFees} onChange={(checked) => form.setValue("coverFees", checked, { shouldDirty: true })} ariaLabel="Activer l'ajout pour couvrir" />
                   </div>
                 </GlassSection>
                 <GlassSection>
