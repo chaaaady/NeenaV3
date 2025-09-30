@@ -95,8 +95,8 @@ export default function StepsDSPage() {
               <div className="mt-4 space-y-6">
                 <GlassSegmented
                   options={["Unique", "Vendredi", "Mensuel"]}
-                    value={values.frequency}
-                    onChange={(v) => form.setValue("frequency", v, { shouldDirty: true })}
+                  value={values.frequency}
+                  onChange={(next) => form.setValue("frequency", next as DonationFormValues["frequency"], { shouldDirty: true })}
                   variant="light"
                 />
                 <GlassSection>
@@ -147,7 +147,7 @@ export default function StepsDSPage() {
                 <GlassSegmented
                   options={["Personnel", "Entreprise"]}
                   value={values.identityType || "Personnel"}
-                  onChange={(v) => form.setValue("identityType", v, { shouldDirty: true })}
+                  onChange={(next) => form.setValue("identityType", next as DonationFormValues["identityType"], { shouldDirty: true })}
                   variant="light"
                 />
 

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { Suspense, useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { useRouter, useSearchParams } from "next/navigation";
 import { HeaderPrimary } from "@/components/headers/HeaderPrimary";
@@ -9,6 +9,14 @@ import { GlassCard, GlassTextarea, PrimaryButton, StepLabels } from "@/component
 import { useDuaaFeed } from "@/features/duaa/useDuaaFeed";
 
 export default function MerciPage() {
+  return (
+    <Suspense fallback={<div className="min-h-[100svh] w-full bg-black" />}>
+      <MerciContent />
+    </Suspense>
+  );
+}
+
+function MerciContent() {
   const params = useSearchParams();
   const router = useRouter();
   const mosqueName = params.get("mosque") || "notre mosquée";
@@ -164,5 +172,3 @@ export default function MerciPage() {
     </>
   );
 }
-
-

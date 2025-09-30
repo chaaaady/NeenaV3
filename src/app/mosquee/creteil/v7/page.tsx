@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { Suspense, useEffect, useMemo, useState } from "react";
 import Image from "next/image";
 import { useRouter, useSearchParams } from "next/navigation";
 import {
@@ -29,6 +29,14 @@ const MOSQUE_ADDRESS = "5 Rue Jean Gabin, 94000 Créteil";
 const MAPS_URL = `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(MOSQUE_ADDRESS)}`;
 
 export default function MosqueCreteilV7Page() {
+  return (
+    <Suspense fallback={<div className="min-h-[100svh] w-full bg-[#0d3326]" />}>
+      <MosqueCreteilV7Content />
+    </Suspense>
+  );
+}
+
+function MosqueCreteilV7Content() {
   const router = useRouter();
   const params = useSearchParams();
   const [isMenuOpen, setIsMenuOpen] = useState(false);

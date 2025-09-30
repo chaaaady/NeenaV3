@@ -3,11 +3,9 @@
 import * as React from "react";
 import { cn } from "@/lib/cn";
 
-export type GlassCardProps = React.PropsWithChildren<{
-  className?: string;
-}>;
+export type GlassCardProps = React.HTMLAttributes<HTMLDivElement>;
 
-export function GlassCard({ className, children }: GlassCardProps) {
+export function GlassCard({ className, children, ...rest }: GlassCardProps) {
   return (
     <div
       className={cn(
@@ -18,6 +16,7 @@ export function GlassCard({ className, children }: GlassCardProps) {
         "p-6 md:p-7",
         className
       )}
+      {...rest}
     >
       {children}
     </div>

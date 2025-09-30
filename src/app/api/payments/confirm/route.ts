@@ -22,7 +22,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Server missing STRIPE_SECRET_KEY" }, { status: 500 });
     }
 
-    const stripe = new Stripe(secretKey, { apiVersion: "2024-06-20" });
+    const stripe = new Stripe(secretKey, { apiVersion: "2025-08-27.basil" });
 
     const intentId = clientSecret.split("_secret")[0] ?? clientSecret;
     const intent = await stripe.paymentIntents.confirm(intentId, {

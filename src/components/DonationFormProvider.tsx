@@ -1,7 +1,7 @@
 "use client";
 
 import { createContext, useContext, useEffect, useMemo } from "react";
-import { useForm, FormProvider } from "react-hook-form";
+import { useForm, FormProvider, type Resolver } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { donationFormSchema, defaultDonationValues, type DonationFormValues } from "@/lib/schema";
 import { loadFromStorage, saveToStorage, removeFromStorage } from "@/lib/storage";
@@ -19,8 +19,9 @@ type DonationContextValue = {
 const DonationContext = createContext<DonationContextValue | null>(null);
 
 export function DonationFormProvider({ children }: { children: React.ReactNode }) {
+  const resolver = zodResolver(donationFormSchema) as Resolver<DonationFormValues>;
   const form = useForm<DonationFormValues>({
-    resolver: zodResolver(donationFormSchema),
+    resolver,
     mode: "onChange",
     defaultValues: defaultDonationValues,
   });

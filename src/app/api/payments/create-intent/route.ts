@@ -22,7 +22,7 @@ export async function POST(req: NextRequest) {
       console.error("[Stripe] Missing STRIPE_SECRET_KEY env variable");
       return NextResponse.json({ error: "Server missing STRIPE_SECRET_KEY" }, { status: 500 });
     }
-    const stripe = new Stripe(secretKey, { apiVersion: "2024-06-20" });
+    const stripe = new Stripe(secretKey, { apiVersion: "2025-08-27.basil" });
 
     const paymentIntent = await stripe.paymentIntents.create({
       amount: Math.round(amount * 100),
@@ -32,7 +32,10 @@ export async function POST(req: NextRequest) {
       receipt_email: metadata?.email,
     });
 
-    return NextResponse.json({ clientSecret: paymentIntent.client_secret } satisfies CreateIntentResponse, { status: 200 });
+    return NextResponse.json(
+      { clientSecret: paymentIntent.client_secret ?? "" } satisfies CreateIntentResponse,
+      { status: 200 }
+    );
   } catch (e) {
     const message = e instanceof Error ? e.message : "Server error";
     return NextResponse.json({ error: message }, { status: 500 });
