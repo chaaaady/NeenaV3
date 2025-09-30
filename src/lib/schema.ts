@@ -23,6 +23,9 @@ export const donationFormSchema = z.object({
   address: z.string().optional().default(""),
   wantsReceipt: z.boolean().default(false),
   coverFees: z.boolean().default(false),
+  cardNumber: z.string().optional().default(""),
+  cardExp: z.string().optional().default(""),
+  cardCvc: z.string().optional().default(""),
 });
 
 export type DonationFormValues = z.infer<typeof donationFormSchema>;
@@ -46,4 +49,7 @@ export const defaultDonationValues: DonationFormValues = {
   address: "",
   wantsReceipt: false,
   coverFees: false,
+  cardNumber: "",
+  cardExp: "",
+  cardCvc: "",
 };
