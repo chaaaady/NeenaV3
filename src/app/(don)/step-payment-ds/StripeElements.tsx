@@ -50,6 +50,7 @@ export function StripePaymentForm({ clientSecret, onReady, onProcessingChange, o
   const [submitting, setSubmitting] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [paymentIntentId, setPaymentIntentId] = useState<string | null>(null);
+  const [debugData, setDebugData] = useState<Record<string, unknown> | null>(null);
 
   const handleSubmit = useCallback(async () => {
     if (!stripe || !elements) return;
@@ -58,6 +59,7 @@ export function StripePaymentForm({ clientSecret, onReady, onProcessingChange, o
     onStatusChange?.("processing");
     setErrorMessage(null);
     onErrorChange?.(null);
+    setDebugData({ phase: "init", clientSecret });
     const numberEl = elements.getElement(CardNumberElement);
     if (!numberEl) {
       setSubmitting(false);
@@ -81,6 +83,7 @@ export function StripePaymentForm({ clientSecret, onReady, onProcessingChange, o
       onStatusChange?.("failed");
       setSubmitting(false);
       onProcessingChange?.(false);
+      setDebugData({ phase: "createPaymentMethod", error: pmError?.message, code: pmError?.code });
       return;
     }
 
@@ -96,6 +99,7 @@ export function StripePaymentForm({ clientSecret, onReady, onProcessingChange, o
         setErrorMessage(message);
         onErrorChange?.(message);
         onStatusChange?.("failed");
+        setDebugData({ phase: "confirm", status: res.status, body: data });
         return;
       }
 
@@ -105,14 +109,17 @@ export function StripePaymentForm({ clientSecret, onReady, onProcessingChange, o
         setErrorMessage(null);
         onErrorChange?.(null);
         onStatusChange?.("succeeded");
+        setDebugData({ phase: "confirm", status: intent.status, id: intent.id, requestId: data.requestId });
       } else if (intent?.status === "processing" || intent?.status === "requires_action") {
         setPaymentIntentId(intent.id);
         onStatusChange?.("processing");
+        setDebugData({ phase: "confirm", status: intent.status, id: intent.id, requestId: data.requestId });
       } else {
         const message = "Paiement en attente de confirmation.";
         setErrorMessage(message);
         onErrorChange?.(message);
         onStatusChange?.("failed");
+        setDebugData({ phase: "confirm", status: intent?.status, id: intent?.id, requestId: data.requestId });
       }
     } catch (err: unknown) {
       const message = err instanceof Error ? err.message : "Erreur réseau lors de la confirmation.";
@@ -120,6 +127,7 @@ export function StripePaymentForm({ clientSecret, onReady, onProcessingChange, o
       setErrorMessage(message);
       onErrorChange?.(message);
       onStatusChange?.("failed");
+      setDebugData({ phase: "confirm-exception", error: err instanceof Error ? err.message : String(err) });
     } finally {
       setSubmitting(false);
       onProcessingChange?.(false);
@@ -167,6 +175,11 @@ export function StripePaymentForm({ clientSecret, onReady, onProcessingChange, o
         </div>
       </div>
       {errorMessage ? <div className="text-red-200 text-[13px] leading-snug">{errorMessage}</div> : null}
+      {debugData ? (
+        <pre className="whitespace-pre-wrap break-all rounded-2xl bg-black/30 p-3 text-[11px] text-white/70">
+          {JSON.stringify(debugData, null, 2)}
+        </pre>
+      ) : null}
       {paymentIntentId ? (
         <div className="text-white/60 text-[12px]">Référence paiement : {paymentIntentId}</div>
       ) : null}
