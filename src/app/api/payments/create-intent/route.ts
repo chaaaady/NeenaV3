@@ -10,7 +10,9 @@ type CreateIntentBody = {
   metadata?: Record<string, string>;
 };
 
-type CreateIntentResponse = { clientSecret: string } | { error: string };
+type CreateIntentResponse = 
+  | { clientSecret: string; requestId?: string } 
+  | { error: string; requestId?: string };
 
 export async function POST(req: NextRequest) {
   const requestId = crypto.randomUUID();

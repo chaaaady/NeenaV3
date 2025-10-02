@@ -113,8 +113,11 @@ export function StripePaymentMount({ amount, email, metadata, onReady, onProcess
       const serializedMetadata = Object.fromEntries(
         Object.entries(parsedMetadata).map(([key, value]) => [key, String(value)])
       );
-      // Use idempotency key to prevent duplicate PaymentIntents on retries
-      const idempotencyKey = `pi_${requestKey.replace(/[^a-zA-Z0-9_-]/g, "_")}`;
+      // Use SHA-256 hash to keep idempotency key under 255 chars
+      const hashBuffer = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(requestKey));
+      const hashArray = Array.from(new Uint8Array(hashBuffer));
+      const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+      const idempotencyKey = `pi_${hashHex}`;
 
       try {
         const res = await fetch("/api/payments/create-intent", {
