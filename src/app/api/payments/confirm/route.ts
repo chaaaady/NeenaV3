@@ -10,7 +10,9 @@ type ConfirmIntentBody = {
   returnUrl?: string;
 };
 
-type ConfirmIntentResponse = { paymentIntent: Stripe.PaymentIntent } | { error: string };
+type ConfirmIntentResponse = 
+  | { paymentIntent: Stripe.PaymentIntent; requestId?: string } 
+  | { error: string; requestId?: string };
 
 export async function POST(req: NextRequest) {
   const requestId = crypto.randomUUID();
