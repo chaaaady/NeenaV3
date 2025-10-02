@@ -30,7 +30,7 @@ const MAPS_URL = `https://www.google.com/maps/dir/?api=1&destination=${encodeURI
 
 export default function MosqueCreteilV7Page() {
   return (
-    <Suspense fallback={<div className="min-h-[100svh] w-full bg-gradient-to-br from-emerald-500 via-teal-600 to-green-700" />}>
+    <Suspense fallback={<div className="min-h-[100svh] w-full bg-[#0a5c4a]" />}>
       <MosqueCreteilV7Content />
     </Suspense>
   );
@@ -63,7 +63,7 @@ function MosqueCreteilV7Content() {
       <HeaderPrimary wide transparent overlay onMenuClick={() => setIsMenuOpen(true)} />
       <SideMenu isOpen={isMenuOpen} onClose={() => setIsMenuOpen(false)} />
 
-      <div className="min-h-[100svh] w-full bg-gradient-to-br from-emerald-500 via-teal-600 to-green-700">
+      <div className="min-h-[100svh] w-full bg-[#0a5c4a]">
         <main className="px-4 pb-24 pt-[calc(var(--hdr-primary-h)+24px)] md:px-6">
           <div className="mx-auto flex w-full max-w-5xl flex-col gap-6 md:gap-8">
             <HeroCard
