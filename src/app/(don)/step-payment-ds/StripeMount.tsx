@@ -17,6 +17,8 @@ type StripePaymentMountProps = {
 };
 
 export function StripePaymentMount({ amount, email, metadata, onReady, onProcessingChange, onStatusChange, onErrorChange }: StripePaymentMountProps) {
+  // Generate a unique session ID to prevent reusing confirmed PaymentIntents
+  const sessionIdRef = useRef<string>(crypto.randomUUID());
   const [clientSecret, setClientSecret] = useState<string | null>(null);
   const clientSecretRef = useRef<string | null>(null);
   const submitHandlerRef = useRef<(() => Promise<void>) | null>(null);
@@ -60,7 +62,8 @@ export function StripePaymentMount({ amount, email, metadata, onReady, onProcess
 
   const requestKey = useMemo(() => {
     if (!amount || !Number.isFinite(amount) || amount <= 0) return null;
-    return `${Math.round(amount * 100)}|${metadataJson}`;
+    // Include sessionId to ensure each payment session gets a unique PaymentIntent
+    return `${sessionIdRef.current}|${Math.round(amount * 100)}|${metadataJson}`;
   }, [amount, metadataJson]);
 
   useEffect(() => {
