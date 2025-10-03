@@ -161,7 +161,7 @@ function MosqueCreteilContent() {
 
         {/* Jumu'a section — harmonisée avec app-card */}
         <div className="app-card mt-4" id="jumuah" data-observe-section data-section-title="Jumu'a">
-          <div className="app-title">Jumu'a</div>
+          <div className="app-title">Jumu&apos;a</div>
           <div className="mt-2">
             <JumaaCard slug={mawaqitSlug} url={mawaqitUrl} />
           </div>

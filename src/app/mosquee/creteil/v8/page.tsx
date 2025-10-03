@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo, useEffect, useRef, Suspense } from "react";
+import { useState, useMemo, useEffect, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import Image from "next/image";
 import { SideMenu } from "@/components";
@@ -29,7 +29,7 @@ export default function MosqueCreteilV8Page() {
 // Hook to get dynamic background based on current prayer time
 function usePrayerBackground(slug?: string, url?: string) {
   const [currentPrayer, setCurrentPrayer] = useState<string>("Isha");
-  const [timings, setTimings] = useState<any>(null);
+  const [timings, setTimings] = useState<Record<string, unknown> | null>(null);
 
   useEffect(() => {
     let cancelled = false;
@@ -58,10 +58,14 @@ function usePrayerBackground(slug?: string, url?: string) {
       return Math.max(0, (h || 0) * 60 + (m || 0));
     };
 
-    const selectTime = (p: any): string => {
+    const selectTime = (p: unknown): string => {
       if (!p) return "";
       if (typeof p === "string") return String(p);
-      return (p.adhan && p.adhan.trim()) || (p.iqama && p.iqama.trim()) || "";
+      if (typeof p === "object" && p !== null) {
+        const prayer = p as Record<string, unknown>;
+        return (prayer.adhan && String(prayer.adhan).trim()) || (prayer.iqama && String(prayer.iqama).trim()) || "";
+      }
+      return "";
     };
 
     // Inclure Jumua dans la liste des prières
@@ -328,7 +332,7 @@ function MosqueCreteilV8Content() {
 
 // Prayer Times Card Component (copied from original)
 function PrayerTimesCard({ slug, url }: { slug?: string; url?: string }) {
-  const [timings, setTimings] = useState<any>(null);
+  const [timings, setTimings] = useState<Record<string, unknown> | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -403,7 +407,7 @@ function PrayerTimesCard({ slug, url }: { slug?: string; url?: string }) {
 
 // Jumu'a Card Component (copied from original)
 function JumaaCard({ slug, url }: { slug?: string; url?: string }) {
-  const [jumaaData, setJumaaData] = useState<any>(null);
+  const [jumaaData, setJumaaData] = useState<Record<string, unknown> | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {

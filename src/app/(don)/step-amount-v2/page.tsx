@@ -25,8 +25,8 @@ export default function StepAmountV2Page() {
   const { canProceedFromAmount } = useDonationFlow();
   const labelsRef = useRef<HTMLDivElement>(null);
   const bottomRef = useRef<HTMLDivElement>(null);
-  const [labelsOffset, setLabelsOffset] = useState(0);
-  const [bottomOffset, setBottomOffset] = useState(0);
+  const [_labelsOffset, setLabelsOffset] = useState(0);
+  const [_bottomOffset, setBottomOffset] = useState(0);
 
   // Lock scroll for this page
   useEffect(() => {
@@ -200,7 +200,7 @@ export default function StepAmountV2Page() {
                               (e.currentTarget as HTMLInputElement).blur();
                             }
                           }}
-                          onBlur={(e) => { 
+                          onBlur={() => { 
                             const num = parseFloat(otherAmountInput); 
                             if (isNaN(num)) {
                               setOtherAmountInput("");

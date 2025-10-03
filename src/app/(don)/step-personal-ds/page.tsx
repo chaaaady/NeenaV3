@@ -22,7 +22,7 @@ export default function StepPersonalDSPage() {
   const cardWrapRef = useRef<HTMLDivElement>(null);
   const [labelsBottom, setLabelsBottom] = useState(0);
   const [bottomOffset, setBottomOffset] = useState(0);
-  const [topGap, setTopGap] = useState(24);
+  const [_topGap, setTopGap] = useState(24);
 
   // lock scroll
   useEffect(() => {
