@@ -45,6 +45,29 @@ export default function StepAmountV2Page() {
     };
   }, []);
 
+  // Set theme-color for iPhone notch
+  useEffect(() => {
+    const themeColor = "#6e7375";
+    let meta = document.querySelector('meta[name="theme-color"]');
+    
+    if (!meta) {
+      meta = document.createElement("meta");
+      meta.setAttribute("name", "theme-color");
+      document.head.appendChild(meta);
+    }
+    
+    const previousColor = meta.getAttribute("content");
+    meta.setAttribute("content", themeColor);
+    
+    return () => {
+      if (previousColor) {
+        meta?.setAttribute("content", previousColor);
+      } else {
+        meta?.remove();
+      }
+    };
+  }, []);
+
   // Measure labels (top block) and bottom action bar to center the card between them
   useEffect(() => {
     const update = () => {

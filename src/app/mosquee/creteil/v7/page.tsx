@@ -41,6 +41,29 @@ function MosqueCreteilV7Content() {
   const params = useSearchParams();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
+  // Set theme-color for iPhone notch
+  useEffect(() => {
+    const themeColor = "#0a5c4a";
+    let meta = document.querySelector('meta[name="theme-color"]');
+    
+    if (!meta) {
+      meta = document.createElement("meta");
+      meta.setAttribute("name", "theme-color");
+      document.head.appendChild(meta);
+    }
+    
+    const previousColor = meta.getAttribute("content");
+    meta.setAttribute("content", themeColor);
+    
+    return () => {
+      if (previousColor) {
+        meta?.setAttribute("content", previousColor);
+      } else {
+        meta?.remove();
+      }
+    };
+  }, []);
+
   const heroImages = useMemo(() => {
     const override = params.get("img");
     return [override || "/hero-creteil.png", "/hero-creteil-2.png"];

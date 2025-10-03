@@ -160,10 +160,10 @@ function MosqueCreteilContent() {
         </div>
 
         {/* Jumu'a section — harmonisée avec app-card */}
-        <div className="app-card mt-4" id="jumuah" data-observe-section data-section-title="Jumu’a">
-          <div className="app-title">Jumu’a</div>
+        <div className="app-card mt-4" id="jumuah" data-observe-section data-section-title="Jumu'a">
+          <div className="app-title">Jumu'a</div>
           <div className="mt-2">
-            <JumaaCard />
+            <JumaaCard slug={mawaqitSlug} url={mawaqitUrl} />
           </div>
         </div>
 
@@ -253,18 +253,48 @@ function MosqueCreteilContent() {
 
 // InfoItem helper removed (not used)
 
-function JumaaCard() {
+function JumaaCard({ slug, url }: { slug?: string; url?: string }) {
   const params = useSearchParams();
-  const j1s = (params.get("j1s") || "13:30").trim();
-  const j1e = (params.get("j1e") || "14:10").trim();
-  const _parking = (params.get("parking") || "oui").trim().toLowerCase() === 'oui';
-  const khutbasCount = parseInt((params.get("khutbas") || "1").trim(), 10) || 1;
+  const [jumaaData, setJumaaData] = useState<PrayerValue | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  // Fetch Jumua times from API
+  useEffect(() => {
+    let cancelled = false;
+    const fetchJumuaTimes = async () => {
+      try {
+        setLoading(true);
+        const qs = new URLSearchParams();
+        if (slug) qs.set("slug", slug);
+        if (url) qs.set("url", url);
+        qs.set("t", Date.now().toString());
+        const res = await fetch(`/api/mawaqit?${qs.toString()}`, { cache: "no-store" });
+        const json: { ok: boolean; timings?: MawaqitTimings } = await res.json();
+        
+        if (!cancelled && json.ok && json.timings?.Jumua) {
+          setJumaaData(json.timings.Jumua);
+        }
+      } catch (err) {
+        console.error("Error fetching Jumua times:", err);
+      } finally {
+        if (!cancelled) setLoading(false);
+      }
+    };
+    fetchJumuaTimes();
+    return () => { cancelled = true; };
+  }, [slug, url]);
+
+  // Fallback values from query params or defaults
+  const j1s = jumaaData?.adhan || params.get("j1s") || "13:30";
+  const j1e = jumaaData?.iqama || params.get("j1e") || "14:10";
+  const khutbasCount = parseInt((params.get("khutbas") || "2").trim(), 10) || 2;
   const languages = (params.get("langues") || "Français, Arabe").split(",").map((s) => s.trim()).filter(Boolean);
   const imamName = (params.get("imam") || "").trim();
   const khutbaLanguages = (params.get("khutba_langues") || languages.join(", ")).split(",").map((s) => s.trim()).filter(Boolean);
-  const duration = (params.get("khutba_duree") || "45 min").trim();
-  const _parkingNote = (params.get("parking_note") || "Respectez le voisinage et le stationnement.").trim();
-  const _womenSpace = (params.get("espace_femmes") || "oui").trim();
+  const duration = (params.get("khutba_duree") || "30 min").trim();
+
+  if (loading) return <div className="text-[14px] text-[var(--text-muted)]">Chargement…</div>;
+
   return (
     <div className="w-full">
       <div className="mt-2">
@@ -284,7 +314,7 @@ function JumaaCard() {
             <div className="w-[128px] text-[14px] font-[700] text-[var(--text)] text-right tabular-nums">{j1e}</div>
           </div>
         </div>
-        {/* Infos complémentaires Jumu’a — continuation sans espace */}
+        {/* Infos complémentaires Jumu'a — continuation sans espace */}
         <div>
           {[
             { icon: Users, label: "Nombre de khutbas", value: String(khutbasCount) },

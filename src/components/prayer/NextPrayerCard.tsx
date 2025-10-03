@@ -86,9 +86,9 @@ export default function NextPrayerCard({
   const fullDateLabel = useMemo(() => formatHijriFull(now), [now]);
 
   return (
-    <section aria-label="Prochaine prière" className="rounded-12 overflow-hidden">
+    <section aria-label="Prière actuelle" className="rounded-12 overflow-hidden">
       {/* Image plein cadre + overlay texte */}
-      <div className="relative w-full h-[230px]">
+      <div className="relative w-full h-[230px] rounded-2xl overflow-hidden">
         <Image src={imgSrc} alt={lastPrayer.label} fill sizes="100vw" className="object-cover" onError={() => setImgSrc("/hero-creteil-2.png")} />
         {/* Date en haut à droite */}
         {fullDateLabel ? (
@@ -101,29 +101,28 @@ export default function NextPrayerCard({
         <div className="absolute inset-x-0 bottom-0">
           <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/55 via-black/20 to-transparent" />
           <div className="relative p-3" style={{ paddingBottom: `calc(env(safe-area-inset-bottom, 0px) + 12px)` }}>
-            <div className="text-white/95 text-[15px] md:text-[16px] font-[600] tracking-[-0.2px] drop-shadow-[0_1px_2px_rgba(0,0,0,0.6)]">
+            <div className="text-white text-[15px] md:text-[16px] font-[600] tracking-[-0.2px] drop-shadow-[0_1px_2px_rgba(0,0,0,0.6)]">
               Prière actuelle : <span className="font-[700]">{lastPrayer.label}</span>
             </div>
           </div>
         </div>
       </div>
 
-      {/* Texte et barre sous la photo, sans encadré */}
+      {/* Texte et barre sous la photo */}
       <div className="pt-3 pb-4 px-0">
-        <div className="flex items-center gap-2 text-[13.75px] md:text-[14.25px] font-[500] tracking-[-0.2px] text-[var(--text)]" aria-label={`Prochaine ${nextPrayer.label} à ${nextTimeLabel} dans ${etaLabel}`}>
-          <Clock size={16} className="text-[var(--text-muted)]" />
-          <span><span className="font-[600]">{nextPrayer.label}</span> dans <span className="tabular-nums">{etaLabel}</span></span>
+        <div className="flex items-center gap-2 text-[13.75px] md:text-[14.25px] font-[500] tracking-[-0.2px] text-white" aria-label={`Prochaine ${nextPrayer.label} à ${nextTimeLabel} dans ${etaLabel}`}>
+          <Clock size={16} className="text-white/70" />
+          <span>Prochaine <span className="font-[600]">{nextPrayer.label}</span> dans <span className="tabular-nums">{etaLabel}</span></span>
         </div>
         <div className="mt-3">
-          {/* New progress: elapsed vs total between prayers */}
-          <div className="relative h-[10px] rounded-full bg-neutral-300 dark:bg-white/15 overflow-hidden" aria-hidden={false}>
+          {/* Progress: elapsed vs total between prayers */}
+          <div className="relative h-[10px] rounded-full bg-white/15 overflow-hidden" aria-hidden={false}>
             {/* Fill */}
             <div
-              className="h-full"
+              className="h-full bg-white"
               style={{
                 width: `${widthPctRaw}%`,
                 minWidth: widthPctRaw > 0 ? "2px" : undefined,
-                backgroundColor: tMinusMinutes <= 10 ? "#16a34a" : "#0E3B2E",
                 transition: prefersReducedMotion ? undefined : "width 1000ms linear",
               }}
               role="progressbar"
@@ -133,12 +132,9 @@ export default function NextPrayerCard({
             />
           </div>
           {debug && (
-            <div className="mt-2 text-[11px] text-[var(--text-muted)]">
+            <div className="mt-2 text-[11px] text-white/70">
               elapsed {Math.round(elapsedMinutes)} min / total {Math.round(totalMinutes)} min → {widthPctRaw.toFixed(2)}%
             </div>
-          )}
-          {tMinusMinutes <= 10 && (
-            <div className="mt-2 inline-flex items-center rounded-full border border-emerald-600/20 bg-emerald-600/10 px-2 py-[2px] text-[12px] text-emerald-700">Bientôt l’adhan</div>
           )}
       </div>
       </div>
