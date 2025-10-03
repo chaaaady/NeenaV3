@@ -42,22 +42,19 @@ export default function NextPrayerCard({
     }
   }
 
+  // Mapping des images pour chaque prière avec des chemins distincts
   function getPrayerImage(key: string): string {
-    switch (key) {
-      case "Fajr":
-        return "/prayers/sobh.png";      // Upload: SOBH
-      case "Dhuhr":
-        return "/prayers/dohr.png";      // Upload: DOHR
-      case "Asr":
-        return "/prayers/asr.png";       // Upload: ASR
-      case "Maghrib":
-        return "/prayers/maghrib.png";   // Upload: Maghrib
-      case "Isha":
-        return "/prayers/isha.png";      // Upload: ISHA
-      default:
-        return "/prayers/placeholder.png";
-    }
+    const imageMap: Record<string, string> = {
+      "Fajr": "/prayers/sobh.png",      // Aube - ciel bleu/violet
+      "Dhuhr": "/prayers/dohr.png",     // Midi - soleil haut, lumière forte
+      "Jumua": "/prayers/dohr.png",     // Vendredi midi - même image que Dhuhr
+      "Asr": "/prayers/asr.png",        // Après-midi - lumière dorée
+      "Maghrib": "/prayers/maghrib.png",// Coucher de soleil - orange/rouge
+      "Isha": "/prayers/isha.png",      // Nuit - ciel sombre/étoiles
+    };
+    return imageMap[key] || "/prayers/placeholder.png";
   }
+  
   // Compute elapsed/total and fraction (wrap across midnight if needed)
   const { elapsedMinutes, totalMinutes, fraction } = useMemo(() => {
     const nowPrecise = now.getHours() * 60 + now.getMinutes() + now.getSeconds() / 60;
@@ -78,9 +75,14 @@ export default function NextPrayerCard({
       ? `Adhan maintenant pour ${nextPrayer.label}`
       : "";
 
-  const [imgSrc, setImgSrc] = useState<string>(getPrayerImage(lastPrayer.key));
+  // State pour l'image avec key pour forcer le refresh
+  const [imgSrc, setImgSrc] = useState<string>(() => getPrayerImage(lastPrayer.key));
+  const [imageKey, setImageKey] = useState<number>(0);
+  
   useEffect(() => {
-    setImgSrc(getPrayerImage(lastPrayer.key));
+    const newSrc = getPrayerImage(lastPrayer.key);
+    setImgSrc(newSrc);
+    setImageKey(prev => prev + 1); // Force le rechargement de l'image
   }, [lastPrayer.key]);
 
   const fullDateLabel = useMemo(() => formatHijriFull(now), [now]);
@@ -89,7 +91,16 @@ export default function NextPrayerCard({
     <section aria-label="Prière actuelle" className="rounded-12 overflow-hidden">
       {/* Image plein cadre + overlay texte */}
       <div className="relative w-full h-[230px] rounded-2xl overflow-hidden">
-        <Image src={imgSrc} alt={lastPrayer.label} fill sizes="100vw" className="object-cover" onError={() => setImgSrc("/hero-creteil-2.png")} />
+        <Image 
+          key={`prayer-${lastPrayer.key}-${imageKey}`} 
+          src={imgSrc} 
+          alt={lastPrayer.label} 
+          fill 
+          sizes="100vw" 
+          className="object-cover" 
+          onError={() => setImgSrc("/hero-creteil-2.png")}
+          priority
+        />
         {/* Date en haut à droite */}
         {fullDateLabel ? (
           <div className="absolute top-2 right-2 z-10">
