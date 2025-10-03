@@ -369,12 +369,21 @@ function PrayerTimesCard({ slug, url }: { slug?: string; url?: string }) {
   if (loading) return <div className="text-white/80">Chargement...</div>;
   if (!timings) return <div className="text-white/80">Indisponible</div>;
 
+  const extractTimes = (data: unknown): { adhan: string; iqama: string } => {
+    if (!data || typeof data !== "object") return { adhan: "—", iqama: "—" };
+    const obj = data as Record<string, unknown>;
+    return {
+      adhan: obj.adhan ? String(obj.adhan).trim() : "—",
+      iqama: obj.iqama ? String(obj.iqama).trim() : "—"
+    };
+  };
+
   const prayers = [
-    { name: "Fajr", data: timings.Fajr },
-    { name: "Dhuhr", data: timings.Dhuhr },
-    { name: "Asr", data: timings.Asr },
-    { name: "Maghrib", data: timings.Maghrib },
-    { name: "Isha", data: timings.Isha },
+    { name: "Fajr", ...extractTimes(timings.Fajr) },
+    { name: "Dhuhr", ...extractTimes(timings.Dhuhr) },
+    { name: "Asr", ...extractTimes(timings.Asr) },
+    { name: "Maghrib", ...extractTimes(timings.Maghrib) },
+    { name: "Isha", ...extractTimes(timings.Isha) },
   ];
 
   return (
@@ -390,8 +399,8 @@ function PrayerTimesCard({ slug, url }: { slug?: string; url?: string }) {
       
       {/* Prayer Rows */}
       {prayers.map((p) => {
-        const adhan = p.data?.adhan ? String(p.data.adhan).trim() : "—";
-        const iqama = p.data?.iqama ? String(p.data.iqama).trim() : "—";
+        const adhan = p.adhan;
+        const iqama = p.iqama;
         
         return (
           <div key={p.name} className="flex items-center justify-between px-1 py-1">
@@ -439,8 +448,14 @@ function JumaaCard({ slug, url }: { slug?: string; url?: string }) {
 
   if (loading) return <div className="text-white/80">Chargement...</div>;
 
-  const adhan = jumaaData?.adhan ? String(jumaaData.adhan).trim() : "13:30";
-  const iqama = jumaaData?.iqama ? String(jumaaData.iqama).trim() : "14:10";
+  const extractJumuaTime = (data: Record<string, unknown> | null, field: string, fallback: string): string => {
+    if (!data) return fallback;
+    const value = data[field];
+    return value ? String(value).trim() : fallback;
+  };
+
+  const adhan = extractJumuaTime(jumaaData, "adhan", "13:30");
+  const iqama = extractJumuaTime(jumaaData, "iqama", "14:10");
 
   return (
     <div className="space-y-2">
