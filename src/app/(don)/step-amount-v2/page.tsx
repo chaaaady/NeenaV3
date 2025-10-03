@@ -9,7 +9,6 @@ import { HeaderPrimary } from "@/components/headers/HeaderPrimary";
 import { formatEuro } from "@/lib/currency";
 import { DonationFormValues } from "@/lib/schema";
 import { useDonationFlow } from "@/features/donation/useDonationFlow";
-import Image from "next/image";
 import { GlassSegmented } from "@/components/ui/GlassSegmented";
 import { GlassAmountPills } from "@/components/ui/GlassAmountPills";
 import { StepLabels } from "@/components/ds";
@@ -24,7 +23,6 @@ export default function StepAmountV2Page() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [showMosqueSelector, setShowMosqueSelector] = useState(false);
   const { canProceedFromAmount } = useDonationFlow();
-  const heroImageSrc = "/hero-creteil.png";
   const labelsRef = useRef<HTMLDivElement>(null);
   const bottomRef = useRef<HTMLDivElement>(null);
   const [labelsOffset, setLabelsOffset] = useState(0);
@@ -47,7 +45,7 @@ export default function StepAmountV2Page() {
 
   // Set theme-color for iPhone notch
   useEffect(() => {
-    const themeColor = "#6e7375";
+    const themeColor = "#6b9ec7"; // Match blue gradient
     let meta = document.querySelector('meta[name="theme-color"]');
     
     if (!meta) {
@@ -138,11 +136,7 @@ export default function StepAmountV2Page() {
         onMosqueSelect={(mosque) => form.setValue("mosqueName", mosque, { shouldDirty: true })}
       />
 
-      <div className="relative w-full" style={{ height: "100svh", overflow: "hidden" }}>
-        <div className="absolute inset-0">
-          <Image src={heroImageSrc} alt={values.mosqueName || "Mosquée"} fill sizes="100vw" className="object-cover object-center" priority />
-          <div className="absolute inset-0 bg-black/45" />
-        </div>
+      <div className="relative w-full bg-gradient-to-b from-[#6b9ec7] via-[#7faed4] to-[#6b9ec7]" style={{ height: "100svh", overflow: "hidden" }}>
 
         {/* Labels under header */}
         <div className="mx-auto w-full max-w-lg md:max-w-xl px-4" style={{ paddingTop: "calc(var(--hdr-primary-h) + 6px)" }}>
