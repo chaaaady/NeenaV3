@@ -36,7 +36,7 @@ export function HeaderSecondary({ title, visible }: HeaderSecondaryProps) {
         transform: visible ? "translateY(0)" : "translateY(-8px)",
       }}
     >
-      <div className="backdrop-blur-md bg-white/75 dark:bg-neutral-900/60 border-b border-black/10 dark:border-white/10" style={{ WebkitBackdropFilter: "saturate(150%) blur(16px)" }}>
+      <div className="backdrop-blur-md bg-white/60 dark:bg-neutral-900/50 border-b border-black/10 dark:border-white/10" style={{ WebkitBackdropFilter: "saturate(140%) blur(14px)" }}>
         <div className="mx-auto max-w-[1280px] px-4 sm:px-6">
           <div className="h-[48px] sm:h-[52px] flex items-center justify-between">
             <div className="flex items-center min-w-0">

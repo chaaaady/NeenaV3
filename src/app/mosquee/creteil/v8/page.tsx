@@ -174,7 +174,7 @@ function MosqueCreteilV8Content() {
       <div className={`relative w-full min-h-[100svh] ${background}`}>
         {/* Dynamic background based on current prayer time */}
         
-        <main className="relative px-4 pb-24 pt-[calc(var(--hdr-primary-h)+24px)] md:px-6 max-w-3xl mx-auto">
+        <main className="relative px-4 pb-24 pt-[calc(var(--hdr-primary-h)+12px)] md:px-6 max-w-3xl mx-auto">
           {/* Hero Card */}
           <div id="hero-v8" className={`rounded-3xl border border-white/15 bg-gradient-to-br from-white/35 to-white/20 ${glassBlurClass} shadow-2xl p-6 md:p-7 space-y-4`}>
             {/* Hero Image Carousel */}
