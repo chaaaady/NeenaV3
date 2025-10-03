@@ -20,7 +20,7 @@ export default function BenevolatPage() {
 
   // Set theme-color for iPhone notch
   useEffect(() => {
-    const themeColor = "#2d5a45"; // Green for volunteering
+    const themeColor = "#a8c8e1"; // Blue pastel
     let meta = document.querySelector('meta[name="theme-color"]');
     
     if (!meta) {
@@ -46,7 +46,7 @@ export default function BenevolatPage() {
       <HeaderPrimary wide transparent overlay onMenuClick={() => setIsMenuOpen(true)} />
       <SideMenu isOpen={isMenuOpen} onClose={() => setIsMenuOpen(false)} />
       
-      <div className="relative w-full min-h-[100svh] bg-gradient-to-b from-[#2d5a45] via-[#3a6f57] to-[#2d5a45]">
+      <div className="relative w-full min-h-[100svh] bg-gradient-to-b from-[#a8c8e1] via-[#b8d4e8] to-[#a8c8e1]">
         <main className="relative px-4 pb-24 pt-[calc(var(--hdr-primary-h)+24px)] md:px-6 max-w-3xl mx-auto">
           {/* Hero Card with Image */}
           <GlassCard className="space-y-6">
