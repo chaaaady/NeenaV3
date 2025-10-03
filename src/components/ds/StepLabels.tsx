@@ -11,32 +11,25 @@ export type StepLabelsProps = {
   className?: string;
 };
 
-export function StepLabels({ current, previous = ["Montant", "Information", "Paiement"], className }: StepLabelsProps) {
-  const sequence = React.useMemo(() => {
-    const ordered: StepName[] = [];
-    for (const step of previous) {
-      if (!ordered.includes(step)) ordered.push(step);
-    }
-    if (!ordered.includes(current)) {
-      ordered.push(current);
-    }
-    return ordered;
-  }, [current, previous]);
+export function StepLabels({ current, className }: StepLabelsProps) {
+  const allSteps: StepName[] = ["Montant", "Information", "Paiement"];
 
   return (
     <div className={cn("flex items-center gap-2", className)}>
-      {sequence.map((label) => {
+      {allSteps.map((label, idx) => {
         const isCurrent = label === current;
         return (
-          <span
-            key={label}
-            className={cn(
-              "inline-flex items-center px-2.5 py-0.5 text-[13px]",
-              isCurrent ? "rounded-full bg-white/18 text-white font-semibold" : "text-white/85 font-medium"
-            )}
-          >
-            {label}
-          </span>
+          <React.Fragment key={label}>
+            {idx > 0 && <span className="text-white/40">·</span>}
+            <span
+              className={cn(
+                "inline-flex items-center text-[13px]",
+                isCurrent ? "text-white font-semibold" : "text-white/60 font-medium"
+              )}
+            >
+              {label}
+            </span>
+          </React.Fragment>
         );
       })}
     </div>

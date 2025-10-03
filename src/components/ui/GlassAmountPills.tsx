@@ -11,7 +11,7 @@ export type GlassAmountPillsProps = {
 };
 
 export function GlassAmountPills({ amounts, activeAmount, onSelect, className }: GlassAmountPillsProps) {
-  const activeCls = "rounded-2xl h-11 flex items-center justify-center px-4 text-[16px] font-semibold transition-all duration-300 bg-white/90 text-zinc-900 shadow-sm focus-visible:outline-none";
+  const activeCls = "rounded-2xl h-11 flex items-center justify-center px-4 text-[16px] font-semibold transition-all duration-300 bg-white/90 text-zinc-900 shadow-lg focus-visible:outline-none";
   const inactiveCls = "h-11 flex items-center justify-center px-2 text-[16px] font-semibold transition-all duration-300 bg-transparent text-white/80 hover:text-white focus-visible:outline-none";
 
   return (

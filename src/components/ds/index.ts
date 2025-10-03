@@ -8,4 +8,5 @@ export * from "./PrimaryButton";
 export * from "./StepLabels";
 export * from "./ToggleSwitch";
 export * from "./Textarea";
+export * from "./AddressAutocomplete";
 

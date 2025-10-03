@@ -103,11 +103,7 @@ export default function StepAmountV2Page() {
     setOtherAmountInput(value);
     const numValue = parseFloat(value);
     if (!isNaN(numValue) && numValue > 0) {
-      if (PRESET_AMOUNTS.includes(numValue)) {
-        form.setValue("amount", numValue, { shouldDirty: true });
-        setOtherAmountInput("");
-        return;
-      }
+      // Ne plus auto-sélectionner les montants prédéfinis pendant la saisie
       form.setValue("amount", numValue, { shouldDirty: true });
     }
   };
@@ -137,26 +133,21 @@ export default function StepAmountV2Page() {
       />
 
       <div className="relative w-full bg-gradient-to-b from-[#5a8bb5] via-[#6b9ec7] to-[#5a8bb5]" style={{ height: "100svh", overflow: "hidden" }}>
-
-        {/* Labels under header */}
-        <div className="mx-auto w-full max-w-lg md:max-w-xl px-4" style={{ paddingTop: "calc(var(--hdr-primary-h) + 6px)" }}>
-          <div ref={labelsRef} className="mb-2 flex justify-center">
-            <div className="rounded-full bg-white/12 border border-white/15 backdrop-blur-md px-3 py-1 shadow-sm">
-              <StepLabels current="Montant" />
+        
+        {/* Main content area - starts below header */}
+        <div className="relative w-full h-full flex flex-col" style={{ paddingTop: "var(--hdr-primary-h)" }}>
+          
+          {/* Labels under header */}
+          <div className="relative z-30 mx-auto w-full max-w-lg md:max-w-xl px-4 pt-2 pb-1">
+            <div ref={labelsRef} className="flex justify-center">
+              <div className="rounded-full bg-white/15 border border-white/20 backdrop-blur-md px-4 py-1.5 shadow-md">
+                <StepLabels current="Montant" />
+              </div>
             </div>
           </div>
-        </div>
 
-        {/* Center the card between labels and bottom bar with a minimal gutter */}
-        <div
-          className="px-4"
-          style={{
-            minHeight: `calc(100svh - ${bottomOffset + labelsOffset + 40}px)`,
-            paddingTop: "20px",
-            paddingBottom: "20px",
-          }}
-        >
-          <div className="h-full flex items-center justify-center">
+          {/* Card - centered in remaining space */}
+          <div className="flex-1 flex items-center justify-center px-4 pt-6" style={{ paddingBottom: "calc(env(safe-area-inset-bottom) + 80px)" }}>
             <div className="w-full max-w-lg md:max-w-xl">
               <div className="rounded-3xl border border-white/15 bg-gradient-to-br from-white/35 to-white/20 backdrop-blur-xl shadow-2xl p-6 md:p-7 transition-all duration-300 ease-out">
                 <h1 className="text-center text-white font-semibold tracking-tight text-[20px] md:text-[24px] leading-snug">
@@ -200,13 +191,26 @@ export default function StepAmountV2Page() {
                           inputMode="numeric"
                           pattern="[0-9]*"
                           placeholder="Autre montant"
-                          className={"w-full h-11 rounded-2xl px-4 pr-10 ring-1 ring-white/12 backdrop-blur-md focus:outline-none focus:ring-2 focus:ring-white/35 " + (otherAmountDisplay ? "bg-transparent text-transparent caret-white placeholder-white/60" : "bg-black/15 text-white placeholder-white/70")}
+                          className={"w-full h-11 rounded-2xl px-4 pr-10 border focus:outline-none focus:ring-2 focus:ring-white/35 text-[16px] " + (otherAmountDisplay ? "bg-transparent text-transparent caret-white placeholder-white/60 border-white/6" : "bg-transparent text-white placeholder-white/70 border-white/10")}
+                          style={{ fontSize: "16px" }}
                           aria-invalid={!!otherAmountInput && isNaN(parseFloat(otherAmountInput))}
-                          onKeyDown={(e) => { if (e.key === "Enter") (e.currentTarget as HTMLInputElement).blur(); }}
-                          onBlur={() => { const num = parseFloat(otherAmountInput); if (isNaN(num)) setOtherAmountInput(""); }}
+                          onKeyDown={(e) => { 
+                            if (e.key === "Enter") {
+                              e.preventDefault();
+                              (e.currentTarget as HTMLInputElement).blur();
+                            }
+                          }}
+                          onBlur={(e) => { 
+                            const num = parseFloat(otherAmountInput); 
+                            if (isNaN(num)) {
+                              setOtherAmountInput("");
+                            }
+                            // Force viewport reset on iOS
+                            window.scrollTo(0, 0);
+                          }}
                         />
                         {!otherAmountDisplay && (
-                          <span className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-white/75">€</span>
+                          <span className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-white/75 text-[16px]">€</span>
                         )}
                       </div>
                     </div>

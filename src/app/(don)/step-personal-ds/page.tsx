@@ -2,13 +2,12 @@
 
 import { useFormContext } from "react-hook-form";
 import { useRouter } from "next/navigation";
-import Image from "next/image";
 import { ArrowRight, ArrowLeft } from "lucide-react";
 import { HeaderPrimary } from "@/components/headers/HeaderPrimary";
 import { SideMenu, MosqueSelectorModal } from "@/components";
 import { useState, useEffect, useRef } from "react";
 import { DonationFormValues } from "@/lib/schema";
-import { GlassCard, PrimaryButton, StepLabels, ToggleSwitch } from "@/components/ds";
+import { GlassCard, PrimaryButton, StepLabels, ToggleSwitch, AddressAutocomplete } from "@/components/ds";
 import { GlassSegmented } from "@/components/ui/GlassSegmented";
 import { GlassInput } from "@/components/ds/GlassInput";
 
@@ -34,6 +33,29 @@ export default function StepPersonalDSPage() {
     return () => {
       document.documentElement.style.overflow = prevHtmlOverflow;
       document.body.style.overflow = prevBodyOverflow;
+    };
+  }, []);
+
+  // Set theme-color for iPhone notch
+  useEffect(() => {
+    const themeColor = "#5a8bb5"; // Match blue gradient
+    let meta = document.querySelector('meta[name="theme-color"]');
+    
+    if (!meta) {
+      meta = document.createElement("meta");
+      meta.setAttribute("name", "theme-color");
+      document.head.appendChild(meta);
+    }
+    
+    const previousColor = meta.getAttribute("content");
+    meta.setAttribute("content", themeColor);
+    
+    return () => {
+      if (previousColor) {
+        meta?.setAttribute("content", previousColor);
+      } else {
+        meta?.remove();
+      }
     };
   }, []);
 
@@ -76,8 +98,6 @@ export default function StepPersonalDSPage() {
     };
   }, [labelsBottom, bottomOffset]);
 
-  const heroImageSrc = "/hero-creteil.png";
-
   const identityType = values.identityType || "Personnel";
 
   const handleIdentityChange = (type: "Personnel" | "Entreprise") => {
@@ -107,23 +127,24 @@ export default function StepPersonalDSPage() {
         onMosqueSelect={(mosque) => form.setValue("mosqueName", mosque, { shouldDirty: true })}
       />
 
-      <div className="relative w-full" style={{ height: "100svh", overflow: "hidden" }}>
-        <div className="absolute inset-0">
-          <Image src={heroImageSrc} alt={values.mosqueName || "Mosquée"} fill sizes="100vw" className="object-cover object-center" priority />
-          <div className="absolute inset-0 bg-black/45" />
-        </div>
+      <div className="relative w-full bg-gradient-to-b from-[#5a8bb5] via-[#6b9ec7] to-[#5a8bb5]" style={{ height: "100svh", overflow: "hidden" }}>
 
-        <div className="px-4" style={{ paddingTop: "calc(var(--hdr-primary-h) + 6px)" }}>
-          <div ref={labelsRef} className="mx-auto w-full max-w-lg md:max-w-xl mb-2 flex justify-center">
-            <div className="rounded-full bg-white/12 border border-white/15 backdrop-blur-md px-3 py-1 shadow-sm">
-              <StepLabels current="Information" />
+        {/* Main content area - starts below header */}
+        <div className="relative w-full h-full flex flex-col" style={{ paddingTop: "var(--hdr-primary-h)" }}>
+          
+          {/* Labels under header */}
+          <div className="relative z-30 mx-auto w-full max-w-lg md:max-w-xl px-4 pt-2 pb-1">
+            <div ref={labelsRef} className="flex justify-center">
+              <div className="rounded-full bg-white/15 border border-white/20 backdrop-blur-md px-4 py-1.5 shadow-md">
+                <StepLabels current="Information" />
+              </div>
             </div>
           </div>
-        </div>
 
-        <div className="px-4">
-          <div className="mx-auto w-full max-w-lg md:max-w-xl" ref={cardWrapRef} style={{ marginTop: `${topGap}px`, marginBottom: `${topGap}px` }}>
-            <GlassCard>
+          {/* Card - centered in remaining space */}
+          <div className="flex-1 flex items-center justify-center px-4" style={{ paddingBottom: "calc(env(safe-area-inset-bottom) + 80px)" }}>
+            <div className="w-full max-w-lg md:max-w-xl" ref={cardWrapRef}>
+              <GlassCard>
                 <h1 className="text-center text-white font-semibold tracking-tight text-[20px] md:text-[24px] leading-snug">
                   Vos informations personnelles
                 </h1>
@@ -158,10 +179,10 @@ export default function StepPersonalDSPage() {
                         />
                       </div>
                       <div className="col-span-2">
-                        <GlassInput
+                        <AddressAutocomplete
                           placeholder="Adresse"
                           value={values.address || ""}
-                          onChange={(e) => form.setValue("address", e.target.value, { shouldDirty: true })}
+                          onChange={(value) => form.setValue("address", value, { shouldDirty: true })}
                         />
                       </div>
                     </div>
@@ -186,10 +207,10 @@ export default function StepPersonalDSPage() {
                         />
                       </div>
                       <div className="col-span-2">
-                        <GlassInput
+                        <AddressAutocomplete
                           placeholder="Adresse"
                           value={values.address || ""}
-                          onChange={(e) => form.setValue("address", e.target.value, { shouldDirty: true })}
+                          onChange={(value) => form.setValue("address", value, { shouldDirty: true })}
                         />
                       </div>
                     </div>
@@ -204,7 +225,8 @@ export default function StepPersonalDSPage() {
                     />
                   </div>
                 </div>
-            </GlassCard>
+              </GlassCard>
+            </div>
           </div>
         </div>
       </div>

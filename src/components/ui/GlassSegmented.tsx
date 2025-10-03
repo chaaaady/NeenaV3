@@ -22,8 +22,8 @@ export function GlassSegmented({ options, value, onChange, ariaLabel, variant = 
     ? "text-white/75 hover:bg-white/8"
     : "text-white/80 hover:bg-white/10";
   const active = variant === "light"
-    ? "bg-white/85 text-zinc-900 shadow-sm"
-    : "bg-white/85 text-zinc-900 shadow-sm";
+    ? "bg-white/85 text-zinc-900 shadow-lg"
+    : "bg-white/85 text-zinc-900 shadow-lg";
 
   return (
     <div className={cn(container, className)} role="tablist" aria-label={ariaLabel}>
