@@ -63,7 +63,9 @@ function usePrayerBackground(slug?: string, url?: string) {
       if (typeof p === "string") return String(p);
       if (typeof p === "object" && p !== null) {
         const prayer = p as Record<string, unknown>;
-        return (prayer.adhan && String(prayer.adhan).trim()) || (prayer.iqama && String(prayer.iqama).trim()) || "";
+        const adhanTime = prayer.adhan ? String(prayer.adhan).trim() : "";
+        const iqamaTime = prayer.iqama ? String(prayer.iqama).trim() : "";
+        return adhanTime || iqamaTime || "";
       }
       return "";
     };
