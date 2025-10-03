@@ -200,7 +200,7 @@ export default function StepAmountV2Page() {
                           inputMode="numeric"
                           pattern="[0-9]*"
                           placeholder="Autre montant"
-                          className={"w-full h-11 rounded-2xl px-4 pr-10 ring-1 ring-white/12 backdrop-blur-md focus:outline-none focus:ring-2 focus:ring-white/35 " + (otherAmountDisplay ? "bg-transparent text-transparent caret-white placeholder-white/60" : "bg-white/10 text-white placeholder-white/60")}
+                          className={"w-full h-11 rounded-2xl px-4 pr-10 ring-1 ring-white/12 backdrop-blur-md focus:outline-none focus:ring-2 focus:ring-white/35 " + (otherAmountDisplay ? "bg-transparent text-transparent caret-white placeholder-white/60" : "bg-black/15 text-white placeholder-white/70")}
                           aria-invalid={!!otherAmountInput && isNaN(parseFloat(otherAmountInput))}
                           onKeyDown={(e) => { if (e.key === "Enter") (e.currentTarget as HTMLInputElement).blur(); }}
                           onBlur={() => { const num = parseFloat(otherAmountInput); if (isNaN(num)) setOtherAmountInput(""); }}
