@@ -56,7 +56,7 @@ export function HeaderSecondary({ title, visible }: HeaderSecondaryProps) {
             <div className="flex items-center gap-2">
               <a
                 href="/step-amount-v2"
-                className="inline-flex h-7 sm:h-8 items-center rounded-[12px] px-3 sm:px-4 text-[14px] font-medium bg-[var(--text)] text-[var(--bg)] hover:opacity-90 active:translate-y-[0.5px] focus:outline-none focus:ring-2 focus:ring-gray-300/60 focus:ring-offset-1 disabled:opacity-60"
+                className="inline-flex h-7 sm:h-8 items-center rounded-[12px] px-3 sm:px-4 text-[14px] font-medium bg-white text-black hover:bg-white/90 active:translate-y-[0.5px] focus:outline-none focus:ring-2 focus:ring-gray-300/60 focus:ring-offset-1 disabled:opacity-60 shadow-sm"
               >
                 Faire un don
               </a>

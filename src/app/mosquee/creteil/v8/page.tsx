@@ -87,8 +87,8 @@ function usePrayerBackground(slug?: string, url?: string) {
   // Prayer-specific backgrounds - adaptés aux photos de chaque prière
   const backgrounds = {
     Fajr: "bg-gradient-to-b from-[#2d1b4e] via-[#8b4789] to-[#d97d54]", // Aube: violet profond → rose → orange (comme sobh.png)
-    Dhuhr: "bg-gradient-to-b from-[#87ceeb] via-[#4da6d4] to-[#5cb85c]", // Midi: ciel bleu lumineux → vert (comme dohr.png)
-    Jumua: "bg-gradient-to-b from-[#87ceeb] via-[#4da6d4] to-[#5cb85c]", // Vendredi midi: même fond que Dhuhr (même photo)
+    Dhuhr: "bg-gradient-to-b from-[#3d6f8f] via-[#4a7a93] to-[#568a95]", // Midi: bleu plus foncé avec dégradé léger
+    Jumua: "bg-gradient-to-b from-[#3d6f8f] via-[#4a7a93] to-[#568a95]", // Vendredi midi: même fond que Dhuhr (même photo)
     Asr: "bg-gradient-to-b from-[#f4a460] via-[#e8935e] to-[#d4785a]", // Après-midi: doré/orange chaud
     Maghrib: "bg-gradient-to-b from-[#ff6b6b] via-[#ee5a24] to-[#8b4789]", // Coucher: rouge/orange → violet
     Isha: "bg-gradient-to-b from-[#0a0a1a] via-[#1a1a2e] to-[#0f0f1f]", // Nuit: bleu nuit très sombre
@@ -96,8 +96,8 @@ function usePrayerBackground(slug?: string, url?: string) {
 
   const themeColors = {
     Fajr: "#2d1b4e",    // Violet profond de l'aube
-    Dhuhr: "#87ceeb",   // Bleu ciel lumineux
-    Jumua: "#87ceeb",   // Même que Dhuhr
+    Dhuhr: "#3d6f8f",   // Bleu foncé
+    Jumua: "#3d6f8f",   // Même que Dhuhr
     Asr: "#f4a460",     // Orange doré
     Maghrib: "#ff6b6b", // Rouge du coucher
     Isha: "#0a0a1a",    // Bleu nuit très sombre
@@ -167,14 +167,14 @@ function MosqueCreteilV8Content() {
 
   return (
     <>
-      <HeaderPrimary onMenuClick={() => setIsMenuOpen(true)} />
+      <HeaderPrimary wide transparent overlay onMenuClick={() => setIsMenuOpen(true)} />
       <HeaderSecondary title={MOSQUE_NAME} visible={miniVisible} />
       <SideMenu isOpen={isMenuOpen} onClose={() => setIsMenuOpen(false)} />
 
       <div className={`relative w-full min-h-[100svh] ${background}`}>
         {/* Dynamic background based on current prayer time */}
         
-        <main className="relative px-4 pb-24 pt-0 md:px-6 max-w-3xl mx-auto">
+        <main className="relative px-4 pb-24 pt-[calc(var(--hdr-primary-h)+24px)] md:px-6 max-w-3xl mx-auto">
           {/* Hero Card */}
           <div id="hero-v8" className={`rounded-3xl border border-white/15 bg-gradient-to-br from-white/35 to-white/20 ${glassBlurClass} shadow-2xl p-6 md:p-7 space-y-4`}>
             {/* Hero Image Carousel */}
