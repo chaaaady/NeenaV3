@@ -5,6 +5,8 @@ import { useSearchParams } from "next/navigation";
 import Image from "next/image";
 import { SideMenu } from "@/components";
 import { HeaderPrimary } from "@/components/headers/HeaderPrimary";
+import { HeaderSecondary } from "@/components/headers/HeaderSecondary";
+import { useMiniHeaderTrigger } from "@/hooks/useMiniHeaderTrigger";
 import CurrentPrayerSection from "@/components/CurrentPrayerSection";
 import CurrentTimeSection from "@/components/CurrentTimeSection";
 import { MapPin, Check, Car, Users, Accessibility, Info, CreditCard, User, Globe, Book } from "lucide-react";
@@ -111,6 +113,7 @@ function usePrayerBackground(slug?: string, url?: string) {
 function MosqueCreteilV8Content() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const params = useSearchParams();
+  const { visible: miniVisible } = useMiniHeaderTrigger("hero-v8");
 
   // Hero image (configurable via ?img=...)
   const heroImages = useMemo(() => {
@@ -164,15 +167,16 @@ function MosqueCreteilV8Content() {
 
   return (
     <>
-      <HeaderPrimary wide transparent overlay onMenuClick={() => setIsMenuOpen(true)} />
+      <HeaderPrimary onMenuClick={() => setIsMenuOpen(true)} />
+      <HeaderSecondary title={MOSQUE_NAME} visible={miniVisible} />
       <SideMenu isOpen={isMenuOpen} onClose={() => setIsMenuOpen(false)} />
 
       <div className={`relative w-full min-h-[100svh] ${background}`}>
         {/* Dynamic background based on current prayer time */}
         
-        <main className="relative px-4 pb-24 pt-[calc(var(--hdr-primary-h)+24px)] md:px-6 max-w-3xl mx-auto">
+        <main className="relative px-4 pb-24 pt-0 md:px-6 max-w-3xl mx-auto">
           {/* Hero Card */}
-          <div className={`rounded-3xl border border-white/15 bg-gradient-to-br from-white/35 to-white/20 ${glassBlurClass} shadow-2xl p-6 md:p-7 space-y-4`}>
+          <div id="hero-v8" className={`rounded-3xl border border-white/15 bg-gradient-to-br from-white/35 to-white/20 ${glassBlurClass} shadow-2xl p-6 md:p-7 space-y-4`}>
             {/* Hero Image Carousel */}
             <div
               className="w-full rounded-2xl overflow-hidden relative h-[260px]"
