@@ -270,7 +270,7 @@ function MosqueCreteilV8Content() {
                       <span className="text-[14px] font-[700] text-white truncate">{row.label}</span>
                     </div>
                     <div className="w-[128px] text-[14px] font-[700] text-white text-right truncate">
-                      {typeof row.value === 'boolean' ? (row.value ? <Check size={16} className="text-emerald-400 inline-block" /> : '—') : row.value}
+                      {typeof row.value === 'boolean' ? (row.value ? <Check size={16} className="text-white inline-block" /> : '—') : row.value}
                     </div>
                   </div>
                 );
@@ -460,7 +460,7 @@ function JumaaCard({ slug, url }: { slug?: string; url?: string }) {
           <span className="text-[14px] font-[700] text-white">30 min</span>
         </div>
       </div>
-      <div className="mt-3 p-3 rounded-xl bg-yellow-500/10 border border-yellow-500/20 text-[12px] text-yellow-200">
+      <div className="mt-3 p-3 rounded-xl bg-white/10 border border-white/20 text-[12px] text-white/90">
         Merci de ne pas gêner le voisinage et de vous garer sur des places appropriées.
       </div>
     </div>

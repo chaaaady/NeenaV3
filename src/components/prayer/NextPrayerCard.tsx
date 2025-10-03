@@ -123,7 +123,7 @@ export default function NextPrayerCard({
       <div className="pt-3 pb-4 px-0">
         <div className="flex items-center gap-2 text-[13.75px] md:text-[14.25px] font-[500] tracking-[-0.2px] text-white" aria-label={`Prochaine ${nextPrayer.label} à ${nextTimeLabel} dans ${etaLabel}`}>
           <Clock size={16} className="text-white/70" />
-          <span>Prochaine <span className="font-[600]">{nextPrayer.label}</span> dans <span className="tabular-nums">{etaLabel}</span></span>
+          <span>Prochaine prière <span className="font-[600]">{nextPrayer.label}</span> dans <span className="tabular-nums">{etaLabel}</span> : <span className="font-[600] tabular-nums">{nextTimeLabel}</span></span>
         </div>
         <div className="mt-3">
           {/* Progress: elapsed vs total between prayers */}
