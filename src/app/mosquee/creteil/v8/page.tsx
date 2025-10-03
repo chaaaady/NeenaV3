@@ -62,7 +62,8 @@ function usePrayerBackground(slug?: string, url?: string) {
       return (p.adhan && p.adhan.trim()) || (p.iqama && p.iqama.trim()) || "";
     };
 
-    const prayers = ["Fajr", "Dhuhr", "Asr", "Maghrib", "Isha"];
+    // Inclure Jumua dans la liste des prières
+    const prayers = ["Fajr", "Dhuhr", "Jumua", "Asr", "Maghrib", "Isha"];
     const points = prayers
       .map((k) => ({ key: k, at: selectTime(timings[k] ?? null), min: toMinutes(selectTime(timings[k] ?? null)) }))
       .filter((x) => x.at)
@@ -81,21 +82,23 @@ function usePrayerBackground(slug?: string, url?: string) {
     setCurrentPrayer(current);
   }, [timings]);
 
-  // Prayer-specific backgrounds
+  // Prayer-specific backgrounds - adaptés aux photos de chaque prière
   const backgrounds = {
-    Fajr: "bg-gradient-to-b from-[#1a1a2e] via-[#16213e] to-[#0f3460]", // Dawn: deep blue to lighter blue
-    Dhuhr: "bg-gradient-to-b from-[#4facfe] via-[#00f2fe] to-[#43e97b]", // Noon: bright sky blue to green
-    Asr: "bg-gradient-to-b from-[#f093fb] via-[#f5576c] to-[#fa709a]", // Afternoon: pink/orange
-    Maghrib: "bg-gradient-to-b from-[#ee0979] via-[#ff6a00] to-[#7f00ff]", // Sunset: red/orange/purple
-    Isha: "bg-gradient-to-b from-[#0d0d0d] via-[#1a1a1a] to-[#0d0d0d]", // Night: dark
+    Fajr: "bg-gradient-to-b from-[#2d1b4e] via-[#8b4789] to-[#d97d54]", // Aube: violet profond → rose → orange (comme sobh.png)
+    Dhuhr: "bg-gradient-to-b from-[#87ceeb] via-[#4da6d4] to-[#5cb85c]", // Midi: ciel bleu lumineux → vert (comme dohr.png)
+    Jumua: "bg-gradient-to-b from-[#87ceeb] via-[#4da6d4] to-[#5cb85c]", // Vendredi midi: même fond que Dhuhr (même photo)
+    Asr: "bg-gradient-to-b from-[#f4a460] via-[#e8935e] to-[#d4785a]", // Après-midi: doré/orange chaud
+    Maghrib: "bg-gradient-to-b from-[#ff6b6b] via-[#ee5a24] to-[#8b4789]", // Coucher: rouge/orange → violet
+    Isha: "bg-gradient-to-b from-[#0a0a1a] via-[#1a1a2e] to-[#0f0f1f]", // Nuit: bleu nuit très sombre
   };
 
   const themeColors = {
-    Fajr: "#1a1a2e",
-    Dhuhr: "#4facfe",
-    Asr: "#f093fb",
-    Maghrib: "#ee0979",
-    Isha: "#0d0d0d",
+    Fajr: "#2d1b4e",    // Violet profond de l'aube
+    Dhuhr: "#87ceeb",   // Bleu ciel lumineux
+    Jumua: "#87ceeb",   // Même que Dhuhr
+    Asr: "#f4a460",     // Orange doré
+    Maghrib: "#ff6b6b", // Rouge du coucher
+    Isha: "#0a0a1a",    // Bleu nuit très sombre
   };
 
   return {
