@@ -45,7 +45,7 @@ export default function StepAmountV2Page() {
 
   // Set theme-color for iPhone notch
   useEffect(() => {
-    const themeColor = "#6b9ec7"; // Match blue gradient
+    const themeColor = "#5a8bb5"; // Match darker blue gradient
     let meta = document.querySelector('meta[name="theme-color"]');
     
     if (!meta) {
@@ -136,7 +136,7 @@ export default function StepAmountV2Page() {
         onMosqueSelect={(mosque) => form.setValue("mosqueName", mosque, { shouldDirty: true })}
       />
 
-      <div className="relative w-full bg-gradient-to-b from-[#6b9ec7] via-[#7faed4] to-[#6b9ec7]" style={{ height: "100svh", overflow: "hidden" }}>
+      <div className="relative w-full bg-gradient-to-b from-[#5a8bb5] via-[#6b9ec7] to-[#5a8bb5]" style={{ height: "100svh", overflow: "hidden" }}>
 
         {/* Labels under header */}
         <div className="mx-auto w-full max-w-lg md:max-w-xl px-4" style={{ paddingTop: "calc(var(--hdr-primary-h) + 6px)" }}>
@@ -200,7 +200,7 @@ export default function StepAmountV2Page() {
                           inputMode="numeric"
                           pattern="[0-9]*"
                           placeholder="Autre montant"
-                          className={"w-full h-11 rounded-2xl px-4 pr-10 ring-1 ring-white/12 backdrop-blur-md focus:outline-none focus:ring-2 focus:ring-white/35 " + (otherAmountDisplay ? "bg-transparent text-transparent caret-white placeholder-white/60" : "bg-black/25 text-white placeholder-white/60")}
+                          className={"w-full h-11 rounded-2xl px-4 pr-10 ring-1 ring-white/12 backdrop-blur-md focus:outline-none focus:ring-2 focus:ring-white/35 " + (otherAmountDisplay ? "bg-transparent text-transparent caret-white placeholder-white/60" : "bg-white/10 text-white placeholder-white/60")}
                           aria-invalid={!!otherAmountInput && isNaN(parseFloat(otherAmountInput))}
                           onKeyDown={(e) => { if (e.key === "Enter") (e.currentTarget as HTMLInputElement).blur(); }}
                           onBlur={() => { const num = parseFloat(otherAmountInput); if (isNaN(num)) setOtherAmountInput(""); }}
