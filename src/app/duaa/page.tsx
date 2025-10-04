@@ -103,13 +103,6 @@ export default function DuaasPage() {
                   </p>
                 </div>
 
-                <GlassTextarea
-                  value={duaa}
-                  onChange={(e) => setDuaa(e.target.value)}
-                  minRows={4}
-                  placeholder="Je demande du'a pour..."
-                />
-
                 {/* Category selector */}
                 <div className="space-y-2">
                   <div className="text-[13px] font-medium text-white/80">Catégorie (pour une recommandation appropriée)</div>
@@ -123,6 +116,13 @@ export default function DuaasPage() {
                     placeholder="Choisir une catégorie..."
                   />
                 </div>
+
+                <GlassTextarea
+                  value={duaa}
+                  onChange={(e) => setDuaa(e.target.value)}
+                  minRows={4}
+                  placeholder="Je demande du'a pour..."
+                />
 
                 <div className="text-[12px] text-white/60">
                   Merci d'éviter tout appel personnel, numéro de téléphone ou message sensible. Concentrez-vous sur

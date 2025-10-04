@@ -122,13 +122,6 @@ function MerciContent() {
                   <div className="text-[13px] text-white/65">Exprimez une intention ou une personne pour laquelle vous souhaitez qu&apos;on invoque Allah. Votre message restera anonyme.</div>
                 </div>
                 <div className="space-y-3">
-                  <GlassTextarea
-                    value={duaa}
-                    minRows={3}
-                    onChange={(e) => setDuaa(e.target.value)}
-                    placeholder="Je demande des du&apos;a pour..."
-                  />
-                  
                   {/* Category selector */}
                   <div className="space-y-2">
                     <div className="text-[13px] font-medium text-white/80">Catégorie (pour une recommandation appropriée)</div>
@@ -142,6 +135,13 @@ function MerciContent() {
                       placeholder="Choisir une catégorie..."
                     />
                   </div>
+
+                  <GlassTextarea
+                    value={duaa}
+                    minRows={3}
+                    onChange={(e) => setDuaa(e.target.value)}
+                    placeholder="Je demande des du&apos;a pour..."
+                  />
 
                   <div className="flex justify-end">
                     <PrimaryButton
