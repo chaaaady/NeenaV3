@@ -19,9 +19,9 @@ export function ScrollReveal({
 }: ScrollRevealProps) {
   const { ref, isVisible } = useScrollReveal();
 
+  // @ts-ignore - Dynamic component ref type incompatibility
   return (
     <Component
-      // @ts-expect-error - Dynamic component ref type
       ref={ref}
       className={cn(
         "scroll-reveal",
