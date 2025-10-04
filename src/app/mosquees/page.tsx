@@ -246,10 +246,13 @@ export default function MosqueesPage() {
                         </p>
                       </div>
 
-                      <div className="pt-2">
+                      <div className="flex items-center justify-between pt-2">
                         <span className="inline-flex items-center px-3 py-1 rounded-full bg-white/15 backdrop-blur-md text-white text-[12px] font-medium">
                           Département {mosque.department}
                         </span>
+                        <button className="px-4 py-2 rounded-xl bg-white/90 hover:bg-white text-zinc-900 font-semibold text-[13px] shadow-lg transition-all">
+                          Découvrir
+                        </button>
                       </div>
                     </div>
                   </div>
