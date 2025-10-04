@@ -21,7 +21,8 @@ export function ScrollReveal({
 
   return (
     <Component
-      ref={ref as React.RefObject<Element>}
+      // @ts-expect-error - Dynamic component ref type
+      ref={ref}
       className={cn(
         "scroll-reveal",
         isVisible && "is-visible",
