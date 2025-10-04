@@ -19,19 +19,18 @@ export function ScrollReveal({
 }: ScrollRevealProps) {
   const { ref, isVisible } = useScrollReveal();
 
-  // @ts-ignore - Dynamic component ref type incompatibility
-  return (
-    <Component
-      ref={ref}
-      className={cn(
+  return React.createElement(
+    Component,
+    {
+      ref,
+      className: cn(
         "scroll-reveal",
         isVisible && "is-visible",
         className
-      )}
-      style={{ transitionDelay: `${delay}ms` }}
-    >
-      {children}
-    </Component>
+      ),
+      style: { transitionDelay: `${delay}ms` }
+    },
+    children
   );
 }
 
