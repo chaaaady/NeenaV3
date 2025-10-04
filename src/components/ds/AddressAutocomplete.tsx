@@ -26,7 +26,7 @@ export function AddressAutocomplete({ value, onChange, placeholder, className }:
   const [isOpen, setIsOpen] = useState(false);
   const [selectedIndex, setSelectedIndex] = useState(-1);
   const wrapperRef = useRef<HTMLDivElement>(null);
-  const debounceRef = useRef<NodeJS.Timeout>();
+  const debounceRef = useRef<NodeJS.Timeout | undefined>(undefined);
 
   // Sync external value with internal query
   useEffect(() => {
