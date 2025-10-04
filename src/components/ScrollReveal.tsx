@@ -7,7 +7,7 @@ import { cn } from "@/lib/cn";
 export type ScrollRevealProps = {
   children: React.ReactNode;
   className?: string;
-  as?: keyof JSX.IntrinsicElements;
+  as?: keyof React.JSX.IntrinsicElements;
   delay?: number;
 };
 
