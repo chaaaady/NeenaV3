@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import Image from "next/image";
 import { SideMenu } from "@/components";
+import { ScrollReveal } from "@/components/ScrollReveal";
 import { HeaderPrimary } from "@/components/headers/HeaderPrimary";
 import { GlassCard, GlassInput, PrimaryButton } from "@/components/ds";
 
@@ -20,7 +21,7 @@ export default function BenevolatPage() {
 
   // Set theme-color for iPhone notch
   useEffect(() => {
-    const themeColor = "#6b9ec7"; // Blue darker
+    const themeColor = "#5a8bb5"; // Match gradient start
     let meta = document.querySelector('meta[name="theme-color"]');
     
     if (!meta) {
@@ -46,10 +47,11 @@ export default function BenevolatPage() {
       <HeaderPrimary wide transparent overlay onMenuClick={() => setIsMenuOpen(true)} />
       <SideMenu isOpen={isMenuOpen} onClose={() => setIsMenuOpen(false)} />
       
-      <div className="relative w-full min-h-[100svh] bg-gradient-to-b from-[#6b9ec7] via-[#7faed4] to-[#6b9ec7]">
+      <div className="relative w-full min-h-[100svh] bg-gradient-to-b from-[#5a8bb5] via-[#6b9ec7] to-[#5a8bb5]">
         <main className="relative px-4 pb-24 pt-[calc(var(--hdr-primary-h)+24px)] md:px-6 max-w-3xl mx-auto">
           {/* Hero Card with Image */}
-          <GlassCard className="space-y-6">
+          <ScrollReveal delay={0}>
+            <GlassCard className="space-y-6">
             {/* Hero Image */}
             <div className="w-full rounded-2xl overflow-hidden h-[230px] relative">
               <Image src="/benevolat.png" alt="Bénévolat" fill className="object-cover" />
@@ -187,6 +189,7 @@ export default function BenevolatPage() {
               <PrimaryButton className="w-full">Envoyer</PrimaryButton>
             </div>
           </GlassCard>
+          </ScrollReveal>
         </main>
       </div>
     </>

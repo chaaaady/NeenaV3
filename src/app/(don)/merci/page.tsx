@@ -1,11 +1,10 @@
 "use client";
 
 import { Suspense, useEffect, useRef, useState } from "react";
-import Image from "next/image";
 import { useRouter, useSearchParams } from "next/navigation";
 import { HeaderPrimary } from "@/components/headers/HeaderPrimary";
 import { SideMenu } from "@/components";
-import { GlassCard, GlassTextarea, PrimaryButton, StepLabels } from "@/components/ds";
+import { GlassCard, GlassTextarea, PrimaryButton } from "@/components/ds";
 import { useDuaaFeed } from "@/features/duaa/useDuaaFeed";
 
 export default function MerciPage() {
@@ -27,9 +26,6 @@ function MerciContent() {
   const [duaa, setDuaa] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [feedback, setFeedback] = useState<string | null>(null);
-  const [topGap, setTopGap] = useState(32);
-  const labelsRef = useRef<HTMLDivElement>(null);
-  const bottomRef = useRef<HTMLDivElement>(null);
   const cardRef = useRef<HTMLDivElement>(null);
   const { addPost } = useDuaaFeed();
 
@@ -43,22 +39,26 @@ function MerciContent() {
     };
   }, []);
 
+  // Set theme-color for iPhone notch
   useEffect(() => {
-    const update = () => {
-      const labelsHeight = labelsRef.current?.getBoundingClientRect().bottom ?? 0;
-      const bottomHeight = bottomRef.current?.getBoundingClientRect().height ?? 0;
-      const cardHeight = cardRef.current?.getBoundingClientRect().height ?? 0;
-      const available = window.innerHeight - labelsHeight - bottomHeight;
-      const gap = Math.max(32, Math.floor((available - cardHeight) / 2));
-      setTopGap(Number.isFinite(gap) ? gap : 32);
-    };
-    update();
-    window.addEventListener("resize", update);
-    const roCard = cardRef.current ? new ResizeObserver(update) : null;
-    if (cardRef.current && roCard) roCard.observe(cardRef.current);
+    const themeColor = "#5a8bb5";
+    let meta = document.querySelector('meta[name="theme-color"]');
+    
+    if (!meta) {
+      meta = document.createElement("meta");
+      meta.setAttribute("name", "theme-color");
+      document.head.appendChild(meta);
+    }
+    
+    const previousColor = meta.getAttribute("content");
+    meta.setAttribute("content", themeColor);
+    
     return () => {
-      window.removeEventListener("resize", update);
-      roCard?.disconnect();
+      if (previousColor) {
+        meta?.setAttribute("content", previousColor);
+      } else {
+        meta?.remove();
+      }
     };
   }, []);
 
@@ -73,7 +73,6 @@ function MerciContent() {
     setSubmitting(false);
   };
 
-  const goHome = () => router.push("/");
   const goToDuaas = () => router.push("/duaa");
 
   return (
@@ -81,29 +80,12 @@ function MerciContent() {
       <HeaderPrimary wide transparent overlay onMenuClick={() => setIsMenuOpen(true)} />
       <SideMenu isOpen={isMenuOpen} onClose={() => setIsMenuOpen(false)} />
 
-      <div className="relative" style={{ height: "100svh", overflow: "hidden" }}>
-        <Image
-          src="/hero-creteil.png"
-          alt="Mosquée"
-          fill
-          priority
-          className="object-cover"
-        />
-        <div className="absolute inset-0 bg-black/55" />
+      <div className="relative bg-gradient-to-b from-[#5a8bb5] via-[#6b9ec7] to-[#5a8bb5]" style={{ height: "100svh", overflow: "hidden" }}>
 
-        <div className="px-4" style={{ paddingTop: "calc(var(--hdr-primary-h) + 6px)" }}>
-          <div ref={labelsRef} className="mx-auto w-full max-w-lg md:max-w-xl mb-2 flex justify-center">
-            <div className="rounded-full bg-white/12 border border-white/15 backdrop-blur-md px-3 py-1 shadow-sm">
-              <StepLabels current="Merci" previous={["Montant", "Information", "Paiement"]} />
-            </div>
-          </div>
-        </div>
-
-        <div className="px-4">
+        <div className="flex items-center justify-center px-4" style={{ minHeight: "100svh", paddingTop: "var(--hdr-primary-h)", paddingBottom: "32px" }}>
           <div
             ref={cardRef}
             className="mx-auto w-full max-w-lg md:max-w-xl"
-            style={{ marginTop: `${topGap}px`, marginBottom: `${topGap}px` }}
           >
             <GlassCard className="space-y-6 text-center text-white">
               <div className="space-y-2">
@@ -122,51 +104,41 @@ function MerciContent() {
                 ) : null}
               </div>
 
-              <div className="pt-2 text-left space-y-3">
+              <div className="pt-2 text-left space-y-4">
                 <div>
-                  <div className="text-[15px] font-medium text-white">Partager une demande de du’a</div>
+                  <div className="text-[15px] font-medium text-white">Partager une demande de du'a</div>
                   <div className="text-[13px] text-white/65">Exprimez une intention ou une personne pour laquelle vous souhaitez qu&apos;on invoque Allah. Votre message restera anonyme.</div>
                 </div>
-                <GlassTextarea
-                  value={duaa}
-                  minRows={4}
-                  onChange={(e) => setDuaa(e.target.value)}
-                  placeholder="Je demande des du&apos;a pour..."
-                />
-                <div className="text-[12px] text-white/60">
-                  Vos demandes de du&apos;a sont visibles par la communauté et modérées. Merci de rester centrés sur l&apos;invocation et d&apos;éviter toute information personnelle ou propos sensibles.
+                <div className="space-y-2">
+                  <GlassTextarea
+                    value={duaa}
+                    minRows={3}
+                    onChange={(e) => setDuaa(e.target.value)}
+                    placeholder="Je demande des du&apos;a pour..."
+                  />
+                  <div className="flex justify-end">
+                    <PrimaryButton
+                      variant="white"
+                      onClick={handlePublish}
+                      disabled={submitting || !duaa.trim()}
+                      className="px-6"
+                    >
+                      Publier
+                    </PrimaryButton>
+                  </div>
                 </div>
                 {feedback ? <div className="text-[13px] text-emerald-200">{feedback}</div> : null}
-                <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
-                  <PrimaryButton
-                    width="full"
-                    variant="glass"
+                <div className="pt-2 border-t border-white/10">
+                  <button
                     onClick={goToDuaas}
-                    className="sm:w-auto"
+                    className="text-[14px] text-white/70 hover:text-white transition-colors underline underline-offset-2"
                   >
-                    Découvrir les du’as
-                  </PrimaryButton>
-                  <PrimaryButton
-                    width="full"
-                    variant="white"
-                    onClick={handlePublish}
-                    disabled={submitting || !duaa.trim()}
-                    className="sm:w-auto"
-                  >
-                    Publier
-                  </PrimaryButton>
+                    Découvrir les du&apos;as de la communauté
+                  </button>
                 </div>
               </div>
             </GlassCard>
           </div>
-        </div>
-      </div>
-
-      <div ref={bottomRef} className="fixed inset-x-0" style={{ bottom: "calc(env(safe-area-inset-bottom) + 14px)" }}>
-        <div className="mx-auto w-full max-w-lg md:max-w-xl px-4">
-          <PrimaryButton width="full" variant="white" onClick={goHome}>
-            Revenir à l’accueil
-          </PrimaryButton>
         </div>
       </div>
     </>

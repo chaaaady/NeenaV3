@@ -4,6 +4,7 @@ import { useState, useMemo, useEffect, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import Image from "next/image";
 import { SideMenu } from "@/components";
+import { ScrollReveal } from "@/components/ScrollReveal";
 import { HeaderPrimary } from "@/components/headers/HeaderPrimary";
 import { HeaderSecondary } from "@/components/headers/HeaderSecondary";
 import { useMiniHeaderTrigger } from "@/hooks/useMiniHeaderTrigger";
@@ -19,101 +20,11 @@ const MAPS_URL = `https://www.google.com/maps/dir/?api=1&destination=${encodeURI
 export default function MosqueCreteilV8Page() {
   return (
     <Suspense fallback={
-      <div className="relative w-full min-h-[100svh] bg-gradient-to-b from-[#0d0d0d] via-[#1a1a1a] to-[#0d0d0d]" />
+      <div className="relative w-full min-h-[100svh] bg-gradient-to-b from-[#5a8bb5] via-[#6b9ec7] to-[#5a8bb5]" />
     }>
       <MosqueCreteilV8Content />
     </Suspense>
   );
-}
-
-// Hook to get dynamic background based on current prayer time
-function usePrayerBackground(slug?: string, url?: string) {
-  const [currentPrayer, setCurrentPrayer] = useState<string>("Isha");
-  const [timings, setTimings] = useState<Record<string, unknown> | null>(null);
-
-  useEffect(() => {
-    let cancelled = false;
-    (async () => {
-      try {
-        const qs = new URLSearchParams();
-        if (slug) qs.set("slug", slug);
-        if (url) qs.set("url", url);
-        qs.set("t", Date.now().toString());
-        const res = await fetch(`/api/mawaqit?${qs.toString()}`, { cache: "no-store" });
-        const json = await res.json();
-        if (!json.ok || !json.timings) return;
-        if (!cancelled) setTimings(json.timings);
-      } catch {
-        // Ignore errors
-      }
-    })();
-    return () => { cancelled = true; };
-  }, [slug, url]);
-
-  useEffect(() => {
-    if (!timings) return;
-
-    const toMinutes = (time: string): number => {
-      const [h, m] = (time || "").split(":").map((x) => parseInt(x || "0", 10));
-      return Math.max(0, (h || 0) * 60 + (m || 0));
-    };
-
-    const selectTime = (p: unknown): string => {
-      if (!p) return "";
-      if (typeof p === "string") return String(p);
-      if (typeof p === "object" && p !== null) {
-        const prayer = p as Record<string, unknown>;
-        const adhanTime = prayer.adhan ? String(prayer.adhan).trim() : "";
-        const iqamaTime = prayer.iqama ? String(prayer.iqama).trim() : "";
-        return adhanTime || iqamaTime || "";
-      }
-      return "";
-    };
-
-    // Inclure Jumua dans la liste des prières
-    const prayers = ["Fajr", "Dhuhr", "Jumua", "Asr", "Maghrib", "Isha"];
-    const points = prayers
-      .map((k) => ({ key: k, at: selectTime(timings[k] ?? null), min: toMinutes(selectTime(timings[k] ?? null)) }))
-      .filter((x) => x.at)
-      .sort((a, b) => a.min - b.min);
-
-    if (!points.length) return;
-
-    const now = new Date();
-    const nowM = now.getHours() * 60 + now.getMinutes();
-
-    let current = points[points.length - 1].key; // Default to Isha
-    for (let i = 0; i < points.length; i++) {
-      if (points[i].min <= nowM) current = points[i].key;
-    }
-
-    setCurrentPrayer(current);
-  }, [timings]);
-
-  // Prayer-specific backgrounds - adaptés aux photos de chaque prière
-  const backgrounds = {
-    Fajr: "bg-gradient-to-b from-[#2d1b4e] via-[#8b4789] to-[#d97d54]", // Aube: violet profond → rose → orange (comme sobh.png)
-    Dhuhr: "bg-gradient-to-b from-[#3d6f8f] via-[#4a7a93] to-[#568a95]", // Midi: bleu plus foncé avec dégradé léger
-    Jumua: "bg-gradient-to-b from-[#3d6f8f] via-[#4a7a93] to-[#568a95]", // Vendredi midi: même fond que Dhuhr (même photo)
-    Asr: "bg-gradient-to-b from-[#f4a460] via-[#e8935e] to-[#d4785a]", // Après-midi: doré/orange chaud
-    Maghrib: "bg-gradient-to-b from-[#ff6b6b] via-[#ee5a24] to-[#8b4789]", // Coucher: rouge/orange → violet
-    Isha: "bg-gradient-to-b from-[#0a0a1a] via-[#1a1a2e] to-[#0f0f1f]", // Nuit: bleu nuit très sombre
-  };
-
-  const themeColors = {
-    Fajr: "#2d1b4e",    // Violet profond de l'aube
-    Dhuhr: "#3d6f8f",   // Bleu foncé
-    Jumua: "#3d6f8f",   // Même que Dhuhr
-    Asr: "#f4a460",     // Orange doré
-    Maghrib: "#ff6b6b", // Rouge du coucher
-    Isha: "#0a0a1a",    // Bleu nuit très sombre
-  };
-
-  return {
-    background: backgrounds[currentPrayer as keyof typeof backgrounds] || backgrounds.Isha,
-    themeColor: themeColors[currentPrayer as keyof typeof themeColors] || themeColors.Isha,
-    currentPrayer,
-  };
 }
 
 function MosqueCreteilV8Content() {
@@ -141,16 +52,13 @@ function MosqueCreteilV8Content() {
   const mawaqitSlug = (params.get("slug") || "mosquee-sahaba-creteil").trim();
   const mawaqitUrl = params.get("url") || undefined;
 
-  // Dynamic background based on current prayer
-  const { background, themeColor: prayerThemeColor, currentPrayer } = usePrayerBackground(mawaqitSlug, mawaqitUrl);
-  
-  // Augmenter le blur pour les prières avec photos claires (meilleure lisibilité)
-  const needsExtraBlur = ["Fajr", "Dhuhr", "Jumua", "Asr"].includes(currentPrayer);
-  const glassBlurClass = needsExtraBlur ? "backdrop-blur-xl" : "backdrop-blur-md";
+  // Static blue background (same as step-payment)
+  const background = "bg-gradient-to-b from-[#5a8bb5] via-[#6b9ec7] to-[#5a8bb5]";
+  const glassBlurClass = "backdrop-blur-xl";
 
   // Set theme-color for iPhone notch
   useEffect(() => {
-    const themeColor = prayerThemeColor;
+    const themeColor = "#5a8bb5";
     let meta = document.querySelector('meta[name="theme-color"]');
     
     if (!meta) {
@@ -169,7 +77,7 @@ function MosqueCreteilV8Content() {
         meta?.remove();
       }
     };
-  }, [prayerThemeColor]);
+  }, []);
 
   return (
     <>
@@ -239,26 +147,33 @@ function MosqueCreteilV8Content() {
           </div>
 
           {/* Current Prayer Card */}
-          <div className={`mt-4 rounded-3xl border border-white/15 bg-gradient-to-br from-white/[0.18] to-white/[0.12] ${glassBlurClass} shadow-2xl p-6 md:p-7 space-y-4`}>
-            <CurrentPrayerSection slug={mawaqitSlug} url={mawaqitUrl} embedded />
-            <CurrentTimeSection embedded />
-          </div>
+          <ScrollReveal delay={0}>
+            <div className={`mt-4 rounded-3xl border border-white/15 bg-gradient-to-br from-white/[0.18] to-white/[0.12] ${glassBlurClass} shadow-2xl p-6 md:p-7 space-y-4`}>
+              <CurrentPrayerSection slug={mawaqitSlug} url={mawaqitUrl} embedded />
+              <CurrentTimeSection embedded />
+            </div>
+          </ScrollReveal>
 
           {/* Prayer Times Card */}
-          <div className={`mt-4 rounded-3xl border border-white/15 bg-gradient-to-br from-white/[0.18] to-white/[0.12] ${glassBlurClass} shadow-2xl p-6 md:p-7 space-y-4`}>
-            <h2 className="text-[18px] font-[800] text-white">Horaires de prière</h2>
-            <PrayerTimesCard slug={mawaqitSlug} url={mawaqitUrl} />
-          </div>
+          <ScrollReveal delay={100}>
+            <div className={`mt-4 rounded-3xl border border-white/15 bg-gradient-to-br from-white/[0.18] to-white/[0.12] ${glassBlurClass} shadow-2xl p-6 md:p-7 space-y-4`}>
+              <h2 className="text-[18px] font-[800] text-white">Horaires de prière</h2>
+              <PrayerTimesCard slug={mawaqitSlug} url={mawaqitUrl} />
+            </div>
+          </ScrollReveal>
 
           {/* Jumu'a Card */}
-          <div className={`mt-4 rounded-3xl border border-white/15 bg-gradient-to-br from-white/[0.18] to-white/[0.12] ${glassBlurClass} shadow-2xl p-6 md:p-7 space-y-4`}>
-            <h2 className="text-[18px] font-[800] text-white">Jumu&apos;a</h2>
-            <JumaaCard slug={mawaqitSlug} url={mawaqitUrl} />
-          </div>
+          <ScrollReveal delay={200}>
+            <div className={`mt-4 rounded-3xl border border-white/15 bg-gradient-to-br from-white/[0.18] to-white/[0.12] ${glassBlurClass} shadow-2xl p-6 md:p-7 space-y-4`}>
+              <h2 className="text-[18px] font-[800] text-white">Jumu&apos;a</h2>
+              <JumaaCard slug={mawaqitSlug} url={mawaqitUrl} />
+            </div>
+          </ScrollReveal>
 
           {/* Practical Info Card */}
-          <div className={`mt-4 rounded-3xl border border-white/15 bg-gradient-to-br from-white/[0.18] to-white/[0.12] ${glassBlurClass} shadow-2xl p-6 md:p-7 space-y-4`}>
-            <h2 className="text-[18px] font-[800] text-white">Informations pratiques</h2>
+          <ScrollReveal delay={300}>
+            <div className={`mt-4 rounded-3xl border border-white/15 bg-gradient-to-br from-white/[0.18] to-white/[0.12] ${glassBlurClass} shadow-2xl p-6 md:p-7 space-y-4`}>
+              <h2 className="text-[18px] font-[800] text-white">Informations pratiques</h2>
             <div>
               {[
                 { icon: Car, label: "Parking", value: true },
@@ -293,28 +208,33 @@ function MosqueCreteilV8Content() {
               </div>
             </div>
           </div>
+          </ScrollReveal>
 
           {/* Volunteering Card */}
-          <div className={`mt-4 rounded-3xl border border-white/15 bg-gradient-to-br from-white/[0.18] to-white/[0.12] ${glassBlurClass} shadow-2xl p-6 md:p-7 space-y-4`}>
-            <h2 className="text-[18px] font-[800] text-white">Bénévolat</h2>
-            <div className="w-full rounded-2xl overflow-hidden h-[230px] relative">
-              <Image src="/benevolat.png" alt="Bénévolat RAM 94" fill className="object-cover" />
+          <ScrollReveal delay={400}>
+            <div className={`mt-4 rounded-3xl border border-white/15 bg-gradient-to-br from-white/[0.18] to-white/[0.12] ${glassBlurClass} shadow-2xl p-6 md:p-7 space-y-4`}>
+              <h2 className="text-[18px] font-[800] text-white">Bénévolat</h2>
+              <div className="w-full rounded-2xl overflow-hidden h-[230px] relative">
+                <Image src="/benevolat.png" alt="Bénévolat RAM 94" fill className="object-cover" />
+              </div>
+              <p className="text-[12.5px] text-white/80 leading-snug">Rejoignez l&apos;équipe pour soutenir l&apos;organisation des prières, Jumu&apos;a et événements.</p>
+              <div className="flex justify-end">
+                <a href="/benevolat" className="inline-flex items-center gap-2 h-10 px-4 text-gray-900 bg-white hover:bg-white/90 rounded-2xl shadow-lg transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/40">
+                  Devenir bénévole
+                </a>
+              </div>
             </div>
-            <p className="text-[12.5px] text-white/80 leading-snug">Rejoignez l&apos;équipe pour soutenir l&apos;organisation des prières, Jumu&apos;a et événements.</p>
-            <div className="flex justify-end">
-              <a href="/benevolat" className="inline-flex items-center gap-2 h-10 px-4 text-gray-900 bg-white hover:bg-white/90 rounded-2xl shadow-lg transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/40">
-                Devenir bénévole
-              </a>
-            </div>
-          </div>
+          </ScrollReveal>
 
           {/* About Neena Card */}
-          <div className={`mt-4 rounded-3xl border border-white/15 bg-gradient-to-br from-white/[0.18] to-white/[0.12] ${glassBlurClass} shadow-2xl p-6 md:p-7`}>
-            <p className="text-[12.5px] text-white/80 leading-snug">
-              Neena est une association à but non lucratif. Notre mission est d&apos;assurer la transition digitale des mosquées et d&apos;aider à mieux informer leurs fidèles.
-              Nous ne prélevons aucune commission sur les dons et nous ne facturons aucun frais à la mosquée.
-            </p>
-          </div>
+          <ScrollReveal delay={500}>
+            <div className={`mt-4 rounded-3xl border border-white/15 bg-gradient-to-br from-white/[0.18] to-white/[0.12] ${glassBlurClass} shadow-2xl p-6 md:p-7`}>
+              <p className="text-[12.5px] text-white/80 leading-snug">
+                Neena est une association à but non lucratif. Notre mission est d&apos;assurer la transition digitale des mosquées et d&apos;aider à mieux informer leurs fidèles.
+                Nous ne prélevons aucune commission sur les dons et nous ne facturons aucun frais à la mosquée.
+              </p>
+            </div>
+          </ScrollReveal>
 
           {/* Footer */}
           <div className="mt-6 px-4 py-6 border-t border-white/20 text-[12px] text-white/80 flex flex-col md:flex-row items-center justify-between gap-4 bg-white/10 backdrop-blur-md rounded-2xl">

@@ -45,7 +45,7 @@ export function HeaderPrimary({ onMenuClick, wide = false, glass = false, glassT
   return (
     <div className={(overlay ? "absolute inset-x-0 top-0 z-20 " : "") + "w-full transition-all duration-300 ease-out " + bgClass}>
       <div ref={ref} className="mx-auto flex h-14 items-center justify-between" style={{ maxWidth: maxW, paddingLeft: 16, paddingRight: 16 }}>
-        <div className={"text-[16px] font-[800] tracking-[-0.2px] " + brandClass}>Neena</div>
+        <Link href="/qui-sommes-nous" className={"text-[16px] font-[800] tracking-[-0.2px] " + brandClass}>Neena</Link>
         <nav className={(hideNav ? "hidden " : "hidden md:flex ") + "items-center gap-6 text-[14px] font-[600] " + navTextClass}>
           <Link href="/" className={linkClass}>Accueil</Link>
           <Link href="/step-amount-v2" className={linkClass}>Montant</Link>

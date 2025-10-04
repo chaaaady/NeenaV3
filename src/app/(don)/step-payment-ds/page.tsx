@@ -155,10 +155,10 @@ export default function StepPaymentDSPage() {
             <GlassCard>
               <h1 className="text-center text-white font-semibold tracking-tight text-[20px] md:text-[24px] leading-snug">Paiement</h1>
 
-              <div className="mt-4 space-y-6">
-                {/* Mini carte: Résumé */}
+              <div className="mt-4 space-y-4">
+                {/* Résumé + Option frais combinés */}
                 <GlassSection>
-                  <div className="flex flex-col items-center justify-center text-white">
+                  <div className="flex flex-col items-center justify-center text-white pb-3 border-b border-white/10">
                     <div className="text-[28px] md:text-[32px] font-semibold leading-none">
                       {totalAmount <= 0 ? "—" : Number.isInteger(totalAmount) ? `${totalAmount} €` : `${totalAmount.toFixed(2)} €`}
                     </div>
@@ -170,18 +170,15 @@ export default function StepPaymentDSPage() {
                       return label ? <div className="mt-1 text-white/70 text-[13px] text-center">{label}</div> : null;
                     })()}
                   </div>
-                </GlassSection>
-
-                {/* Mini carte: Couvrir les frais */}
-                <GlassSection>
-                  <div className="flex items-center justify-between gap-3">
-                    <div className="flex-1 text-white/90 text-[14px] leading-relaxed text-left">
+                  
+                  <div className="flex items-center justify-between gap-3 pt-3">
+                    <div className="flex-1 text-white/90 text-[13px] leading-relaxed text-left">
                       {(() => {
                         const mosque = mosqueName ? `la mosquée de ${mosqueName}` : "la mosquée";
                         const feeLabel = feeAmount <= 0 ? "0 €" : Number.isInteger(feeAmount) ? `${feeAmount} €` : `${feeAmount.toFixed(2)} €`;
                         return (
                           <span>
-                            Je rajoute <span className="text-white font-semibold">{feeLabel}</span> pour que 100% de mon don aille à {mosque}.
+                            + <span className="text-white font-semibold">{feeLabel}</span> pour que 100% aille à {mosque}
                           </span>
                         );
                       })()}
@@ -194,9 +191,8 @@ export default function StepPaymentDSPage() {
                   </div>
                 </GlassSection>
 
-                {/* Mini carte: Coordonnées bancaires (Stripe iframe placeholder) */}
+                {/* Coordonnées bancaires */}
                 <GlassSection>
-                  <div className="text-white text-[15px] mb-2">Paiement sécurisé</div>
                   {(() => {
                     return (
                       <StripePaymentMount
