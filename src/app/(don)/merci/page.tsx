@@ -6,6 +6,7 @@ import { HeaderPrimary } from "@/components/headers/HeaderPrimary";
 import { SideMenu } from "@/components";
 import { GlassCard, GlassTextarea, PrimaryButton } from "@/components/ds";
 import { useDuaaFeed } from "@/features/duaa/useDuaaFeed";
+import type { Category } from "@/types/duaa";
 
 export default function MerciPage() {
   return (
@@ -26,8 +27,18 @@ function MerciContent() {
   const [duaa, setDuaa] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [feedback, setFeedback] = useState<string | null>(null);
+  const [categories, setCategories] = useState<Category[]>([]);
+  const [selectedCategory, setSelectedCategory] = useState<string>("other");
   const cardRef = useRef<HTMLDivElement>(null);
-  const { addPost } = useDuaaFeed();
+  const { addRequest } = useDuaaFeed();
+
+  // Load categories
+  useEffect(() => {
+    fetch("/api/duaa/categories")
+      .then((res) => res.json())
+      .then((data) => setCategories(data))
+      .catch(() => {});
+  }, []);
 
   useEffect(() => {
     const prevOverflow = document.documentElement.style.overflow;
@@ -66,9 +77,10 @@ function MerciContent() {
     const text = duaa.trim();
     if (!text) return;
     setSubmitting(true);
-    addPost(text, "Anonyme");
+    addRequest(text, selectedCategory, "Anonyme");
     setFeedback("Votre demande de du'a a bien été partagée. Qu'Allah vous exauce.");
     setDuaa("");
+    setSelectedCategory("other");
     setTimeout(() => setFeedback(null), 4000);
     setSubmitting(false);
   };
@@ -109,13 +121,34 @@ function MerciContent() {
                   <div className="text-[15px] font-medium text-white">Partager une demande de du&apos;a</div>
                   <div className="text-[13px] text-white/65">Exprimez une intention ou une personne pour laquelle vous souhaitez qu&apos;on invoque Allah. Votre message restera anonyme.</div>
                 </div>
-                <div className="space-y-2">
+                <div className="space-y-3">
                   <GlassTextarea
                     value={duaa}
                     minRows={3}
                     onChange={(e) => setDuaa(e.target.value)}
                     placeholder="Je demande des du&apos;a pour..."
                   />
+                  
+                  {/* Category selector */}
+                  <div className="space-y-2">
+                    <div className="text-[13px] font-medium text-white/80">Catégorie (pour une recommandation appropriée)</div>
+                    <div className="flex flex-wrap gap-2">
+                      {categories.map((cat) => (
+                        <button
+                          key={cat.id}
+                          onClick={() => setSelectedCategory(cat.id)}
+                          className={`px-3 py-1.5 rounded-xl text-[13px] font-medium transition-all ${
+                            selectedCategory === cat.id
+                              ? "bg-white/90 text-zinc-900 shadow-lg"
+                              : "bg-white/10 text-white hover:bg-white/15"
+                          }`}
+                        >
+                          {cat.title}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
                   <div className="flex justify-end">
                     <PrimaryButton
                       variant="white"

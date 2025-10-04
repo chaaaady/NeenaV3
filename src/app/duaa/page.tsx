@@ -4,15 +4,29 @@ import { useMemo, useState, useEffect } from "react";
 import { HeaderPrimary } from "@/components/headers/HeaderPrimary";
 import { SideMenu } from "@/components";
 import { ScrollReveal } from "@/components/ScrollReveal";
+import { DuaaModal } from "@/components/DuaaModal";
 import { GlassCard, GlassTextarea, PrimaryButton } from "@/components/ds";
 import { useDuaaFeed } from "@/features/duaa/useDuaaFeed";
+import type { Category, Duaa, Request } from "@/types/duaa";
 
 export default function DuaasPage() {
-  const { sortedFeed, addPost, like } = useDuaaFeed();
+  const { sortedFeed, addRequest, incrementDuaaDone } = useDuaaFeed();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [duaa, setDuaa] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [feedback, setFeedback] = useState<string | null>(null);
+  const [categories, setCategories] = useState<Category[]>([]);
+  const [selectedCategory, setSelectedCategory] = useState<string>("other");
+  const [modalOpen, setModalOpen] = useState(false);
+  const [currentDuaa, setCurrentDuaa] = useState<{ duaa: Duaa; request: Request } | null>(null);
+
+  // Load categories
+  useEffect(() => {
+    fetch("/api/duaa/categories")
+      .then((res) => res.json())
+      .then((data) => setCategories(data))
+      .catch(() => {});
+  }, []);
 
   // Set theme-color for iPhone notch
   useEffect(() => {
@@ -46,11 +60,27 @@ export default function DuaasPage() {
     const text = duaa.trim();
     if (!text) return;
     setSubmitting(true);
-    addPost(text, "Anonyme");
+    addRequest(text, selectedCategory, "Anonyme");
     setDuaa("");
-    setFeedback("Votre du’a a été partagée. Qu’Allah ﷻ exauce votre invocation.");
+    setSelectedCategory("other");
+    setFeedback("Votre demande a été partagée. Qu'Allah ﷻ exauce votre invocation.");
     setTimeout(() => setFeedback(null), 4000);
     setSubmitting(false);
+  };
+
+  const handleMakeDuaa = (request: Request) => {
+    const category = categories.find((c) => c.id === request.category_id);
+    if (category && category.duaas.length > 0) {
+      setCurrentDuaa({ duaa: category.duaas[0], request });
+      setModalOpen(true);
+    }
+  };
+
+  const handleDuaaDone = () => {
+    if (currentDuaa) {
+      incrementDuaaDone(currentDuaa.request.id);
+      setCurrentDuaa(null);
+    }
   };
 
   return (
@@ -76,13 +106,33 @@ export default function DuaasPage() {
                 <GlassTextarea
                   value={duaa}
                   onChange={(e) => setDuaa(e.target.value)}
-                  minRows={5}
-                  placeholder="Je demande du’a pour..."
+                  minRows={4}
+                  placeholder="Je demande du'a pour..."
                 />
 
+                {/* Category selector */}
+                <div className="space-y-2">
+                  <div className="text-[13px] font-medium text-white/80">Catégorie (pour une recommandation appropriée)</div>
+                  <div className="flex flex-wrap gap-2">
+                    {categories.map((cat) => (
+                      <button
+                        key={cat.id}
+                        onClick={() => setSelectedCategory(cat.id)}
+                        className={`px-3 py-1.5 rounded-xl text-[12px] font-medium transition-all ${
+                          selectedCategory === cat.id
+                            ? "bg-white/90 text-zinc-900 shadow-lg"
+                            : "bg-white/15 text-white hover:bg-white/20"
+                        }`}
+                      >
+                        {cat.title}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
                 <div className="text-[12px] text-white/60">
-                  Merci d’éviter tout appel personnel, numéro de téléphone ou message sensible. Concentrez-vous sur
-                  l’invocation sincère et bienveillante.
+                  Merci d'éviter tout appel personnel, numéro de téléphone ou message sensible. Concentrez-vous sur
+                  l'invocation sincère et bienveillante.
                 </div>
 
                 {feedback ? <div className="text-[13px] text-emerald-200">{feedback}</div> : null}
@@ -95,7 +145,7 @@ export default function DuaasPage() {
                     disabled={submitting || !duaa.trim()}
                     className="sm:w-auto"
                   >
-                    Publier ma du’a
+                    Publier ma demande
                   </PrimaryButton>
                 </div>
               </div>
@@ -105,38 +155,51 @@ export default function DuaasPage() {
             <ScrollReveal delay={100}>
               <div className="space-y-4">
                 <div className="flex flex-col gap-1 text-white sm:flex-row sm:items-end sm:justify-between">
-                <h2 className="text-[22px] font-semibold">Toutes les du’as</h2>
-                <span className="text-[13px] text-white/60">{sortedFeed.length} invocations partagées</span>
+                <h2 className="text-[22px] font-semibold">Toutes les demandes</h2>
+                <span className="text-[13px] text-white/60">{sortedFeed.length} demande{sortedFeed.length > 1 ? "s" : ""} partagée{sortedFeed.length > 1 ? "s" : ""}</span>
               </div>
 
               {sortedFeed.length === 0 ? (
                 <GlassCard className="border-white/15 bg-white/10 text-white/75">
-                  Aucune du’a publiée pour le moment. Soyez le premier à partager une invocation.
+                  Aucune demande publiée pour le moment. Soyez le premier à partager une invocation.
                 </GlassCard>
               ) : (
                 <div className="flex flex-col gap-4">
-                  {sortedFeed.map((post) => (
-                    <GlassCard key={post.id} className="border-white/12 bg-white/10 text-white">
-                      <div className="space-y-3">
-                        <div className="flex flex-col gap-1 text-[12px] text-white/65 sm:flex-row sm:items-center sm:justify-between">
-                          <span>Posté le {formatter.format(new Date(post.createdAt))}</span>
-                          <span>{post.author ?? "Anonyme"}</span>
+                  {sortedFeed.map((request) => {
+                    const category = categories.find((c) => c.id === request.category_id);
+                    return (
+                      <GlassCard key={request.id} className="border-white/12 bg-white/10 text-white">
+                        <div className="space-y-3">
+                          <div className="flex flex-col gap-1 text-[12px] text-white/65 sm:flex-row sm:items-center sm:justify-between">
+                            <span>Posté le {formatter.format(new Date(request.created_at))}</span>
+                            <span>{request.author}</span>
+                          </div>
+                          
+                          {category && (
+                            <div className="inline-flex items-center px-3 py-1 rounded-lg bg-white/10 border border-white/15 text-[12px] text-white/80">
+                              {category.title}
+                            </div>
+                          )}
+
+                          <p className="text-[15px] leading-relaxed text-white/90 whitespace-pre-line">{request.context_text}</p>
+                          
+                          <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+                            <span className="text-[12px] text-white/60">
+                              {request.counters.duaa_done} personne{request.counters.duaa_done > 1 ? "s ont" : " a"} fait cette du&apos;a
+                            </span>
+                            <PrimaryButton
+                              width="full"
+                              variant="glass"
+                              onClick={() => handleMakeDuaa(request)}
+                              className="sm:w-auto"
+                            >
+                              Faire la du&apos;a
+                            </PrimaryButton>
+                          </div>
                         </div>
-                        <p className="text-[15px] leading-relaxed text-white/90 whitespace-pre-line">{post.text}</p>
-                        <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
-                          <span className="text-[12px] text-white/60">Dire « Amine » pour soutenir cette du’a.</span>
-                          <PrimaryButton
-                            width="full"
-                            variant="glass"
-                            onClick={() => like(post.id)}
-                            className="sm:w-auto"
-                          >
-                            Amine ({post.likes})
-                          </PrimaryButton>
-                        </div>
-                      </div>
-                    </GlassCard>
-                  ))}
+                      </GlassCard>
+                    );
+                  })}
                 </div>
               )}
             </div>
@@ -144,6 +207,17 @@ export default function DuaasPage() {
           </div>
         </main>
       </div>
+
+      {/* Duaa Modal */}
+      {currentDuaa && (
+        <DuaaModal
+          isOpen={modalOpen}
+          onClose={() => setModalOpen(false)}
+          duaa={currentDuaa.duaa}
+          context={currentDuaa.request.context_text}
+          onDuaaDone={handleDuaaDone}
+        />
+      )}
     </>
   );
 }
