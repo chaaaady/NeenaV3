@@ -21,7 +21,7 @@ export function ScrollReveal({
 
   return (
     <Component
-      ref={ref as React.RefObject<HTMLElement>}
+      ref={ref as React.RefObject<Element>}
       className={cn(
         "scroll-reveal",
         isVisible && "is-visible",
