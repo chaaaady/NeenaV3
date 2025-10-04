@@ -106,7 +106,7 @@ function MerciContent() {
 
               <div className="pt-2 text-left space-y-4">
                 <div>
-                  <div className="text-[15px] font-medium text-white">Partager une demande de du'a</div>
+                  <div className="text-[15px] font-medium text-white">Partager une demande de du&apos;a</div>
                   <div className="text-[13px] text-white/65">Exprimez une intention ou une personne pour laquelle vous souhaitez qu&apos;on invoque Allah. Votre message restera anonyme.</div>
                 </div>
                 <div className="space-y-2">
