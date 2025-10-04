@@ -4,6 +4,7 @@ export { SummaryRow } from "./SummaryRow";
 export * from "./GlassCard";
 export * from "./GlassSection";
 export * from "./GlassInput";
+export * from "./GlassSelect";
 export * from "./PrimaryButton";
 export * from "./StepLabels";
 export * from "./ToggleSwitch";

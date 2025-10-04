@@ -4,7 +4,7 @@ import { Suspense, useEffect, useRef, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { HeaderPrimary } from "@/components/headers/HeaderPrimary";
 import { SideMenu } from "@/components";
-import { GlassCard, GlassTextarea, PrimaryButton } from "@/components/ds";
+import { GlassCard, GlassTextarea, GlassSelect, PrimaryButton } from "@/components/ds";
 import { useDuaaFeed } from "@/features/duaa/useDuaaFeed";
 import type { Category } from "@/types/duaa";
 
@@ -132,21 +132,15 @@ function MerciContent() {
                   {/* Category selector */}
                   <div className="space-y-2">
                     <div className="text-[13px] font-medium text-white/80">Catégorie (pour une recommandation appropriée)</div>
-                    <div className="flex flex-wrap gap-2">
-                      {categories.map((cat) => (
-                        <button
-                          key={cat.id}
-                          onClick={() => setSelectedCategory(cat.id)}
-                          className={`px-3 py-1.5 rounded-xl text-[13px] font-medium transition-all ${
-                            selectedCategory === cat.id
-                              ? "bg-white/90 text-zinc-900 shadow-lg"
-                              : "bg-white/10 text-white hover:bg-white/15"
-                          }`}
-                        >
-                          {cat.title}
-                        </button>
-                      ))}
-                    </div>
+                    <GlassSelect
+                      value={selectedCategory}
+                      onChange={setSelectedCategory}
+                      options={categories.map((cat) => ({
+                        value: cat.id,
+                        label: cat.title,
+                      }))}
+                      placeholder="Choisir une catégorie..."
+                    />
                   </div>
 
                   <div className="flex justify-end">
