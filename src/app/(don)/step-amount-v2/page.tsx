@@ -149,7 +149,7 @@ export default function StepAmountV2Page() {
           {/* Card - centered in remaining space */}
           <div className="flex-1 flex items-center justify-center px-4 pt-6" style={{ paddingBottom: "calc(env(safe-area-inset-bottom) + 80px)" }}>
             <div className="w-full max-w-lg md:max-w-xl">
-              <div className="rounded-3xl border border-white/15 bg-gradient-to-br from-white/35 to-white/20 backdrop-blur-xl shadow-2xl p-6 md:p-7 transition-all duration-300 ease-out">
+              <div className="rounded-3xl border border-white/15 bg-gradient-to-br from-white/[0.18] to-white/[0.12] backdrop-blur-xl shadow-2xl p-6 md:p-7 transition-all duration-300 ease-out">
                 <h1 className="text-center text-white font-semibold tracking-tight text-[20px] md:text-[24px] leading-snug">
                   Quel montant souhaitez-vous donner à la {" "}
                   <button onClick={() => setShowMosqueSelector(true)} className="underline decoration-white/40 underline-offset-4 hover:decoration-white transition-all">

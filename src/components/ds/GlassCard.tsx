@@ -11,7 +11,7 @@ export function GlassCard({ className, children, ...rest }: GlassCardProps) {
       className={cn(
         "rounded-3xl border",
         "border-white/15",
-        "bg-gradient-to-br from-white/35 to-white/20",
+        "bg-gradient-to-br from-white/[0.18] to-white/[0.12]",
         "backdrop-blur-xl shadow-2xl",
         "p-6 md:p-7",
         className

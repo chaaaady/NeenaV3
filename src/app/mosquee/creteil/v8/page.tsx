@@ -182,7 +182,7 @@ function MosqueCreteilV8Content() {
         
         <main className="relative px-4 pb-24 pt-[calc(var(--hdr-primary-h)+12px)] md:px-6 max-w-3xl mx-auto">
           {/* Hero Card */}
-          <div id="hero-v8" className={`rounded-3xl border border-white/15 bg-gradient-to-br from-white/35 to-white/20 ${glassBlurClass} shadow-2xl p-6 md:p-7 space-y-4`}>
+          <div id="hero-v8" className={`rounded-3xl border border-white/15 bg-gradient-to-br from-white/[0.18] to-white/[0.12] ${glassBlurClass} shadow-2xl p-6 md:p-7 space-y-4`}>
             {/* Hero Image Carousel */}
             <div
               className="w-full rounded-2xl overflow-hidden relative h-[260px]"
@@ -239,25 +239,25 @@ function MosqueCreteilV8Content() {
           </div>
 
           {/* Current Prayer Card */}
-          <div className={`mt-4 rounded-3xl border border-white/15 bg-gradient-to-br from-white/35 to-white/20 ${glassBlurClass} shadow-2xl p-6 md:p-7 space-y-4`}>
+          <div className={`mt-4 rounded-3xl border border-white/15 bg-gradient-to-br from-white/[0.18] to-white/[0.12] ${glassBlurClass} shadow-2xl p-6 md:p-7 space-y-4`}>
             <CurrentPrayerSection slug={mawaqitSlug} url={mawaqitUrl} embedded />
             <CurrentTimeSection embedded />
           </div>
 
           {/* Prayer Times Card */}
-          <div className={`mt-4 rounded-3xl border border-white/15 bg-gradient-to-br from-white/35 to-white/20 ${glassBlurClass} shadow-2xl p-6 md:p-7 space-y-4`}>
+          <div className={`mt-4 rounded-3xl border border-white/15 bg-gradient-to-br from-white/[0.18] to-white/[0.12] ${glassBlurClass} shadow-2xl p-6 md:p-7 space-y-4`}>
             <h2 className="text-[18px] font-[800] text-white">Horaires de prière</h2>
             <PrayerTimesCard slug={mawaqitSlug} url={mawaqitUrl} />
           </div>
 
           {/* Jumu'a Card */}
-          <div className={`mt-4 rounded-3xl border border-white/15 bg-gradient-to-br from-white/35 to-white/20 ${glassBlurClass} shadow-2xl p-6 md:p-7 space-y-4`}>
+          <div className={`mt-4 rounded-3xl border border-white/15 bg-gradient-to-br from-white/[0.18] to-white/[0.12] ${glassBlurClass} shadow-2xl p-6 md:p-7 space-y-4`}>
             <h2 className="text-[18px] font-[800] text-white">Jumu&apos;a</h2>
             <JumaaCard slug={mawaqitSlug} url={mawaqitUrl} />
           </div>
 
           {/* Practical Info Card */}
-          <div className={`mt-4 rounded-3xl border border-white/15 bg-gradient-to-br from-white/35 to-white/20 ${glassBlurClass} shadow-2xl p-6 md:p-7 space-y-4`}>
+          <div className={`mt-4 rounded-3xl border border-white/15 bg-gradient-to-br from-white/[0.18] to-white/[0.12] ${glassBlurClass} shadow-2xl p-6 md:p-7 space-y-4`}>
             <h2 className="text-[18px] font-[800] text-white">Informations pratiques</h2>
             <div>
               {[
@@ -295,7 +295,7 @@ function MosqueCreteilV8Content() {
           </div>
 
           {/* Volunteering Card */}
-          <div className={`mt-4 rounded-3xl border border-white/15 bg-gradient-to-br from-white/35 to-white/20 ${glassBlurClass} shadow-2xl p-6 md:p-7 space-y-4`}>
+          <div className={`mt-4 rounded-3xl border border-white/15 bg-gradient-to-br from-white/[0.18] to-white/[0.12] ${glassBlurClass} shadow-2xl p-6 md:p-7 space-y-4`}>
             <h2 className="text-[18px] font-[800] text-white">Bénévolat</h2>
             <div className="w-full rounded-2xl overflow-hidden h-[230px] relative">
               <Image src="/benevolat.png" alt="Bénévolat RAM 94" fill className="object-cover" />
@@ -309,7 +309,7 @@ function MosqueCreteilV8Content() {
           </div>
 
           {/* About Neena Card */}
-          <div className={`mt-4 rounded-3xl border border-white/15 bg-gradient-to-br from-white/35 to-white/20 ${glassBlurClass} shadow-2xl p-6 md:p-7`}>
+          <div className={`mt-4 rounded-3xl border border-white/15 bg-gradient-to-br from-white/[0.18] to-white/[0.12] ${glassBlurClass} shadow-2xl p-6 md:p-7`}>
             <p className="text-[12.5px] text-white/80 leading-snug">
               Neena est une association à but non lucratif. Notre mission est d&apos;assurer la transition digitale des mosquées et d&apos;aider à mieux informer leurs fidèles.
               Nous ne prélevons aucune commission sur les dons et nous ne facturons aucun frais à la mosquée.
