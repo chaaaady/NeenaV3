@@ -28,7 +28,7 @@ function MerciContent() {
   const [submitting, setSubmitting] = useState(false);
   const [feedback, setFeedback] = useState<string | null>(null);
   const [categories, setCategories] = useState<Category[]>([]);
-  const [selectedCategory, setSelectedCategory] = useState<string>("other");
+  const [selectedCategory, setSelectedCategory] = useState<string>("");
   const cardRef = useRef<HTMLDivElement>(null);
   const { addRequest } = useDuaaFeed();
 
@@ -75,12 +75,12 @@ function MerciContent() {
 
   const handlePublish = () => {
     const text = duaa.trim();
-    if (!text) return;
+    if (!text || !selectedCategory) return;
     setSubmitting(true);
     addRequest(text, selectedCategory, "Anonyme");
     setFeedback("Votre demande de du'a a bien été partagée. Qu'Allah vous exauce.");
     setDuaa("");
-    setSelectedCategory("other");
+    setSelectedCategory("");
     setTimeout(() => setFeedback(null), 4000);
     setSubmitting(false);
   };
@@ -147,7 +147,7 @@ function MerciContent() {
                     <PrimaryButton
                       variant="white"
                       onClick={handlePublish}
-                      disabled={submitting || !duaa.trim()}
+                      disabled={submitting || !duaa.trim() || !selectedCategory}
                       className="px-6"
                     >
                       Publier

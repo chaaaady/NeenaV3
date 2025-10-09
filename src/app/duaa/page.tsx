@@ -16,7 +16,7 @@ export default function DuaasPage() {
   const [submitting, setSubmitting] = useState(false);
   const [feedback, setFeedback] = useState<string | null>(null);
   const [categories, setCategories] = useState<Category[]>([]);
-  const [selectedCategory, setSelectedCategory] = useState<string>("other");
+  const [selectedCategory, setSelectedCategory] = useState<string>("");
   const [modalOpen, setModalOpen] = useState(false);
   const [currentDuaa, setCurrentDuaa] = useState<{ duaa: Duaa; request: Request } | null>(null);
 
@@ -58,11 +58,11 @@ export default function DuaasPage() {
 
   const handleSubmit = () => {
     const text = duaa.trim();
-    if (!text) return;
+    if (!text || !selectedCategory) return;
     setSubmitting(true);
     addRequest(text, selectedCategory, "Anonyme");
     setDuaa("");
-    setSelectedCategory("other");
+    setSelectedCategory("");
     setFeedback("Votre demande a été partagée. Qu'Allah ﷻ exauce votre invocation.");
     setTimeout(() => setFeedback(null), 4000);
     setSubmitting(false);
@@ -136,7 +136,7 @@ export default function DuaasPage() {
                     width="full"
                     variant="white"
                     onClick={handleSubmit}
-                    disabled={submitting || !duaa.trim()}
+                    disabled={submitting || !duaa.trim() || !selectedCategory}
                     className="sm:w-auto"
                   >
                     Publier ma demande
