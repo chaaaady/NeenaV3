@@ -58,11 +58,12 @@ export default function CurrentPrayerSection({ slug, url, embedded: _embedded }:
 
   const data = useMemo(() => {
     if (!timings) return null;
+    const isFriday = now.getDay() === 5;
     const hasJumua = !!selectTime(timings.Jumua ?? null);
     const base: Array<"Fajr" | "Dhuhr" | "Asr" | "Maghrib" | "Isha"> = ["Fajr", "Dhuhr", "Asr", "Maghrib", "Isha"];
     const points = base
       .map((k) => {
-        if (k === "Dhuhr" && hasJumua) {
+        if (k === "Dhuhr" && hasJumua && isFriday) {
           const at = selectTime(timings.Jumua ?? null);
           return { key: "Jumua", at, min: toMinutes(at) } as { key: string; at: string; min: number };
         }
