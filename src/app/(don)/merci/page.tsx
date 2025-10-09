@@ -35,9 +35,19 @@ function MerciContent() {
   // Load categories
   useEffect(() => {
     fetch("/api/duaa/categories")
-      .then((res) => res.json())
-      .then((data) => setCategories(data))
-      .catch(() => {});
+      .then((res) => {
+        if (!res.ok) throw new Error("Failed to fetch categories");
+        return res.json();
+      })
+      .then((data) => {
+        if (Array.isArray(data)) {
+          setCategories(data);
+        }
+      })
+      .catch((error) => {
+        console.error("Error loading categories:", error);
+        setCategories([]);
+      });
   }, []);
 
   useEffect(() => {

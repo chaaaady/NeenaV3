@@ -6,17 +6,28 @@ import type { Request } from "@/types/duaa";
 
 function loadFeed(): Request[] {
   try {
+    if (typeof window === "undefined" || !window.localStorage) {
+      return [];
+    }
     const raw = localStorage.getItem(DUAA_STORAGE_KEY);
-    return raw ? (JSON.parse(raw) as Request[]) : [];
-  } catch {
+    if (!raw) return [];
+    const parsed = JSON.parse(raw);
+    return Array.isArray(parsed) ? parsed : [];
+  } catch (error) {
+    console.error("Error loading duaa feed:", error);
     return [];
   }
 }
 
 function saveFeed(feed: Request[]) {
   try {
+    if (typeof window === "undefined" || !window.localStorage) {
+      return;
+    }
     localStorage.setItem(DUAA_STORAGE_KEY, JSON.stringify(feed));
-  } catch {}
+  } catch (error) {
+    console.error("Error saving duaa feed:", error);
+  }
 }
 
 export function useDuaaFeed(initialPageSize: number = DUAA_PAGE_SIZE) {

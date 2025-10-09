@@ -23,9 +23,19 @@ export default function DuaasPage() {
   // Load categories
   useEffect(() => {
     fetch("/api/duaa/categories")
-      .then((res) => res.json())
-      .then((data) => setCategories(data))
-      .catch(() => {});
+      .then((res) => {
+        if (!res.ok) throw new Error("Failed to fetch categories");
+        return res.json();
+      })
+      .then((data) => {
+        if (Array.isArray(data)) {
+          setCategories(data);
+        }
+      })
+      .catch((error) => {
+        console.error("Error loading categories:", error);
+        setCategories([]);
+      });
   }, []);
 
   // Set theme-color for iPhone notch
@@ -69,10 +79,16 @@ export default function DuaasPage() {
   };
 
   const handleMakeDuaa = (request: Request) => {
-    const category = categories.find((c) => c.id === request.category_id);
-    if (category && category.duaas.length > 0) {
-      setCurrentDuaa({ duaa: category.duaas[0], request });
-      setModalOpen(true);
+    try {
+      const category = categories.find((c) => c.id === request.category_id);
+      if (category && Array.isArray(category.duaas) && category.duaas.length > 0) {
+        setCurrentDuaa({ duaa: category.duaas[0], request });
+        setModalOpen(true);
+      } else {
+        console.warn("No duaa available for this category");
+      }
+    } catch (error) {
+      console.error("Error opening duaa modal:", error);
     }
   };
 

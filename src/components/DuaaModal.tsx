@@ -18,9 +18,15 @@ export function DuaaModal({ isOpen, onClose, duaa, onDuaaDone, context }: DuaaMo
   if (!isOpen) return null;
 
   const handleCopy = async () => {
-    await navigator.clipboard.writeText(duaa.text_ar);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
+    try {
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        await navigator.clipboard.writeText(duaa.text_ar);
+        setCopied(true);
+        setTimeout(() => setCopied(false), 2000);
+      }
+    } catch (error) {
+      console.error("Failed to copy text:", error);
+    }
   };
 
   const handleDuaaDone = () => {
