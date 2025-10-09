@@ -125,8 +125,8 @@ export default function DuaasPage() {
                 />
 
                 <div className="text-[12px] text-white/60">
-                  Merci d'éviter tout appel personnel, numéro de téléphone ou message sensible. Concentrez-vous sur
-                  l'invocation sincère et bienveillante.
+                  Merci d&apos;éviter tout appel personnel, numéro de téléphone ou message sensible. Concentrez-vous sur
+                  l&apos;invocation sincère et bienveillante.
                 </div>
 
                 {feedback ? <div className="text-[13px] text-emerald-200">{feedback}</div> : null}

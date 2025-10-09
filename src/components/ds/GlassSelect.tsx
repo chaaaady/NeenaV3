@@ -19,8 +19,6 @@ export function GlassSelect({
   placeholder = "Sélectionner...",
   className,
 }: GlassSelectProps) {
-  const selectedOption = options.find((opt) => opt.value === value);
-
   return (
     <div className={cn("relative", className)}>
       <select
