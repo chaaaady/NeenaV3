@@ -233,7 +233,7 @@ function MosqueCreteilV9Content() {
                 href="/step-amount-v2"
                 className="flex-1 flex items-center justify-center gap-1.5 py-2 px-3 rounded-2xl bg-white hover:bg-white/90 text-[#5a8bb5] font-medium transition-all shadow-lg text-[13px]"
               >
-                <Heart className="w-3.5 h-3.5" />
+                <CreditCard className="w-3.5 h-3.5" />
                 <span>Faire un don</span>
               </a>
             </div>
