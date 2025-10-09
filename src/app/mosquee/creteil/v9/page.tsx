@@ -260,12 +260,12 @@ function MosqueCreteilV9Content() {
                     <div className="relative z-10">
                       <div className={`w-8 h-8 rounded-full border-2 flex items-center justify-center ${
                         step.status === 'completed' 
-                          ? 'bg-green-500 border-green-400' 
+                          ? 'bg-white/90 border-white' 
                           : step.status === 'in-progress'
-                          ? 'bg-white border-white animate-pulse'
+                          ? 'bg-[#5a8bb5] border-[#6b9ec7] animate-pulse'
                           : 'bg-white/10 border-white/30'
                       }`}>
-                        {step.status === 'completed' && <Check className="w-4 h-4 text-white" />}
+                        {step.status === 'completed' && <Check className="w-4 h-4 text-[#5a8bb5]" />}
                         {step.status === 'in-progress' && <Clock className="w-4 h-4 text-white" />}
                       </div>
                     </div>
