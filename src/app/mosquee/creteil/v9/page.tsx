@@ -8,9 +8,7 @@ import { ScrollReveal } from "@/components/ScrollReveal";
 import { HeaderPrimary } from "@/components/headers/HeaderPrimary";
 import { HeaderSecondary } from "@/components/headers/HeaderSecondary";
 import { useMiniHeaderTrigger } from "@/hooks/useMiniHeaderTrigger";
-import CurrentPrayerSection from "@/components/CurrentPrayerSection";
-import CurrentTimeSection from "@/components/CurrentTimeSection";
-import { MapPin, Check, TrendingUp, Calendar, Building, Users, Heart, CreditCard, Target, Clock, Sparkles } from "lucide-react";
+import { MapPin, Check, TrendingUp, Building, Users, Heart, CreditCard, Target, Clock, Sparkles } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 
 const MOSQUE_NAME = "Future mosquée d'Ivry-sur-Seine";
@@ -54,10 +52,6 @@ function MosqueCreteilV9Content() {
     }, 7000);
     return () => clearInterval(id);
   }, [heroImages.length, isHeroPaused]);
-
-  // Mawaqit slug/url (override via query if needed)
-  const mawaqitSlug = (params.get("slug") || "mosquee-sahaba-creteil").trim();
-  const mawaqitUrl = params.get("url") || undefined;
 
   // Static blue background (same as step-payment)
   const background = "bg-gradient-to-b from-[#5a8bb5] via-[#6b9ec7] to-[#5a8bb5]";
@@ -133,7 +127,7 @@ function MosqueCreteilV9Content() {
       <SideMenu isOpen={isMenuOpen} onClose={() => setIsMenuOpen(false)} />
 
       <div className={`relative w-full min-h-[100svh] ${background}`}>
-        <main className="relative px-4 pb-24 pt-[calc(var(--hdr-primary-h)+12px)] md:px-6 max-w-3xl mx-auto">
+        <main className="relative px-4 pb-24 pt-[calc(var(--hdr-primary-h)+24px)] md:px-6 max-w-3xl mx-auto">
           {/* Hero Card */}
           <ScrollReveal>
           <div id="hero-v9" className={`rounded-3xl border border-white/15 bg-gradient-to-br from-white/[0.18] to-white/[0.12] ${glassBlurClass} shadow-2xl p-6 md:p-7 space-y-4`}>
@@ -157,9 +151,9 @@ function MosqueCreteilV9Content() {
               ))}
               {/* Overlay with project badge */}
               <div className="absolute top-4 left-4 z-20">
-                <div className="px-3 py-1.5 rounded-full bg-amber-500/90 backdrop-blur-sm border border-amber-400/50 flex items-center gap-2">
-                  <Sparkles className="w-4 h-4 text-white" />
-                  <span className="text-white text-sm font-semibold">Projet en cours</span>
+                <div className="px-3 py-1.5 rounded-full bg-white/90 backdrop-blur-sm border border-white/50 flex items-center gap-2">
+                  <Sparkles className="w-4 h-4 text-[#5a8bb5]" />
+                  <span className="text-[#5a8bb5] text-sm font-semibold">Projet en cours</span>
                 </div>
               </div>
             </div>
@@ -200,8 +194,8 @@ function MosqueCreteilV9Content() {
                 />
                 <defs>
                   <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                    <stop offset="0%" stopColor="#fbbf24" />
-                    <stop offset="100%" stopColor="#f59e0b" />
+                    <stop offset="0%" stopColor="#ffffff" />
+                    <stop offset="100%" stopColor="#e8f0f8" />
                   </linearGradient>
                 </defs>
               </svg>
@@ -215,7 +209,7 @@ function MosqueCreteilV9Content() {
             {/* Amount details */}
             <div className="grid grid-cols-2 gap-4 p-4 rounded-2xl bg-white/5 border border-white/10">
               <div className="text-center">
-                <div className="text-2xl font-bold text-amber-400">{formatNumber(animatedAmount)} €</div>
+                <div className="text-2xl font-bold text-white">{formatNumber(animatedAmount)} €</div>
                 <div className="text-xs text-white/70 mt-1">Montant collecté</div>
               </div>
               <div className="text-center">
@@ -237,7 +231,7 @@ function MosqueCreteilV9Content() {
               </a>
               <a
                 href="/step-amount-v2"
-                className="flex-1 flex items-center justify-center gap-2 py-3 px-4 rounded-2xl bg-amber-500 hover:bg-amber-600 text-white font-medium transition-all shadow-lg"
+                className="flex-1 flex items-center justify-center gap-2 py-3 px-4 rounded-2xl bg-white hover:bg-white/90 text-[#5a8bb5] font-medium transition-all shadow-lg"
               >
                 <Heart className="w-4 h-4" />
                 <span>Faire un don</span>
@@ -250,7 +244,7 @@ function MosqueCreteilV9Content() {
           <ScrollReveal delay={100}>
           <div className={`mt-6 rounded-3xl border border-white/15 bg-gradient-to-br from-white/[0.18] to-white/[0.12] ${glassBlurClass} shadow-2xl p-6 md:p-7`}>
             <h2 className="text-xl font-bold text-white mb-6 flex items-center gap-2">
-              <TrendingUp className="w-5 h-5 text-amber-400" />
+              <TrendingUp className="w-5 h-5 text-white" />
               Avancement du projet
             </h2>
             
@@ -268,7 +262,7 @@ function MosqueCreteilV9Content() {
                         step.status === 'completed' 
                           ? 'bg-green-500 border-green-400' 
                           : step.status === 'in-progress'
-                          ? 'bg-amber-500 border-amber-400 animate-pulse'
+                          ? 'bg-white border-white animate-pulse'
                           : 'bg-white/10 border-white/30'
                       }`}>
                         {step.status === 'completed' && <Check className="w-4 h-4 text-white" />}
@@ -294,19 +288,11 @@ function MosqueCreteilV9Content() {
           </div>
           </ScrollReveal>
 
-          {/* Next Prayer */}
-          <ScrollReveal delay={200}>
-          <div className={`mt-6 rounded-3xl border border-white/15 bg-gradient-to-br from-white/[0.18] to-white/[0.12] ${glassBlurClass} shadow-2xl p-6 md:p-7 space-y-4`}>
-            <CurrentPrayerSection slug={mawaqitSlug} url={mawaqitUrl} embedded />
-            <CurrentTimeSection embedded />
-          </div>
-          </ScrollReveal>
-
           {/* Project Vision */}
-          <ScrollReveal delay={300}>
+          <ScrollReveal delay={200}>
           <div className={`mt-6 rounded-3xl border border-white/15 bg-gradient-to-br from-white/[0.18] to-white/[0.12] ${glassBlurClass} shadow-2xl p-6 md:p-7`}>
             <h2 className="text-xl font-bold text-white mb-4 flex items-center gap-2">
-              <Building className="w-5 h-5 text-amber-400" />
+              <Building className="w-5 h-5 text-white" />
               Un projet ambitieux pour notre communauté
             </h2>
             
@@ -338,10 +324,10 @@ function MosqueCreteilV9Content() {
           </ScrollReveal>
 
           {/* Why Support */}
-          <ScrollReveal delay={400}>
+          <ScrollReveal delay={300}>
           <div className={`mt-6 rounded-3xl border border-white/15 bg-gradient-to-br from-white/[0.18] to-white/[0.12] ${glassBlurClass} shadow-2xl p-6 md:p-7`}>
             <h2 className="text-xl font-bold text-white mb-4 flex items-center gap-2">
-              <Heart className="w-5 h-5 text-amber-400" />
+              <Heart className="w-5 h-5 text-white" />
               Pourquoi soutenir ce projet ?
             </h2>
             
@@ -361,13 +347,13 @@ function MosqueCreteilV9Content() {
             </div>
 
             {/* Final CTA */}
-            <div className="mt-6 p-4 rounded-2xl bg-amber-500/10 border border-amber-500/30">
+            <div className="mt-6 p-4 rounded-2xl bg-white/10 border border-white/20">
               <p className="text-white text-center mb-4">
                 Ensemble, construisons un lieu de paix et de spiritualité
               </p>
               <a
                 href="/step-amount-v2"
-                className="w-full flex items-center justify-center gap-2 py-3 px-6 rounded-2xl bg-amber-500 hover:bg-amber-600 text-white font-semibold transition-all shadow-lg"
+                className="w-full flex items-center justify-center gap-2 py-3 px-6 rounded-2xl bg-white hover:bg-white/90 text-[#5a8bb5] font-semibold transition-all shadow-lg"
               >
                 <CreditCard className="w-5 h-5" />
                 <span>Participer à la construction</span>
@@ -377,13 +363,13 @@ function MosqueCreteilV9Content() {
           </ScrollReveal>
 
           {/* Contact Info */}
-          <ScrollReveal delay={500}>
+          <ScrollReveal delay={400}>
           <div className={`mt-6 rounded-3xl border border-white/15 bg-gradient-to-br from-white/[0.18] to-white/[0.12] ${glassBlurClass} shadow-2xl p-6 md:p-7`}>
             <h2 className="text-xl font-bold text-white mb-4">Contact</h2>
             <div className="space-y-2 text-white/80">
               <p>Pour plus d&apos;informations sur le projet :</p>
-              <p className="font-medium">Email: projet.ivry@mosquee.fr</p>
-              <p className="font-medium">Tél: 01 XX XX XX XX</p>
+              <p className="font-medium">Email: contact@mosqueedivry.fr</p>
+              <p className="font-medium">Tél: 06 24 79 96 08</p>
             </div>
           </div>
           </ScrollReveal>
@@ -398,8 +384,8 @@ function FeatureItem({ icon: Icon, title, description }: { icon: LucideIcon; tit
   return (
     <div className="flex gap-3 p-3 rounded-xl bg-white/5 border border-white/10">
       <div className="flex-shrink-0">
-        <div className="w-10 h-10 rounded-lg bg-amber-500/20 border border-amber-500/30 flex items-center justify-center">
-          <Icon className="w-5 h-5 text-amber-400" />
+        <div className="w-10 h-10 rounded-lg bg-white/20 border border-white/30 flex items-center justify-center">
+          <Icon className="w-5 h-5 text-white" />
         </div>
       </div>
       <div className="flex-1">
