@@ -116,7 +116,7 @@ function MosqueCreteilV9Content() {
   };
 
   // Calculate circumference for circular progress
-  const radius = 120;
+  const radius = 85;
   const circumference = 2 * Math.PI * radius;
   const strokeDashoffset = circumference - (animatedPercentage / 100) * circumference;
 
@@ -130,10 +130,10 @@ function MosqueCreteilV9Content() {
         <main className="relative px-4 pb-24 pt-[calc(var(--hdr-primary-h)+24px)] md:px-6 max-w-3xl mx-auto">
           {/* Hero Card */}
           <ScrollReveal>
-          <div id="hero-v9" className={`rounded-3xl border border-white/15 bg-gradient-to-br from-white/[0.18] to-white/[0.12] ${glassBlurClass} shadow-2xl p-6 md:p-7 space-y-4`}>
+          <div id="hero-v9" className={`rounded-3xl border border-white/15 bg-gradient-to-br from-white/[0.18] to-white/[0.12] ${glassBlurClass} shadow-2xl p-6 md:p-7 space-y-3`}>
             {/* Hero Image */}
             <div
-              className="w-full rounded-2xl overflow-hidden relative h-[260px]"
+              className="w-full rounded-2xl overflow-hidden relative h-[220px]"
               onMouseEnter={() => setIsHeroPaused(true)}
               onMouseLeave={() => setIsHeroPaused(false)}
               onTouchStart={() => setIsHeroPaused(true)}
@@ -159,33 +159,33 @@ function MosqueCreteilV9Content() {
             </div>
 
             {/* Title and Address */}
-            <div className="space-y-1">
-              <h1 className="text-2xl font-bold text-white">{MOSQUE_NAME}</h1>
+            <div className="space-y-0.5">
+              <h1 className="text-xl font-bold text-white">{MOSQUE_NAME}</h1>
               <div className="flex items-center gap-2 text-white/70">
-                <MapPin className="w-4 h-4" />
-                <span className="text-sm">{MOSQUE_ADDRESS}</span>
+                <MapPin className="w-3.5 h-3.5" />
+                <span className="text-[13px]">{MOSQUE_ADDRESS}</span>
               </div>
             </div>
 
             {/* Progress Gauge - Circular Apple Style */}
-            <div className="relative flex flex-col items-center justify-center py-8">
-              <svg className="w-64 h-64 transform -rotate-90">
+            <div className="relative flex flex-col items-center justify-center py-4">
+              <svg className="w-48 h-48 transform -rotate-90">
                 {/* Background circle */}
                 <circle
-                  cx="132"
-                  cy="132"
+                  cx="96"
+                  cy="96"
                   r={radius}
                   stroke="rgba(255, 255, 255, 0.1)"
-                  strokeWidth="12"
+                  strokeWidth="10"
                   fill="none"
                 />
                 {/* Progress circle */}
                 <circle
-                  cx="132"
-                  cy="132"
+                  cx="96"
+                  cy="96"
                   r={radius}
                   stroke="url(#gradient)"
-                  strokeWidth="12"
+                  strokeWidth="10"
                   fill="none"
                   strokeLinecap="round"
                   strokeDasharray={circumference}
@@ -201,20 +201,20 @@ function MosqueCreteilV9Content() {
               </svg>
               {/* Center content */}
               <div className="absolute inset-0 flex flex-col items-center justify-center">
-                <div className="text-5xl font-bold text-white">{Math.round(animatedPercentage)}%</div>
-                <div className="text-sm text-white/70 mt-1">de l&apos;objectif</div>
+                <div className="text-4xl font-bold text-white">{Math.round(animatedPercentage)}%</div>
+                <div className="text-xs text-white/70 mt-0.5">de l&apos;objectif</div>
               </div>
             </div>
 
             {/* Amount details */}
-            <div className="grid grid-cols-2 gap-4 p-4 rounded-2xl bg-white/5 border border-white/10">
+            <div className="grid grid-cols-2 gap-3 p-3 rounded-2xl bg-white/5 border border-white/10">
               <div className="text-center">
-                <div className="text-2xl font-bold text-white">{formatNumber(animatedAmount)} €</div>
-                <div className="text-xs text-white/70 mt-1">Montant collecté</div>
+                <div className="text-lg font-bold text-white whitespace-nowrap">{formatNumber(animatedAmount)} €</div>
+                <div className="text-[11px] text-white/70 mt-0.5">Montant collecté</div>
               </div>
               <div className="text-center">
-                <div className="text-2xl font-bold text-white">{formatNumber(GOAL_AMOUNT)} €</div>
-                <div className="text-xs text-white/70 mt-1">Objectif</div>
+                <div className="text-lg font-bold text-white whitespace-nowrap">{formatNumber(GOAL_AMOUNT)} €</div>
+                <div className="text-[11px] text-white/70 mt-0.5">Objectif</div>
               </div>
             </div>
 
@@ -224,14 +224,14 @@ function MosqueCreteilV9Content() {
                 href={MAPS_URL}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex-1 flex items-center justify-center gap-2 py-3 px-4 rounded-2xl bg-white/10 hover:bg-white/15 border border-white/15 text-white font-medium transition-all"
+                className="flex-1 flex items-center justify-center gap-2 py-2.5 px-4 rounded-2xl bg-white/10 hover:bg-white/15 border border-white/15 text-white font-medium transition-all text-sm"
               >
                 <MapPin className="w-4 h-4" />
                 <span>Localisation</span>
               </a>
               <a
                 href="/step-amount-v2"
-                className="flex-1 flex items-center justify-center gap-2 py-3 px-4 rounded-2xl bg-white hover:bg-white/90 text-[#5a8bb5] font-medium transition-all shadow-lg"
+                className="flex-1 flex items-center justify-center gap-2 py-2.5 px-4 rounded-2xl bg-white hover:bg-white/90 text-[#5a8bb5] font-medium transition-all shadow-lg text-sm"
               >
                 <Heart className="w-4 h-4" />
                 <span>Faire un don</span>
