@@ -3,6 +3,7 @@
 import { useEffect, useRef } from "react";
 import { X } from "lucide-react";
 import { cn } from "@/lib/cn";
+import { MOSQUES } from "@/lib/mosques";
 
 interface MosqueSelectorModalProps {
   isOpen: boolean;
@@ -10,19 +11,6 @@ interface MosqueSelectorModalProps {
   currentMosque?: string;
   onMosqueSelect: (mosque: string) => void;
 }
-
-const MOSQUES = [
-  "Créteil",
-  "Paris 11ème",
-  "Paris 19ème",
-  "Boulogne-Billancourt",
-  "Nanterre",
-  "Saint-Denis",
-  "Aubervilliers",
-  "Bobigny",
-  "Montreuil",
-  "Villejuif"
-];
 
 export function MosqueSelectorModal({ isOpen, onClose, currentMosque, onMosqueSelect }: MosqueSelectorModalProps) {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -79,17 +67,17 @@ export function MosqueSelectorModal({ isOpen, onClose, currentMosque, onMosqueSe
           <div className="grid gap-2">
             {MOSQUES.map((mosque) => (
               <button
-                key={mosque}
+                key={mosque.slug}
                 onClick={() => {
-                  onMosqueSelect(mosque);
+                  onMosqueSelect(mosque.slug); // Envoie le slug, pas le nom
                   onClose();
                 }}
                 className={cn(
                   "mosque-option",
-                  mosque === currentMosque && "selected"
+                  mosque.slug === currentMosque && "selected"
                 )}
               >
-                Mosquée de {mosque}
+                Mosquée de {mosque.displayName}
               </button>
             ))}
           </div>

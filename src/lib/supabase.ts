@@ -14,9 +14,10 @@ export const supabaseAdmin = createClient(
 );
 
 // Client pour utilisation côté client (avec anon key)
+// Les variables d'environnement NEXT_PUBLIC_ sont remplacées au build time par Next.js
 export const supabaseClient = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL || "https://placeholder.supabase.co",
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || "placeholder-key"
+  process.env.NEXT_PUBLIC_SUPABASE_URL!,
+  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
 );
 
 // Hook pour composants client avec auth

@@ -2,7 +2,7 @@
 
 import { useEffect } from "react";
 import Link from "next/link";
-import { X } from "lucide-react";
+import { X, LogIn } from "lucide-react";
 
 export function SideMenu({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) {
   useEffect(() => {
@@ -45,14 +45,22 @@ export function SideMenu({ isOpen, onClose }: { isOpen: boolean; onClose: () => 
             </button>
           </div>
 
-                  <div className="p-4 space-y-2">
-                    <nav className="space-y-2">
-                      <Link href="/mosquees" className="block" onClick={onClose}>
-                        <span className="w-full flex items-center justify-between p-4 rounded-2xl bg-white/5 hover:bg-white/10 transition-all text-left text-[16px] font-[700] text-white">
-                          Mosquées partenaires
-                          <span className="text-[13px] font-[600] text-white/70">Liste</span>
-                        </span>
-                      </Link>
+          <div className="p-4 space-y-2">
+            <nav className="space-y-2">
+              <Link href="/auth/login" className="block" onClick={onClose}>
+                <span className="w-full flex items-center gap-3 p-4 rounded-2xl bg-gradient-to-r from-emerald-500/20 to-blue-500/20 hover:from-emerald-500/30 hover:to-blue-500/30 border border-white/20 transition-all text-left text-[16px] font-[700] text-white shadow-lg">
+                  <LogIn size={20} className="text-white" />
+                  <span className="flex-1">Connexion</span>
+                  <span className="text-[13px] font-[600] text-white/80">Dashboard</span>
+                </span>
+              </Link>
+
+              <Link href="/mosquees" className="block" onClick={onClose}>
+                <span className="w-full flex items-center justify-between p-4 rounded-2xl bg-white/5 hover:bg-white/10 transition-all text-left text-[16px] font-[700] text-white">
+                  Mosquées partenaires
+                  <span className="text-[13px] font-[600] text-white/70">Liste</span>
+                </span>
+              </Link>
 
                       <Link href="/mosquee/creteil/v8" className="block" onClick={onClose}>
                         <span className="w-full flex items-center justify-between p-4 rounded-2xl bg-white/5 hover:bg-white/10 transition-all text-left text-[16px] font-[700] text-white">

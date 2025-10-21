@@ -4,8 +4,17 @@ import type { NextRequest } from "next/server";
 
 export async function middleware(req: NextRequest) {
   const res = NextResponse.next();
+  
+  // Vérifier si les variables d'environnement Supabase sont disponibles
+  if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
+    // Si pas de configuration Supabase, laisser passer toutes les requêtes
+    return res;
+  }
+  
   const supabase = createMiddlewareClient({ req, res });
   
+  // Rafraîchir la session pour s'assurer d'avoir la dernière version
+  // C'est crucial après une connexion
   const {
     data: { session },
   } = await supabase.auth.getSession();
@@ -23,6 +32,7 @@ export async function middleware(req: NextRequest) {
     }
   }
 
+  // IMPORTANT: Retourner la réponse qui contient les cookies mis à jour
   return res;
 }
 

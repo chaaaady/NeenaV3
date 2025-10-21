@@ -2,7 +2,8 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { supabaseClient, Donation, Mosque } from "@/lib/supabase";
+import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
+import type { Donation, Mosque } from "@/lib/supabase";
 import { HeaderPrimary } from "@/components/headers/HeaderPrimary";
 import { SideMenu } from "@/components";
 import { StatsCard } from "@/components/dashboard/StatsCard";
@@ -12,6 +13,7 @@ import { Euro, TrendingUp, Users, Building2, LogOut } from "lucide-react";
 
 export default function AdminDashboardPage() {
   const router = useRouter();
+  const supabase = createClientComponentClient();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [loading, setLoading] = useState(true);
   const [donations, setDonations] = useState<Donation[]>([]);
@@ -45,14 +47,14 @@ export default function AdminDashboardPage() {
       setLoading(true);
 
       // Vérifier l'authentification
-      const { data: { session } } = await supabaseClient.auth.getSession();
+      const { data: { session } } = await supabase.auth.getSession();
       if (!session) {
         router.push("/auth/login");
         return;
       }
 
       // Charger les mosquées
-      const { data: mosquesData, error: mosquesError } = await supabaseClient
+      const { data: mosquesData, error: mosquesError } = await supabase
         .from("mosques")
         .select("*")
         .eq("is_active", true)
@@ -62,7 +64,7 @@ export default function AdminDashboardPage() {
       setMosques(mosquesData || []);
 
       // Charger les donations
-      const { data: donationsData, error: donationsError } = await supabaseClient
+      const { data: donationsData, error: donationsError } = await supabase
         .from("donations")
         .select("*")
         .eq("status", "succeeded")
@@ -84,7 +86,7 @@ export default function AdminDashboardPage() {
   }, []);
 
   const handleSignOut = async () => {
-    await supabaseClient.auth.signOut();
+    await supabase.auth.signOut();
     router.push("/auth/login");
   };
 

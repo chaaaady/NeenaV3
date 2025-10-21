@@ -2,12 +2,13 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { supabaseClient } from "@/lib/supabase";
+import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import { GlassCard } from "@/components/ds";
 import { Lock, Mail } from "lucide-react";
 
 export default function LoginPage() {
   const router = useRouter();
+  const supabase = createClientComponentClient();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
@@ -42,29 +43,49 @@ export default function LoginPage() {
     setLoading(true);
 
     try {
-      const { data, error: signInError } = await supabaseClient.auth.signInWithPassword({
+      console.log("🔐 Tentative de connexion...");
+      const { data, error: signInError } = await supabase.auth.signInWithPassword({
         email,
         password,
       });
 
-      if (signInError) throw signInError;
+      if (signInError) {
+        console.error("❌ Erreur d'authentification:", signInError);
+        throw signInError;
+      }
+
+      console.log("✅ Authentification réussie, user ID:", data.user.id);
 
       if (data.session) {
         // Vérifier le rôle de l'utilisateur pour rediriger vers le bon dashboard
-        const { data: mosqueData } = await supabaseClient
+        console.log("🔍 Recherche de la mosquée associée...");
+        const { data: mosqueData, error: mosqueError } = await supabase
           .from("mosques")
           .select("slug")
           .eq("id", data.user.id)
           .single();
 
+        if (mosqueError) {
+          console.error("❌ Erreur lors de la recherche de mosquée:", mosqueError);
+          // Essayer de rediriger vers admin dashboard par défaut
+          console.log("➡️ Redirection vers /admin/dashboard");
+          window.location.href = "/admin/dashboard";
+          return;
+        }
+
         if (mosqueData) {
-          router.push(`/mosque/${mosqueData.slug}/dashboard`);
+          console.log("✅ Mosquée trouvée:", mosqueData.slug);
+          console.log(`➡️ Redirection vers /mosque/${mosqueData.slug}/dashboard`);
+          // Utiliser window.location.href pour forcer un rechargement complet
+          // Ceci permet au middleware de lire la session depuis les cookies
+          window.location.href = `/mosque/${mosqueData.slug}/dashboard`;
         } else {
-          // Si pas de mosquée trouvée, c'est peut-être un admin
-          router.push("/admin/dashboard");
+          console.log("ℹ️ Pas de mosquée trouvée, redirection vers /admin/dashboard");
+          window.location.href = "/admin/dashboard";
         }
       }
     } catch (err) {
+      console.error("💥 Erreur générale:", err);
       const message = err instanceof Error ? err.message : "Erreur de connexion";
       setError(message);
     } finally {

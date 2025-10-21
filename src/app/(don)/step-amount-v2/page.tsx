@@ -12,6 +12,7 @@ import { useDonationFlow } from "@/features/donation/useDonationFlow";
 import { GlassSegmented } from "@/components/ui/GlassSegmented";
 import { GlassAmountPills } from "@/components/ui/GlassAmountPills";
 import { StepLabels } from "@/components/ds";
+import { getMosqueDisplayName } from "@/lib/mosques";
 
 const PRESET_AMOUNTS = [5, 10, 25, 50, 75, 100];
 
@@ -153,7 +154,7 @@ export default function StepAmountV2Page() {
                 <h1 className="text-center text-white font-semibold tracking-tight text-[20px] md:text-[24px] leading-snug">
                   Quel montant souhaitez-vous donner à la {" "}
                   <button onClick={() => setShowMosqueSelector(true)} className="underline decoration-white/40 underline-offset-4 hover:decoration-white transition-all">
-                    mosquée de {values.mosqueName || "Sélectionner"}
+                    mosquée de {getMosqueDisplayName(values.mosqueName)}
                   </button>
                   {" "}?
                 </h1>

@@ -2,7 +2,8 @@
 
 import { useEffect, useState } from "react";
 import { useRouter, useParams } from "next/navigation";
-import { supabaseClient, Donation, Mosque } from "@/lib/supabase";
+import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
+import type { Donation, Mosque } from "@/lib/supabase";
 import { HeaderPrimary } from "@/components/headers/HeaderPrimary";
 import { SideMenu } from "@/components";
 import { StatsCard } from "@/components/dashboard/StatsCard";
@@ -15,6 +16,7 @@ export default function MosqueDashboardPage() {
   const router = useRouter();
   const params = useParams();
   const slug = params.slug as string;
+  const supabase = createClientComponentClient();
   
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [loading, setLoading] = useState(true);
@@ -49,14 +51,14 @@ export default function MosqueDashboardPage() {
       setLoading(true);
 
       // Vérifier l'authentification
-      const { data: { session } } = await supabaseClient.auth.getSession();
+      const { data: { session } } = await supabase.auth.getSession();
       if (!session) {
         router.push("/auth/login");
         return;
       }
 
       // Charger la mosquée
-      const { data: mosqueData, error: mosqueError } = await supabaseClient
+      const { data: mosqueData, error: mosqueError } = await supabase
         .from("mosques")
         .select("*")
         .eq("slug", slug)
@@ -66,7 +68,7 @@ export default function MosqueDashboardPage() {
       setMosque(mosqueData);
 
       // Charger les donations de cette mosquée
-      const { data: donationsData, error: donationsError } = await supabaseClient
+      const { data: donationsData, error: donationsError } = await supabase
         .from("donations")
         .select("*")
         .eq("mosque_id", mosqueData.id)
@@ -90,7 +92,7 @@ export default function MosqueDashboardPage() {
   }, [slug]);
 
   const handleSignOut = async () => {
-    await supabaseClient.auth.signOut();
+    await supabase.auth.signOut();
     router.push("/auth/login");
   };
 
