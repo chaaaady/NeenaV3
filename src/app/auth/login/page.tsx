@@ -1,13 +1,11 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import { GlassCard } from "@/components/ds";
 import { Lock, Mail } from "lucide-react";
 
 export default function LoginPage() {
-  const router = useRouter();
   const supabase = createClientComponentClient();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -43,7 +41,6 @@ export default function LoginPage() {
     setLoading(true);
 
     try {
-      console.log("🔐 Tentative de connexion...");
       const { data, error: signInError } = await supabase.auth.signInWithPassword({
         email,
         password,
@@ -54,11 +51,8 @@ export default function LoginPage() {
         throw signInError;
       }
 
-      console.log("✅ Authentification réussie, user ID:", data.user.id);
-
       if (data.session) {
         // Vérifier le rôle de l'utilisateur pour rediriger vers le bon dashboard
-        console.log("🔍 Recherche de la mosquée associée...");
         const { data: mosqueData, error: mosqueError } = await supabase
           .from("mosques")
           .select("slug")
@@ -68,19 +62,15 @@ export default function LoginPage() {
         if (mosqueError) {
           console.error("❌ Erreur lors de la recherche de mosquée:", mosqueError);
           // Essayer de rediriger vers admin dashboard par défaut
-          console.log("➡️ Redirection vers /admin/dashboard");
           window.location.href = "/admin/dashboard";
           return;
         }
 
         if (mosqueData) {
-          console.log("✅ Mosquée trouvée:", mosqueData.slug);
-          console.log(`➡️ Redirection vers /mosque/${mosqueData.slug}/dashboard`);
           // Utiliser window.location.href pour forcer un rechargement complet
           // Ceci permet au middleware de lire la session depuis les cookies
           window.location.href = `/mosque/${mosqueData.slug}/dashboard`;
         } else {
-          console.log("ℹ️ Pas de mosquée trouvée, redirection vers /admin/dashboard");
           window.location.href = "/admin/dashboard";
         }
       }
