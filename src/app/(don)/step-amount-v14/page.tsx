@@ -127,12 +127,14 @@ export default function StepAmountV13Page() {
           right: "calc(-1 * env(safe-area-inset-right))"
         }}
       >
-        {/* Video background - original blue gradient */}
+        {/* Video background - optimized for performance */}
         <video
           autoPlay
           loop
           muted
           playsInline
+          preload="none"
+          poster="/bg-video-poster-v14.jpg"
           className="absolute inset-0 w-full h-full object-cover"
           style={{
             minWidth: "100%",
@@ -145,6 +147,7 @@ export default function StepAmountV13Page() {
           }}
         >
           <source src="/bg-video.mp4" type="video/mp4" />
+          <source src="/bg-video.webm" type="video/webm" />
         </video>
         
         {/* Dark overlay to improve contrast */}
