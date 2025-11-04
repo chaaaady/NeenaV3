@@ -21,7 +21,7 @@ export default function StepAmountV13Page() {
   const [otherAmountInput, setOtherAmountInput] = useState("");
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [showMosqueSelector, setShowMosqueSelector] = useState(false);
-  const [isProcessing, setIsProcessing] = useState(false);
+  const [_isProcessing, setIsProcessing] = useState(false);
   const [stripeError, setStripeError] = useState<string | null>(null);
   const submitRef = useRef<(() => Promise<void>) | null>(null);
 
@@ -60,7 +60,7 @@ export default function StepAmountV13Page() {
     meta.setAttribute("content", themeColor);
 
     // Ensure viewport-fit=cover for iOS safe areas
-    let viewport = document.querySelector('meta[name="viewport"]');
+    const viewport = document.querySelector('meta[name="viewport"]');
     if (viewport) {
       const currentContent = viewport.getAttribute("content") || "";
       if (!currentContent.includes("viewport-fit")) {
@@ -381,7 +381,7 @@ export default function StepAmountV13Page() {
                       />
                     </div>
                     <p className="text-white/70 text-[12px] leading-relaxed">
-                      Votre reçu fiscal vous sera automatiquement envoyé par e-mail pour votre déclaration d'impôts
+                      Votre reçu fiscal vous sera automatiquement envoyé par e-mail pour votre déclaration d&apos;impôts
                     </p>
                   </div>
                 </div>

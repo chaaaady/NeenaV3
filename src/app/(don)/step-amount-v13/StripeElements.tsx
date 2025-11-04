@@ -26,7 +26,7 @@ if (!stripeKey) {
   console.error("👉 Les clés LIVE (pk_live_...) exigent HTTPS");
   console.error("👉 Utilisez des clés TEST (pk_test_...) pour le développement local");
 } else if (isTestKey) {
-  console.log("✅ Clés Stripe TEST détectées - OK pour localhost");
+  console.warn("✅ Clés Stripe TEST détectées - OK pour localhost");
 }
 
 const stripePromise = stripeKey ? loadStripe(stripeKey) : null;
@@ -34,6 +34,20 @@ const stripePromise = stripeKey ? loadStripe(stripeKey) : null;
 export type StripePaymentStatus = "idle" | "processing" | "succeeded" | "failed";
 
 export function StripeElementsProvider({ clientSecret, children }: { clientSecret: string; children: React.ReactNode }) {
+  // useMemo doit être appelé avant les early returns
+  const options = useMemo(() => ({ 
+    clientSecret,
+    appearance: {
+      theme: 'night' as const,
+      variables: {
+        colorPrimary: '#ffffff',
+        colorBackground: 'transparent',
+        colorText: '#ffffff',
+        fontFamily: 'system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif',
+      }
+    }
+  }), [clientSecret]);
+
   // Vérification de la clé avant de charger Stripe
   if (!stripePromise) {
     return (
@@ -66,19 +80,6 @@ export function StripeElementsProvider({ clientSecret, children }: { clientSecre
       </div>
     );
   }
-  
-  const options = useMemo(() => ({ 
-    clientSecret,
-    appearance: {
-      theme: 'night' as const,
-      variables: {
-        colorPrimary: '#ffffff',
-        colorBackground: 'transparent',
-        colorText: '#ffffff',
-        fontFamily: 'system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif',
-      }
-    }
-  }), [clientSecret]);
   
   return (
     <Elements key={clientSecret} stripe={stripePromise} options={options}>

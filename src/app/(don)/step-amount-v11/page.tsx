@@ -5,7 +5,6 @@ import { useFormContext } from "react-hook-form";
 import { useRouter } from "next/navigation";
 import { ArrowRight } from "lucide-react";
 import { SideMenu, MosqueSelectorModal } from "@/components";
-import { HeaderMosquee } from "@/components";
 import { formatEuro } from "@/lib/currency";
 import { DonationFormValues } from "@/lib/schema";
 import { useDonationFlow } from "@/features/donation/useDonationFlow";

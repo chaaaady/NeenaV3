@@ -28,7 +28,7 @@ export async function hashString(str: string): Promise<string> {
       const hashBuffer = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(str));
       const hashArray = Array.from(new Uint8Array(hashBuffer));
       return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
-    } catch (e) {
+    } catch (_e) {
       // Fallback si l'API échoue
     }
   }

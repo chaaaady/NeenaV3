@@ -5,7 +5,6 @@ import { useFormContext } from "react-hook-form";
 import { useRouter } from "next/navigation";
 import { ArrowRight } from "lucide-react";
 import { SideMenu, MosqueSelectorModal } from "@/components";
-import { HeaderMosquee } from "@/components";
 import { formatEuro } from "@/lib/currency";
 import { DonationFormValues } from "@/lib/schema";
 import { useDonationFlow } from "@/features/donation/useDonationFlow";
@@ -144,7 +143,7 @@ export default function ZakatAlMaalPage() {
                 <div className="rounded-2xl bg-white/10 border border-white/15 p-4 mb-6 space-y-2">
                   <h3 className="text-white font-semibold text-[15px]">💰 Nisab (seuil minimum)</h3>
                   <p className="text-white/80 text-[14px] leading-relaxed">
-                    La Zakat est obligatoire si vous possédez au moins <strong>85g d'or</strong> ou <strong>595g d'argent</strong> pendant une année lunaire complète.
+                    La Zakat est obligatoire si vous possédez au moins <strong>85g d&apos;or</strong> ou <strong>595g d&apos;argent</strong> pendant une année lunaire complète.
                   </p>
                   <p className="text-white/70 text-[13px]">
                     Taux : <strong>2,5%</strong> de vos biens éligibles

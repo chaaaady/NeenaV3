@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
-import { Menu, ChevronDown } from "lucide-react";
+import { Menu } from "lucide-react";
 import Link from "next/link";
 
 type HeaderPrimaryProps = { onMenuClick?: () => void; wide?: boolean; glass?: boolean; glassTone?: "light" | "dark"; transparent?: boolean; hideNav?: boolean; overlay?: boolean };
@@ -9,7 +9,7 @@ type HeaderPrimaryProps = { onMenuClick?: () => void; wide?: boolean; glass?: bo
 export function HeaderPrimary({ onMenuClick, wide = false, glass = false, glassTone = "light", transparent = false, hideNav = false, overlay = false }: HeaderPrimaryProps) {
   const ref = useRef<HTMLDivElement | null>(null);
   const [_scrolled, setScrolled] = useState(false);
-  const [showSpecialMenu, setShowSpecialMenu] = useState(false);
+  const [_showSpecialMenu, _setShowSpecialMenu] = useState(false);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY >= 16);

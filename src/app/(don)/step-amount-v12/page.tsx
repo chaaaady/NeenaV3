@@ -5,7 +5,6 @@ import { useFormContext } from "react-hook-form";
 import { useRouter } from "next/navigation";
 import { ArrowRight } from "lucide-react";
 import { SideMenu, MosqueSelectorModal } from "@/components";
-import { HeaderMosquee } from "@/components";
 import { formatEuro } from "@/lib/currency";
 import { DonationFormValues } from "@/lib/schema";
 import { useDonationFlow } from "@/features/donation/useDonationFlow";
@@ -59,7 +58,7 @@ export default function StepAmountV12Page() {
     meta.setAttribute("content", themeColor);
 
     // Ensure viewport-fit=cover for iOS safe areas
-    let viewport = document.querySelector('meta[name="viewport"]');
+    const viewport = document.querySelector('meta[name="viewport"]');
     if (viewport) {
       const currentContent = viewport.getAttribute("content") || "";
       if (!currentContent.includes("viewport-fit")) {

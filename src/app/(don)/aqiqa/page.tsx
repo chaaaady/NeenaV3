@@ -5,7 +5,6 @@ import { useFormContext } from "react-hook-form";
 import { useRouter } from "next/navigation";
 import { ArrowRight } from "lucide-react";
 import { SideMenu, MosqueSelectorModal } from "@/components";
-import { HeaderMosquee } from "@/components";
 import { formatEuro } from "@/lib/currency";
 import { DonationFormValues } from "@/lib/schema";
 import { useDonationFlow } from "@/features/donation/useDonationFlow";
@@ -172,7 +171,7 @@ export default function AqiqaPage() {
                   Aqiqa
                 </h1>
                 <p className="text-center text-white/70 text-[14px] mb-6">
-                  Sacrifice pour la naissance d'un enfant
+                  Sacrifice pour la naissance d&apos;un enfant
                 </p>
 
                 <button 
@@ -198,7 +197,7 @@ export default function AqiqaPage() {
                 <div className="space-y-6">
                   {/* Gender Selection */}
                   <div className="rounded-2xl bg-white/10 border border-white/15 p-5">
-                    <h3 className="text-white font-semibold text-[15px] mb-3">Sexe de l'enfant</h3>
+                    <h3 className="text-white font-semibold text-[15px] mb-3">Sexe de l&apos;enfant</h3>
                     <div className="grid grid-cols-2 gap-3">
                       <button
                         onClick={() => setSelectedGender("male")}
@@ -229,7 +228,7 @@ export default function AqiqaPage() {
 
                   {/* Animal Selection */}
                   <div className="rounded-2xl bg-white/10 border border-white/15 p-5">
-                    <h3 className="text-white font-semibold text-[15px] mb-3">Type d'animal</h3>
+                    <h3 className="text-white font-semibold text-[15px] mb-3">Type d&apos;animal</h3>
                     <div className="grid grid-cols-2 gap-3">
                       <button
                         onClick={() => setSelectedAnimal("mouton")}
@@ -260,7 +259,7 @@ export default function AqiqaPage() {
 
                   {/* Quantity */}
                   <div className="rounded-2xl bg-white/10 border border-white/15 p-5">
-                    <h3 className="text-white font-semibold text-[15px] mb-3 text-center">Nombre d'enfants</h3>
+                    <h3 className="text-white font-semibold text-[15px] mb-3 text-center">Nombre d&apos;enfants</h3>
                     <div className="flex items-center justify-center gap-6">
                       <button
                         onClick={() => setQuantity(Math.max(1, quantity - 1))}

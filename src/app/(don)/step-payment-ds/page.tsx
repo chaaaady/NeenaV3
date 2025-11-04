@@ -5,7 +5,6 @@ import { useFormContext } from "react-hook-form";
 import { useRouter } from "next/navigation";
 import { ArrowLeft, CreditCard } from "lucide-react";
 import { DonationFormValues } from "@/lib/schema";
-import { HeaderMosquee } from "@/components";
 import { SideMenu, MosqueSelectorModal } from "@/components";
 import { GlassCard, PrimaryButton, StepLabels, GlassSection, ToggleSwitch } from "@/components/ds";
 import { StripePaymentMount } from "./StripeMount";

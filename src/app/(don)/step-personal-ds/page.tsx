@@ -3,7 +3,6 @@
 import { useFormContext } from "react-hook-form";
 import { useRouter } from "next/navigation";
 import { ArrowRight, ArrowLeft } from "lucide-react";
-import { HeaderMosquee } from "@/components";
 import { SideMenu, MosqueSelectorModal } from "@/components";
 import { useState, useEffect, useRef } from "react";
 import { DonationFormValues } from "@/lib/schema";
