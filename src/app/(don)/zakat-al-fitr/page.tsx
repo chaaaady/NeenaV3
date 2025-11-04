@@ -8,7 +8,6 @@ import { SideMenu, MosqueSelectorModal } from "@/components";
 import { formatEuro } from "@/lib/currency";
 import { DonationFormValues } from "@/lib/schema";
 import { useDonationFlow } from "@/features/donation/useDonationFlow";
-import { StepLabels } from "@/components/ds";
 import { getMosqueDisplayName } from "@/lib/mosques";
 
 const PRICE_PER_PERSON = 7;
@@ -21,10 +20,6 @@ export default function ZakatAlFitrPage() {
   const [showMosqueSelector, setShowMosqueSelector] = useState(false);
   const [numberOfPeople, setNumberOfPeople] = useState(1);
   const { canProceedFromAmount } = useDonationFlow();
-  const labelsRef = useRef<HTMLDivElement>(null);
-  const bottomRef = useRef<HTMLDivElement>(null);
-  const [_labelsOffset, setLabelsOffset] = useState(0);
-  const [_bottomOffset, setBottomOffset] = useState(0);
 
   // Lock scroll for this page
   useEffect(() => {
@@ -61,27 +56,6 @@ export default function ZakatAlFitrPage() {
       } else {
         meta?.remove();
       }
-    };
-  }, []);
-
-  // Measure labels (top block) and bottom action bar to center the card between them
-  useEffect(() => {
-    const update = () => {
-      const t = labelsRef.current?.getBoundingClientRect().height ?? 0;
-      const b = bottomRef.current?.getBoundingClientRect().height ?? 0;
-      setLabelsOffset(Math.round(t));
-      setBottomOffset(Math.round(b));
-    };
-    update();
-    const roTop = labelsRef.current ? new ResizeObserver(update) : null;
-    const roBottom = bottomRef.current ? new ResizeObserver(update) : null;
-    if (labelsRef.current && roTop) roTop.observe(labelsRef.current);
-    if (bottomRef.current && roBottom) roBottom.observe(bottomRef.current);
-    window.addEventListener("resize", update);
-    return () => {
-      roTop?.disconnect();
-      roBottom?.disconnect();
-      window.removeEventListener("resize", update);
     };
   }, []);
 
@@ -141,15 +115,6 @@ export default function ZakatAlFitrPage() {
         {/* Main content area - starts below header */}
         <div className="relative w-full h-full flex flex-col" style={{ paddingTop: "var(--hdr-primary-h)" }}>
           
-          {/* Labels under header */}
-          <div className="relative z-30 mx-auto w-full max-w-lg md:max-w-xl px-4 pt-2 pb-1">
-            <div ref={labelsRef} className="flex justify-center">
-              <div className="rounded-full bg-white/15 border border-white/20 backdrop-blur-md px-4 py-1.5 shadow-md">
-                <StepLabels current="Zakat al Fitr" />
-              </div>
-            </div>
-          </div>
-
           {/* Card - centered in remaining space */}
           <div className="flex-1 flex items-center justify-center px-4 pt-6" style={{ paddingBottom: "calc(env(safe-area-inset-bottom) + 80px)" }}>
             <div className="w-full max-w-lg md:max-w-xl">

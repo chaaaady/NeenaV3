@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import { useFormContext } from "react-hook-form";
 import { useRouter } from "next/navigation";
 import { ArrowRight } from "lucide-react";
@@ -8,7 +8,6 @@ import { SideMenu, MosqueSelectorModal } from "@/components";
 import { formatEuro } from "@/lib/currency";
 import { DonationFormValues } from "@/lib/schema";
 import { useDonationFlow } from "@/features/donation/useDonationFlow";
-import { StepLabels } from "@/components/ds";
 import { getMosqueDisplayName } from "@/lib/mosques";
 
 type AnimalType = "mouton" | "chevre" | "vache" | "chameau";
@@ -66,8 +65,6 @@ export default function QurbaniPage() {
   const [selectedAnimal, setSelectedAnimal] = useState<AnimalType>("mouton");
   const [quantity, setQuantity] = useState(1);
   const { canProceedFromAmount } = useDonationFlow();
-  const labelsRef = useRef<HTMLDivElement>(null);
-
 
   // Set theme-color for iPhone notch
   useEffect(() => {
@@ -153,15 +150,6 @@ export default function QurbaniPage() {
         {/* Main content area - starts below header */}
         <div className="relative w-full h-full flex flex-col" style={{ paddingTop: "var(--hdr-primary-h)" }}>
           
-          {/* Labels under header */}
-          <div className="relative z-30 mx-auto w-full max-w-lg md:max-w-xl px-4 pt-2 pb-1">
-            <div ref={labelsRef} className="flex justify-center">
-              <div className="rounded-full bg-white/15 border border-white/20 backdrop-blur-md px-4 py-1.5 shadow-md">
-                <StepLabels current="Qurbani" />
-              </div>
-            </div>
-          </div>
-
           {/* Card - scrollable content */}
           <div className="flex-1 overflow-y-auto px-4 pt-6 pb-4">
             <div className="w-full max-w-lg md:max-w-xl mx-auto">
