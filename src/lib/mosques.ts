@@ -87,3 +87,9 @@ export function getMosqueSlug(displayName: string): string | undefined {
   return mosque?.slug;
 }
 
+
+
+
+
+
+

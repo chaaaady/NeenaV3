@@ -3,7 +3,7 @@
 import { useFormContext } from "react-hook-form";
 import { useRouter } from "next/navigation";
 import { ArrowRight, ArrowLeft } from "lucide-react";
-import { HeaderPrimary } from "@/components/headers/HeaderPrimary";
+import { HeaderMosquee } from "@/components";
 import { SideMenu, MosqueSelectorModal } from "@/components";
 import { useState, useEffect, useRef } from "react";
 import { DonationFormValues } from "@/lib/schema";
@@ -118,8 +118,7 @@ export default function StepPersonalDSPage() {
 
   return (
     <>
-      <HeaderPrimary wide transparent overlay onMenuClick={() => setIsMenuOpen(true)} />
-      <SideMenu isOpen={isMenuOpen} onClose={() => setIsMenuOpen(false)} />
+      <SideMenu isOpen={isMenuOpen} onClose={() => setIsMenuOpen(false)} variant="mosquee" mosqueeSlug="creteil" />
       <MosqueSelectorModal 
         isOpen={showMosqueSelector}
         onClose={() => setShowMosqueSelector(false)}
@@ -128,6 +127,25 @@ export default function StepPersonalDSPage() {
       />
 
       <div className="relative w-full bg-gradient-to-b from-[#5a8bb5] via-[#6b9ec7] to-[#5a8bb5]" style={{ height: "100svh", overflow: "hidden" }}>
+        {/* Logo Neena en haut de la page */}
+        <div className="absolute top-0 left-0 z-10 p-4">
+          <a href="/qui-sommes-nous" className="text-[20px] font-[800] text-white tracking-[-0.2px] drop-shadow-lg hover:opacity-80 transition-opacity">
+            Neena
+          </a>
+        </div>
+
+        {/* Burger menu mobile en haut à droite */}
+        <button 
+          aria-label="Menu" 
+          onClick={() => setIsMenuOpen(true)} 
+          className="absolute top-4 right-4 z-10 md:hidden w-10 h-10 flex items-center justify-center hover:opacity-70 transition-opacity"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-white">
+            <line x1="4" x2="20" y1="12" y2="12" />
+            <line x1="4" x2="20" y1="6" y2="6" />
+            <line x1="4" x2="20" y1="18" y2="18" />
+          </svg>
+        </button>
 
         {/* Main content area - starts below header */}
         <div className="relative w-full h-full flex flex-col" style={{ paddingTop: "var(--hdr-primary-h)" }}>

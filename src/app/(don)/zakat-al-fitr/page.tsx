@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useMemo, useRef } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useFormContext } from "react-hook-form";
 import { useRouter } from "next/navigation";
 import { ArrowRight } from "lucide-react";
@@ -9,20 +9,18 @@ import { HeaderMosquee } from "@/components";
 import { formatEuro } from "@/lib/currency";
 import { DonationFormValues } from "@/lib/schema";
 import { useDonationFlow } from "@/features/donation/useDonationFlow";
-import { GlassSegmented } from "@/components/ui/GlassSegmented";
-import { GlassAmountPills } from "@/components/ui/GlassAmountPills";
 import { StepLabels } from "@/components/ds";
 import { getMosqueDisplayName } from "@/lib/mosques";
 
-const PRESET_AMOUNTS = [5, 10, 25, 50, 75, 100];
+const PRICE_PER_PERSON = 7;
 
-export default function StepAmountV2Page() {
+export default function ZakatAlFitrPage() {
   const form = useFormContext<DonationFormValues>();
   const router = useRouter();
   const values = form.watch();
-  const [otherAmountInput, setOtherAmountInput] = useState("");
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [showMosqueSelector, setShowMosqueSelector] = useState(false);
+  const [numberOfPeople, setNumberOfPeople] = useState(1);
   const { canProceedFromAmount } = useDonationFlow();
   const labelsRef = useRef<HTMLDivElement>(null);
   const bottomRef = useRef<HTMLDivElement>(null);
@@ -88,26 +86,19 @@ export default function StepAmountV2Page() {
     };
   }, []);
 
+  // Initialize form values for Zakat al Fitr
   useEffect(() => {
-    if (!values.amount || values.amount === 50) {
-      form.setValue("amount", 25, { shouldDirty: true });
-    }
+    form.setValue("frequency", "Unique", { shouldDirty: true });
+    form.setValue("donationType", "Zakat", { shouldDirty: true });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const handlePresetClick = (amt: number) => {
-    form.setValue("amount", amt, { shouldDirty: true });
-    setOtherAmountInput("");
-  };
-
-  const handleOtherAmountChange = (value: string) => {
-    setOtherAmountInput(value);
-    const numValue = parseFloat(value);
-    if (!isNaN(numValue) && numValue > 0) {
-      // Ne plus auto-sélectionner les montants prédéfinis pendant la saisie
-      form.setValue("amount", numValue, { shouldDirty: true });
-    }
-  };
+  // Update amount when numberOfPeople changes
+  useEffect(() => {
+    const totalAmount = numberOfPeople * PRICE_PER_PERSON;
+    form.setValue("amount", totalAmount, { shouldDirty: true });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [numberOfPeople]);
 
   const handleNext = () => {
     if (canProceedFromAmount(values)) {
@@ -115,12 +106,7 @@ export default function StepAmountV2Page() {
     }
   };
 
-  const isPresetActive = typeof values.amount === "number" && PRESET_AMOUNTS.includes(values.amount) && otherAmountInput.trim() === "";
-  const otherAmountDisplay = useMemo(() => {
-    const n = parseFloat(otherAmountInput);
-    if (!isNaN(n) && n > 0 && !PRESET_AMOUNTS.includes(n)) return `${n} €`;
-    return "";
-  }, [otherAmountInput]);
+  const totalAmount = numberOfPeople * PRICE_PER_PERSON;
 
   return (
     <>
@@ -160,7 +146,7 @@ export default function StepAmountV2Page() {
           <div className="relative z-30 mx-auto w-full max-w-lg md:max-w-xl px-4 pt-2 pb-1">
             <div ref={labelsRef} className="flex justify-center">
               <div className="rounded-full bg-white/15 border border-white/20 backdrop-blur-md px-4 py-1.5 shadow-md">
-                <StepLabels current="Montant" />
+                <StepLabels current="Zakat al Fitr" />
               </div>
             </div>
           </div>
@@ -169,91 +155,71 @@ export default function StepAmountV2Page() {
           <div className="flex-1 flex items-center justify-center px-4 pt-6" style={{ paddingBottom: "calc(env(safe-area-inset-bottom) + 80px)" }}>
             <div className="w-full max-w-lg md:max-w-xl">
               <div className="rounded-3xl border border-white/15 bg-gradient-to-br from-white/[0.18] to-white/[0.12] backdrop-blur-xl shadow-2xl p-6 md:p-7 transition-all duration-300 ease-out">
+                
                 <h1 className="text-center text-white font-semibold tracking-tight text-[20px] md:text-[24px] leading-snug">
-                  Quel montant souhaitez-vous donner à la {" "}
+                  Zakat al Fitr pour la {" "}
                   <button onClick={() => setShowMosqueSelector(true)} className="underline decoration-white/40 underline-offset-4 hover:decoration-white transition-all">
                     mosquée de {getMosqueDisplayName(values.mosqueName)}
                   </button>
-                  {" "}?
                 </h1>
 
                 <div className="mt-4 space-y-6">
-                  <GlassSegmented
-                    options={["Unique", "Vendredi", "Mensuel"]}
-                    value={values.frequency}
-                    onChange={(v) => form.setValue("frequency", v as "Unique" | "Vendredi" | "Mensuel", { shouldDirty: true })}
-                    variant="light"
-                    className="w-full"
-                  />
-
+                  {/* Price per person section */}
                   <div className="w-full rounded-2xl bg-white/10 p-3.5">
-                    {otherAmountDisplay ? (
-                      <div className="h-11 flex items-center justify-center text-[18px] font-semibold text-white">{otherAmountDisplay}</div>
-                    ) : (
-                      <GlassAmountPills
-                        amounts={PRESET_AMOUNTS}
-                        activeAmount={isPresetActive ? (values.amount as number) : undefined}
-                        onSelect={(amt) => handlePresetClick(amt)}
-                      />
-                    )}
-                    <div className="mt-3">
-                      <div className="relative">
-                        <input
-                          value={otherAmountInput}
-                          onChange={(e) => {
-                            if (isPresetActive) {
-                              form.setValue("amount", NaN as unknown as number, { shouldDirty: true });
-                            }
-                            handleOtherAmountChange(e.target.value);
-                          }}
-                          type="tel"
-                          inputMode="numeric"
-                          pattern="[0-9]*"
-                          placeholder="Autre montant"
-                          className={"w-full h-11 rounded-2xl px-4 pr-10 border focus:outline-none focus:ring-2 focus:ring-white/35 text-[16px] " + (otherAmountDisplay ? "bg-transparent text-transparent caret-white placeholder-white/60 border-white/6" : "bg-transparent text-white placeholder-white/70 border-white/10")}
-                          style={{ fontSize: "16px" }}
-                          aria-invalid={!!otherAmountInput && isNaN(parseFloat(otherAmountInput))}
-                          onKeyDown={(e) => { 
-                            if (e.key === "Enter") {
-                              e.preventDefault();
-                              (e.currentTarget as HTMLInputElement).blur();
-                            }
-                          }}
-                          onBlur={() => { 
-                            const num = parseFloat(otherAmountInput); 
-                            if (isNaN(num)) {
-                              setOtherAmountInput("");
-                            }
-                            // Force viewport reset on iOS
-                            window.scrollTo(0, 0);
-                          }}
-                        />
-                        {!otherAmountDisplay && (
-                          <span className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-white/75 text-[16px]">€</span>
-                        )}
-                      </div>
+                    <div className="text-center">
+                      <p className="text-white/90 text-[15px] mb-1">Prix par personne</p>
+                      <p className="text-white text-[28px] font-bold">{formatEuro(PRICE_PER_PERSON)}</p>
                     </div>
+                  </div>
 
-                    <p className="mt-3 pl-4 pr-3 text-left text-[15px] text-white leading-relaxed">
-                      Votre don de {formatEuro(values.amount)}
-                      {values.frequency !== "Unique" ? (values.frequency === "Vendredi" ? "/Vendredi" : "/mois") : ""}
-                      {" "}ne vous coûtera que
+                  {/* Number of people selector */}
+                  <div className="w-full rounded-2xl bg-white/10 p-3.5">
+                    <p className="text-white text-[15px] font-semibold mb-3 text-center">
+                      Nombre de personnes
+                    </p>
+                    
+                    <div className="flex items-center justify-center gap-6">
+                      <button
+                        onClick={() => setNumberOfPeople(Math.max(1, numberOfPeople - 1))}
+                        disabled={numberOfPeople <= 1}
+                        className="w-12 h-12 rounded-full bg-white/20 hover:bg-white/30 disabled:opacity-30 disabled:cursor-not-allowed text-white text-[24px] font-bold transition-all shadow-lg hover:shadow-xl hover:scale-105 active:scale-95"
+                      >
+                        −
+                      </button>
+                      
+                      <div className="min-w-[70px] text-center">
+                        <p className="text-white text-[42px] font-bold leading-none">
+                          {numberOfPeople}
+                        </p>
+                      </div>
+                      
+                      <button
+                        onClick={() => setNumberOfPeople(numberOfPeople + 1)}
+                        className="w-12 h-12 rounded-full bg-white/20 hover:bg-white/30 text-white text-[24px] font-bold transition-all shadow-lg hover:shadow-xl hover:scale-105 active:scale-95"
+                      >
+                        +
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* Total amount display */}
+                  <div className="w-full rounded-2xl bg-white/10 p-3.5">
+                    <div className="text-center mb-3">
+                      <p className="text-white text-[16px] font-bold mb-2">Montant total</p>
+                      <p className="text-white text-[36px] font-bold leading-none">
+                        {formatEuro(totalAmount)}
+                      </p>
+                    </div>
+                    
+                    <p className="pl-4 pr-3 text-left text-[15px] text-white leading-relaxed">
+                      Votre don de {formatEuro(totalAmount)} ne vous coûtera que
                       {" "}
                       <strong className="font-semibold text-white">
-                        {formatEuro(values.amount * 0.34)}
-                        {values.frequency !== "Unique" ? (values.frequency === "Vendredi" ? "/Vendredi" : "/mois") : ""}
+                        {formatEuro(totalAmount * 0.34)}
                       </strong>
                       {" "}après déduction fiscale.
                     </p>
                   </div>
-
-                  <GlassSegmented
-                    options={["Sadaqah", "Zakat"]}
-                    value={values.donationType}
-                    onChange={(v) => form.setValue("donationType", v as "Sadaqah" | "Zakat", { shouldDirty: true })}
-                    variant="light"
-                    className="w-full"
-                  />
                 </div>
 
                 <div className="pt-0">

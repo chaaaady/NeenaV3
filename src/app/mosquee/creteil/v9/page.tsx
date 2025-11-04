@@ -5,7 +5,7 @@ import { useSearchParams } from "next/navigation";
 import Image from "next/image";
 import { SideMenu } from "@/components";
 import { ScrollReveal } from "@/components/ScrollReveal";
-import { HeaderPrimary } from "@/components/headers/HeaderPrimary";
+import { HeaderPrimary } from "@/components/headers/HeaderPrimary"; // Menu Neena général
 import { HeaderSecondary } from "@/components/headers/HeaderSecondary";
 import { useMiniHeaderTrigger } from "@/hooks/useMiniHeaderTrigger";
 import { MapPin, Check, TrendingUp, Building, Users, Heart, CreditCard, Target, Clock, Sparkles } from "lucide-react";

@@ -3,11 +3,8 @@
 import { useState, useMemo, useEffect, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import Image from "next/image";
-import { SideMenu } from "@/components";
+import { SideMenu, HeaderMosquee } from "@/components";
 import { ScrollReveal } from "@/components/ScrollReveal";
-import { HeaderPrimary } from "@/components/headers/HeaderPrimary";
-import { HeaderSecondary } from "@/components/headers/HeaderSecondary";
-import { useMiniHeaderTrigger } from "@/hooks/useMiniHeaderTrigger";
 import CurrentPrayerSection from "@/components/CurrentPrayerSection";
 import CurrentTimeSection from "@/components/CurrentTimeSection";
 import { MapPin, Check, Car, Users, Accessibility, Info, CreditCard, User, Globe, Book } from "lucide-react";
@@ -30,7 +27,6 @@ export default function MosqueCreteilV8Page() {
 function MosqueCreteilV8Content() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const params = useSearchParams();
-  const { visible: miniVisible } = useMiniHeaderTrigger("hero-v8");
 
   // Hero image (configurable via ?img=...)
   const heroImages = useMemo(() => {
@@ -79,13 +75,50 @@ function MosqueCreteilV8Content() {
     };
   }, []);
 
+  const [showStickyHeader, setShowStickyHeader] = useState(false);
+
+  useEffect(() => {
+    const onScroll = () => {
+      const heroEl = document.getElementById("hero-v8");
+      if (heroEl) {
+        const rect = heroEl.getBoundingClientRect();
+        setShowStickyHeader(rect.bottom <= 0);
+      }
+    };
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
   return (
     <>
-      <HeaderPrimary wide transparent overlay onMenuClick={() => setIsMenuOpen(true)} />
-      <HeaderSecondary title={MOSQUE_NAME} visible={miniVisible} />
-      <SideMenu isOpen={isMenuOpen} onClose={() => setIsMenuOpen(false)} />
+      {/* Header sticky qui apparaît au scroll */}
+      <div className={`fixed top-0 left-0 right-0 z-20 transition-all duration-300 ${showStickyHeader ? 'translate-y-0 opacity-100' : '-translate-y-full opacity-0'}`}>
+        <HeaderMosquee wide glass glassTone="light" onMenuClick={() => setIsMenuOpen(true)} mosqueeSlug="creteil" />
+      </div>
+
+      <SideMenu isOpen={isMenuOpen} onClose={() => setIsMenuOpen(false)} variant="mosquee" mosqueeSlug="creteil" />
 
       <div className={`relative w-full min-h-[100svh] ${background}`}>
+        {/* Logo Neena en haut de la page (scroll avec le contenu) */}
+        <div className="absolute top-0 left-0 z-10 p-4">
+          <a href="/qui-sommes-nous" className="text-[20px] font-[800] text-white tracking-[-0.2px] drop-shadow-lg hover:opacity-80 transition-opacity">
+            Neena
+          </a>
+        </div>
+
+        {/* Burger menu mobile en haut à droite */}
+        <button 
+          aria-label="Menu" 
+          onClick={() => setIsMenuOpen(true)} 
+          className="absolute top-4 right-4 z-10 md:hidden w-10 h-10 flex items-center justify-center hover:opacity-70 transition-opacity"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-white">
+            <line x1="4" x2="20" y1="12" y2="12" />
+            <line x1="4" x2="20" y1="6" y2="6" />
+            <line x1="4" x2="20" y1="18" y2="18" />
+          </svg>
+        </button>
         {/* Dynamic background based on current prayer time */}
         
         <main className="relative px-4 pb-24 pt-[calc(var(--hdr-primary-h)+12px)] md:px-6 max-w-3xl mx-auto">

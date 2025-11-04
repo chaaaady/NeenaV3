@@ -358,3 +358,9 @@ Le flux de données est **complet, tracé et fonctionnel** de bout en bout.
 - `CHECKLIST-CONFIGURATION.md` - Checklist de déploiement
 - `ARCHITECTURE.md` - Architecture globale du système
 
+
+
+
+
+
+

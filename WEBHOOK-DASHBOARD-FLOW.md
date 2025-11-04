@@ -328,3 +328,9 @@ VALUES ('Créteil', 'Mosquée Sahaba Créteil', 'contact@mosquee.fr');
 
 **Tout est maintenant en place pour que ça fonctionne !** 🎉
 
+
+
+
+
+
+

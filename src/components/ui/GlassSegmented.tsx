@@ -8,26 +8,52 @@ export type GlassSegmentedProps = {
   value: string;
   onChange: (val: string) => void;
   ariaLabel?: string;
-  variant?: "light" | "dark";
+  variant?: "light" | "dark" | "white";
   className?: string;
 };
 
 export function GlassSegmented({ options, value, onChange, ariaLabel, variant = "light", className }: GlassSegmentedProps) {
-  const container = variant === "light"
+  const container = variant === "white"
+    ? "overflow-hidden rounded-2xl bg-white/40 backdrop-blur-md border border-white/30 p-1.5"
+    : variant === "light"
     ? "overflow-hidden rounded-2xl bg-white/12 p-1.5"
     : "overflow-hidden rounded-2xl bg-black/30 p-1.5 backdrop-blur-md";
 
-  const baseBtn = "h-11 flex-1 rounded-2xl px-6 text-[16px] font-semibold transition-all duration-300 focus-visible:outline-none";
-  const inactive = variant === "light"
-    ? "text-white/75 hover:bg-white/8"
-    : "text-white/80 hover:bg-white/10";
-  const active = variant === "light"
-    ? "bg-white/85 text-zinc-900 shadow-lg"
-    : "bg-white/85 text-zinc-900 shadow-lg";
+  const baseBtn = "h-11 flex-1 rounded-2xl px-3 text-[15px] font-semibold transition-colors duration-200 ease-out focus-visible:outline-none whitespace-nowrap relative z-10";
+  const inactive = variant === "white"
+    ? "text-gray-700"
+    : variant === "light"
+    ? "text-white/75"
+    : "text-white/80";
+  const active = variant === "white"
+    ? "text-gray-900"
+    : variant === "light"
+    ? "text-zinc-900"
+    : "text-zinc-900";
+
+  const activeIndex = options.indexOf(value);
+  const gapSize = 6; // gap-1.5 = 6px
+  const totalGaps = (options.length - 1) * gapSize;
+  const sliderWidth = `calc((100% - ${totalGaps}px) / ${options.length})`;
+  const sliderLeft = `calc(((100% - ${totalGaps}px) / ${options.length}) * ${activeIndex} + ${activeIndex * gapSize}px)`;
+
+  const sliderBg = variant === "white"
+    ? "bg-white/80 shadow-md backdrop-blur-md border border-white/30"
+    : variant === "light"
+    ? "bg-white/85 shadow-lg"
+    : "bg-white/85 shadow-lg";
 
   return (
     <div className={cn(container, className)} role="tablist" aria-label={ariaLabel}>
-      <div className="flex gap-1.5">
+      <div className="relative flex gap-1.5">
+        {/* Sliding background */}
+        <div
+          className={cn("absolute h-11 rounded-2xl transition-all duration-200 ease-out", sliderBg)}
+          style={{
+            width: sliderWidth,
+            left: sliderLeft,
+          }}
+        />
         {options.map((opt) => {
           const isActive = opt === value;
           return (

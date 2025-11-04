@@ -83,7 +83,7 @@ export default function MosqueesPage() {
 
   // Set theme-color for iPhone notch
   useEffect(() => {
-    const themeColor = "#6b5b95";
+    const themeColor = "#5a8bb5";
     let meta = document.querySelector('meta[name="theme-color"]');
     
     if (!meta) {
@@ -129,7 +129,7 @@ export default function MosqueesPage() {
       <HeaderPrimary wide transparent overlay onMenuClick={() => setIsMenuOpen(true)} />
       <SideMenu isOpen={isMenuOpen} onClose={() => setIsMenuOpen(false)} />
       
-      <div className="relative w-full min-h-[100svh] bg-gradient-to-b from-[#6b5b95] via-[#8b7ab8] to-[#6b5b95]">
+      <div className="relative w-full min-h-[100svh] bg-gradient-to-b from-[#5a8bb5] via-[#6b9ec7] to-[#5a8bb5]">
         <main className="relative px-4 pb-24 pt-[calc(var(--hdr-primary-h)+24px)] md:px-6 max-w-6xl mx-auto">
           
           {/* Hero Section */}

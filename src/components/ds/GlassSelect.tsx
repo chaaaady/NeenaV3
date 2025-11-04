@@ -30,17 +30,20 @@ export function GlassSelect({
           "text-white text-[15px] font-medium",
           "focus:outline-none focus:ring-2 focus:ring-white/30 focus:border-white/20",
           "transition-all cursor-pointer",
-          "hover:bg-white/15"
+          "hover:bg-white/15",
+          "[&>option]:bg-zinc-900 [&>option]:text-white [&>option]:py-2",
+          "[&>option]:text-[15px] [&>option]:font-medium",
+          "[&>option:hover]:bg-zinc-800 [&>option:checked]:bg-blue-600"
         )}
       >
-        <option value="" disabled className="bg-zinc-900 text-white">
+        <option value="" disabled className="bg-zinc-900 text-white/70 py-2 text-[15px] font-medium">
           {placeholder}
         </option>
         {options.map((option) => (
           <option
             key={option.value}
             value={option.value}
-            className="bg-zinc-900 text-white"
+            className="bg-zinc-900 text-white py-2 hover:bg-zinc-800 checked:bg-blue-600 text-[15px] font-medium"
           >
             {option.label}
           </option>

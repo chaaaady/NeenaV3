@@ -180,3 +180,9 @@ La table `mosques` utilise l'`id` de l'utilisateur Supabase Auth comme clé prim
 **Dernière mise à jour** : 21 octobre 2024  
 **Auteur** : AI Assistant (Claude Sonnet 4.5)
 
+
+
+
+
+
+

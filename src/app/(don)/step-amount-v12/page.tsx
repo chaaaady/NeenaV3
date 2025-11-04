@@ -16,7 +16,7 @@ import { getMosqueDisplayName } from "@/lib/mosques";
 
 const PRESET_AMOUNTS = [5, 10, 25, 50, 75, 100];
 
-export default function StepAmountV2Page() {
+export default function StepAmountV12Page() {
   const form = useFormContext<DonationFormValues>();
   const router = useRouter();
   const values = form.watch();
@@ -46,7 +46,7 @@ export default function StepAmountV2Page() {
 
   // Set theme-color for iPhone notch
   useEffect(() => {
-    const themeColor = "#5a8bb5"; // Match darker blue gradient
+    const themeColor = "#ffffff"; // White for iOS notch and gesture bar
     let meta = document.querySelector('meta[name="theme-color"]');
     
     if (!meta) {
@@ -57,6 +57,15 @@ export default function StepAmountV2Page() {
     
     const previousColor = meta.getAttribute("content");
     meta.setAttribute("content", themeColor);
+
+    // Ensure viewport-fit=cover for iOS safe areas
+    let viewport = document.querySelector('meta[name="viewport"]');
+    if (viewport) {
+      const currentContent = viewport.getAttribute("content") || "";
+      if (!currentContent.includes("viewport-fit")) {
+        viewport.setAttribute("content", currentContent + ", viewport-fit=cover");
+      }
+    }
     
     return () => {
       if (previousColor) {
@@ -123,7 +132,7 @@ export default function StepAmountV2Page() {
   }, [otherAmountInput]);
 
   return (
-    <>
+    <div className="bg-white min-h-screen">
       <SideMenu isOpen={isMenuOpen} onClose={() => setIsMenuOpen(false)} variant="mosquee" mosqueeSlug="creteil" />
       <MosqueSelectorModal 
         isOpen={showMosqueSelector}
@@ -132,43 +141,117 @@ export default function StepAmountV2Page() {
         onMosqueSelect={(mosque) => form.setValue("mosqueName", mosque, { shouldDirty: true })}
       />
 
-      <div className="relative w-full bg-gradient-to-b from-[#5a8bb5] via-[#6b9ec7] to-[#5a8bb5]" style={{ height: "100svh", overflow: "hidden" }}>
-        {/* Logo Neena en haut de la page */}
-        <div className="absolute top-0 left-0 z-10 p-4">
-          <a href="/qui-sommes-nous" className="text-[20px] font-[800] text-white tracking-[-0.2px] drop-shadow-lg hover:opacity-80 transition-opacity">
-            Neena
-          </a>
-        </div>
-
-        {/* Burger menu mobile en haut à droite */}
-        <button 
-          aria-label="Menu" 
-          onClick={() => setIsMenuOpen(true)} 
-          className="absolute top-4 right-4 z-10 md:hidden w-10 h-10 flex items-center justify-center hover:opacity-70 transition-opacity"
+      {/* Animated Video Background */}
+      <div 
+        className="fixed inset-0 overflow-hidden" 
+        style={{ 
+          top: "calc(-1 * env(safe-area-inset-top))",
+          bottom: "calc(-1 * env(safe-area-inset-bottom))",
+          left: "calc(-1 * env(safe-area-inset-left))",
+          right: "calc(-1 * env(safe-area-inset-right))"
+        }}
+      >
+        {/* Video background - liquid gradient animation (slowed down) */}
+        <video
+          autoPlay
+          loop
+          muted
+          playsInline
+          className="absolute inset-0 w-full h-full object-cover"
+          style={{
+            minWidth: "100%",
+            minHeight: "100%"
+          }}
+          ref={(video) => {
+            if (video) {
+              video.playbackRate = 0.5; // Ralentir à 50% de la vitesse normale
+            }
+          }}
         >
-          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-white">
-            <line x1="4" x2="20" y1="12" y2="12" />
-            <line x1="4" x2="20" y1="6" y2="6" />
-            <line x1="4" x2="20" y1="18" y2="18" />
-          </svg>
-        </button>
+          <source src="/bg-video.mp4" type="video/mp4" />
+        </video>
+        
+        {/* Dark overlay to improve contrast */}
+        <div className="absolute inset-0 bg-black/30" />
+        
+        {/* Subtle overlay for depth - enrichit le glassmorphism */}
+        <div 
+          className="absolute inset-0 opacity-10"
+          style={{
+            background: "linear-gradient(135deg, rgba(59,130,246,0.2) 0%, rgba(37,99,235,0.3) 50%, rgba(59,130,246,0.2) 100%)"
+          }}
+        />
+        
+        {/* Animated glow - mouvement subtil */}
+        <div 
+          className="absolute inset-0 opacity-12"
+          style={{
+            background: `
+              radial-gradient(circle at 35% 35%, rgba(96,165,250,0.3) 0%, transparent 50%),
+              radial-gradient(circle at 65% 65%, rgba(59,130,246,0.25) 0%, transparent 50%)
+            `,
+            animation: "meshMove 22s ease-in-out infinite"
+          }}
+        />
+        
+        {/* Top edge - white fade to blend with notch (only above header) */}
+        <div 
+          className="absolute top-0 left-0 right-0 pointer-events-none"
+          style={{
+            height: "calc(env(safe-area-inset-top) + 20px)",
+            background: "linear-gradient(to bottom, rgba(255,255,255,0.85) 0%, transparent 100%)"
+          }}
+        />
+      </div>
+
+      <div className="relative w-full" style={{ 
+        height: "100svh", 
+        overflow: "hidden",
+        paddingTop: "env(safe-area-inset-top)",
+        paddingBottom: "env(safe-area-inset-bottom)",
+        paddingLeft: "env(safe-area-inset-left)",
+        paddingRight: "env(safe-area-inset-right)"
+      }}>
+        {/* Header bar with glassmorphism background - same as card */}
+        <div 
+          className="absolute top-0 left-0 right-0 z-10 bg-gradient-to-br from-white/[0.18] to-white/[0.12] backdrop-blur-xl border-b border-white/15"
+        >
+          <div className="flex items-center justify-between px-4 h-12" style={{ paddingTop: "env(safe-area-inset-top)" }}>
+            {/* Logo Neena */}
+            <a href="/qui-sommes-nous" className="text-[20px] font-[800] text-white tracking-[-0.2px] drop-shadow-lg hover:opacity-80 transition-opacity">
+              Neena
+            </a>
+
+            {/* Burger menu mobile */}
+            <button 
+              aria-label="Menu" 
+              onClick={() => setIsMenuOpen(true)} 
+              className="md:hidden w-10 h-10 flex items-center justify-center hover:opacity-70 transition-opacity"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-white">
+                <line x1="4" x2="20" y1="12" y2="12" />
+                <line x1="4" x2="20" y1="6" y2="6" />
+                <line x1="4" x2="20" y1="18" y2="18" />
+              </svg>
+            </button>
+          </div>
+        </div>
         
         {/* Main content area - starts below header */}
-        <div className="relative w-full h-full flex flex-col" style={{ paddingTop: "var(--hdr-primary-h)" }}>
+        <div className="relative w-full h-full flex flex-col" style={{ paddingTop: "calc(48px + env(safe-area-inset-top))" }}>
           
-          {/* Labels under header */}
-          <div className="relative z-30 mx-auto w-full max-w-lg md:max-w-xl px-4 pt-2 pb-1">
-            <div ref={labelsRef} className="flex justify-center">
-              <div className="rounded-full bg-white/15 border border-white/20 backdrop-blur-md px-4 py-1.5 shadow-md">
-                <StepLabels current="Montant" />
+          {/* Labels above card */}
+          <div className="flex-1 flex items-center justify-center px-4 pt-6" style={{ paddingBottom: "calc(env(safe-area-inset-bottom) + 100px)" }}>
+            <div className="flex flex-col items-center w-full max-w-lg md:max-w-xl">
+              <div ref={labelsRef} className="flex justify-center mb-6">
+                <div className="rounded-full bg-white/15 border border-white/20 backdrop-blur-md px-4 py-1.5 shadow-md">
+                  <StepLabels current="Montant" />
+                </div>
               </div>
-            </div>
-          </div>
 
-          {/* Card - centered in remaining space */}
-          <div className="flex-1 flex items-center justify-center px-4 pt-6" style={{ paddingBottom: "calc(env(safe-area-inset-bottom) + 80px)" }}>
-            <div className="w-full max-w-lg md:max-w-xl">
-              <div className="rounded-3xl border border-white/15 bg-gradient-to-br from-white/[0.18] to-white/[0.12] backdrop-blur-xl shadow-2xl p-6 md:p-7 transition-all duration-300 ease-out">
+              {/* Card */}
+              <div className="w-full">
+                <div className="rounded-3xl border border-white/15 bg-gradient-to-br from-white/[0.18] to-white/[0.12] backdrop-blur-xl shadow-2xl p-6 md:p-7 transition-all duration-300 ease-out">
                 <h1 className="text-center text-white font-semibold tracking-tight text-[20px] md:text-[24px] leading-snug">
                   Quel montant souhaitez-vous donner à la {" "}
                   <button onClick={() => setShowMosqueSelector(true)} className="underline decoration-white/40 underline-offset-4 hover:decoration-white transition-all">
@@ -234,7 +317,7 @@ export default function StepAmountV2Page() {
                       </div>
                     </div>
 
-                    <p className="mt-3 pl-4 pr-3 text-left text-[15px] text-white leading-relaxed">
+                    <p className="mt-3 pl-4 pr-3 text-left text-[15px] text-white/90 leading-relaxed">
                       Votre don de {formatEuro(values.amount)}
                       {values.frequency !== "Unique" ? (values.frequency === "Vendredi" ? "/Vendredi" : "/mois") : ""}
                       {" "}ne vous coûtera que
@@ -261,11 +344,15 @@ export default function StepAmountV2Page() {
                 </div>
               </div>
             </div>
+            </div>
           </div>
         </div>
       </div>
-      {/* Fixed bottom action bar (sticky-like), aligned with card width */}
-      <div ref={bottomRef} className="fixed inset-x-0" style={{ bottom: "calc(env(safe-area-inset-bottom) + 14px)" }}>
+      {/* Fixed bottom action bar with safe area respect */}
+      <div ref={bottomRef} className="fixed inset-x-0 z-50" style={{ 
+        bottom: "14px",
+        paddingBottom: "env(safe-area-inset-bottom)"
+      }}>
         <div className="mx-auto w-full max-w-lg md:max-w-xl px-4">
           <div className="flex justify-end">
             <button
@@ -279,7 +366,7 @@ export default function StepAmountV2Page() {
           </div>
         </div>
       </div>
-    </>
+    </div>
   );
 }
 

@@ -5,7 +5,7 @@ import Image from "next/image";
 import { SideMenu } from "@/components";
 import { ScrollReveal } from "@/components/ScrollReveal";
 import { HeaderPrimary } from "@/components/headers/HeaderPrimary";
-import { GlassCard, GlassInput, PrimaryButton } from "@/components/ds";
+import { GlassCard, GlassInput, GlassSelect, PrimaryButton } from "@/components/ds";
 
 export default function BenevolatPage() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -78,78 +78,65 @@ export default function BenevolatPage() {
 
             {/* Compétences */}
             <div className="space-y-3">
-              <h2 className="text-[16px] font-[700] text-white">Compétences{skills.length ? ` (${skills.length})` : ""}</h2>
-              <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
-                {["Informatique", "Sécurité", "Accueil", "Communication", "Entretien", "Pas précisé"].map((opt) => {
-                  const active = skills.includes(opt);
-                  return (
-                    <button
-                      key={opt}
-                      type="button"
-                      className={`h-11 px-4 rounded-2xl text-[14px] font-[600] transition-all ${
-                        active 
-                          ? 'bg-white text-black shadow-lg' 
-                          : 'bg-white/15 text-white border border-white/20 hover:bg-white/25'
-                      }`}
-                      aria-pressed={active}
-                      onClick={() =>
-                        setSkills((prev) =>
-                          prev.includes(opt) ? prev.filter((s) => s !== opt) : [...prev, opt]
-                        )
-                      }
-                    >
-                      {opt}
-                    </button>
-                  );
-                })}
-              </div>
+              <h2 className="text-[16px] font-[700] text-white">Compétences</h2>
+              <GlassSelect
+                value={skills[0] || ""}
+                onChange={(value) => setSkills(value ? [value] : [])}
+                placeholder="Sélectionner une compétence"
+                options={[
+                  { value: "Informatique", label: "Informatique" },
+                  { value: "Sécurité", label: "Sécurité" },
+                  { value: "Accueil", label: "Accueil" },
+                  { value: "Communication", label: "Communication" },
+                  { value: "Entretien", label: "Entretien" },
+                  { value: "Enseignement", label: "Enseignement" },
+                  { value: "Cuisine", label: "Cuisine" },
+                  { value: "Administratif", label: "Administratif" },
+                  { value: "Autre", label: "Autre" },
+                ]}
+              />
             </div>
 
             {/* Disponibilités */}
             <div className="space-y-3">
-              <h2 className="text-[16px] font-[700] text-white">Disponibilités{Object.values(days).some(Boolean) ? ` (${Object.values(days).filter(Boolean).length})` : ""}</h2>
-              <div className="grid grid-cols-3 gap-2">
-                {Object.keys(days).map((d) => {
-                  const active = !!days[d];
-                  return (
-                    <button
-                      key={d}
-                      type="button"
-                      className={`h-11 px-4 rounded-2xl text-[14px] font-[600] transition-all ${
-                        active 
-                          ? 'bg-white text-black shadow-lg' 
-                          : 'bg-white/15 text-white border border-white/20 hover:bg-white/25'
-                      }`}
-                      aria-pressed={active}
-                      onClick={() => setDays((prev) => ({ ...prev, [d]: !prev[d] }))}
-                    >
-                      {d}
-                    </button>
-                  );
-                })}
-              </div>
+              <h2 className="text-[16px] font-[700] text-white">Disponibilités</h2>
+              <GlassSelect
+                value={Object.keys(days).find(d => days[d]) || ""}
+                onChange={(value) => {
+                  const newDays = { Lun:false, Mar:false, Mer:false, Jeu:false, Ven:false, Sam:false, Dim:false };
+                  if (value) newDays[value as keyof typeof newDays] = true;
+                  setDays(newDays);
+                }}
+                placeholder="Sélectionner un jour"
+                options={[
+                  { value: "Lun", label: "Lundi" },
+                  { value: "Mar", label: "Mardi" },
+                  { value: "Mer", label: "Mercredi" },
+                  { value: "Jeu", label: "Jeudi" },
+                  { value: "Ven", label: "Vendredi" },
+                  { value: "Sam", label: "Samedi" },
+                  { value: "Dim", label: "Dimanche" },
+                  { value: "Semaine", label: "Toute la semaine" },
+                  { value: "Weekend", label: "Week-end uniquement" },
+                ]}
+              />
             </div>
 
             {/* Durée d'engagement */}
             <div className="space-y-3">
-              <h2 className="text-[16px] font-[700] text-white">Durée d&apos;engagement{duration ? ` (${duration})` : ''}</h2>
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
-                {["1 mois", "3 mois", "1 an", "Tout le temps"].map((opt) => (
-                  <button
-                    key={opt}
-                    type="button"
-                    className={`h-11 px-4 rounded-2xl text-[14px] font-[600] transition-all ${
-                      duration === opt 
-                        ? 'bg-white text-black shadow-lg' 
-                        : 'bg-white/15 text-white border border-white/20 hover:bg-white/25'
-                    }`}
-                    aria-pressed={duration === opt}
-                    onClick={() => setDuration(opt)}
-                  >
-                    {opt}
-                  </button>
-                ))}
-              </div>
+              <h2 className="text-[16px] font-[700] text-white">Durée d&apos;engagement</h2>
+              <GlassSelect
+                value={duration}
+                onChange={setDuration}
+                placeholder="Sélectionner une durée"
+                options={[
+                  { value: "1 mois", label: "1 mois" },
+                  { value: "3 mois", label: "3 mois" },
+                  { value: "6 mois", label: "6 mois" },
+                  { value: "1 an", label: "1 an" },
+                  { value: "Long terme", label: "Long terme (indéfini)" },
+                ]}
+              />
             </div>
 
             {/* Informations supplémentaires */}

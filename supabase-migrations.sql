@@ -183,3 +183,9 @@ on conflict (slug) do nothing;
 -- select * from public.mosques;
 -- select tablename from pg_tables where schemaname = 'public';
 
+
+
+
+
+
+

@@ -40,7 +40,7 @@ export default function DuaasPage() {
 
   // Set theme-color for iPhone notch
   useEffect(() => {
-    const themeColor = "#1a5c42";
+    const themeColor = "#5a8bb5";
     let meta = document.querySelector('meta[name="theme-color"]');
     
     if (!meta) {
@@ -104,7 +104,7 @@ export default function DuaasPage() {
       <HeaderPrimary wide transparent overlay onMenuClick={() => setIsMenuOpen(true)} />
       <SideMenu isOpen={isMenuOpen} onClose={() => setIsMenuOpen(false)} />
 
-      <div className="min-h-[100svh] w-full bg-gradient-to-b from-[#1a5c42] via-[#2a7557] to-[#1a5c42]">
+      <div className="min-h-[100svh] w-full bg-gradient-to-b from-[#5a8bb5] via-[#6b9ec7] to-[#5a8bb5]">
         <main className="px-4 pb-28 pt-[calc(var(--hdr-primary-h)+28px)] md:px-8">
           <div className="mx-auto flex w-full max-w-4xl flex-col gap-6">
             <ScrollReveal delay={0}>

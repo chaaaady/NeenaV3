@@ -16,7 +16,7 @@ import { getMosqueDisplayName } from "@/lib/mosques";
 
 const PRESET_AMOUNTS = [5, 10, 25, 50, 75, 100];
 
-export default function StepAmountV2Page() {
+export default function StepAmountV11Page() {
   const form = useFormContext<DonationFormValues>();
   const router = useRouter();
   const values = form.watch();
@@ -44,9 +44,9 @@ export default function StepAmountV2Page() {
     };
   }, []);
 
-  // Set theme-color for iPhone notch
+  // Set theme-color for iPhone notch - gradient background
   useEffect(() => {
-    const themeColor = "#5a8bb5"; // Match darker blue gradient
+    const themeColor = "#f5f5f5"; // Match gradient background
     let meta = document.querySelector('meta[name="theme-color"]');
     
     if (!meta) {
@@ -132,10 +132,39 @@ export default function StepAmountV2Page() {
         onMosqueSelect={(mosque) => form.setValue("mosqueName", mosque, { shouldDirty: true })}
       />
 
-      <div className="relative w-full bg-gradient-to-b from-[#5a8bb5] via-[#6b9ec7] to-[#5a8bb5]" style={{ height: "100svh", overflow: "hidden" }}>
+      <div className="relative w-full bg-gradient-to-br from-[#fafafa] via-[#f5f5f5] to-[#fafafa]" style={{ height: "100svh", overflow: "hidden" }}>
+        {/* Animated gradient background */}
+        <div className="absolute inset-0 overflow-hidden">
+          <div 
+            className="absolute inset-0 opacity-60"
+            style={{
+              background: "linear-gradient(135deg, #667eea 0%, #764ba2 25%, #f093fb 50%, #4facfe 75%, #00f2fe 100%)",
+              backgroundSize: "400% 400%",
+              animation: "gradientShift 15s ease infinite"
+            }}
+          />
+          <div 
+            className="absolute inset-0 opacity-40"
+            style={{
+              background: "linear-gradient(45deg, #fa709a 0%, #fee140 25%, #30cfd0 50%, #a8edea 75%, #fed6e3 100%)",
+              backgroundSize: "300% 300%",
+              animation: "gradientShift 20s ease infinite reverse"
+            }}
+          />
+          {/* Grain texture overlay */}
+          <div 
+            className="absolute inset-0 opacity-[0.15]"
+            style={{
+              backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.5' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")`,
+              backgroundRepeat: "repeat",
+              backgroundSize: "200px 200px"
+            }}
+          />
+        </div>
+
         {/* Logo Neena en haut de la page */}
         <div className="absolute top-0 left-0 z-10 p-4">
-          <a href="/qui-sommes-nous" className="text-[20px] font-[800] text-white tracking-[-0.2px] drop-shadow-lg hover:opacity-80 transition-opacity">
+          <a href="/qui-sommes-nous" className="text-[20px] font-[800] text-gray-900 tracking-[-0.2px] drop-shadow-sm hover:opacity-80 transition-opacity">
             Neena
           </a>
         </div>
@@ -146,7 +175,7 @@ export default function StepAmountV2Page() {
           onClick={() => setIsMenuOpen(true)} 
           className="absolute top-4 right-4 z-10 md:hidden w-10 h-10 flex items-center justify-center hover:opacity-70 transition-opacity"
         >
-          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-white">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-gray-900">
             <line x1="4" x2="20" y1="12" y2="12" />
             <line x1="4" x2="20" y1="6" y2="6" />
             <line x1="4" x2="20" y1="18" y2="18" />
@@ -157,21 +186,21 @@ export default function StepAmountV2Page() {
         <div className="relative w-full h-full flex flex-col" style={{ paddingTop: "var(--hdr-primary-h)" }}>
           
           {/* Labels under header */}
-          <div className="relative z-30 mx-auto w-full max-w-lg md:max-w-xl px-4 pt-2 pb-1">
+          <div className="relative z-30 mx-auto w-full max-w-lg md:max-w-xl px-4 pt-12 pb-6">
             <div ref={labelsRef} className="flex justify-center">
-              <div className="rounded-full bg-white/15 border border-white/20 backdrop-blur-md px-4 py-1.5 shadow-md">
-                <StepLabels current="Montant" />
+              <div className="rounded-full bg-white/60 border border-white/40 backdrop-blur-md px-4 py-1.5 shadow-lg">
+                <StepLabels current="Montant" variant="dark" />
               </div>
             </div>
           </div>
 
           {/* Card - centered in remaining space */}
-          <div className="flex-1 flex items-center justify-center px-4 pt-6" style={{ paddingBottom: "calc(env(safe-area-inset-bottom) + 80px)" }}>
+          <div className="flex-1 flex items-center justify-center px-4 pt-0" style={{ paddingBottom: "calc(env(safe-area-inset-bottom) + 80px)" }}>
             <div className="w-full max-w-lg md:max-w-xl">
-              <div className="rounded-3xl border border-white/15 bg-gradient-to-br from-white/[0.18] to-white/[0.12] backdrop-blur-xl shadow-2xl p-6 md:p-7 transition-all duration-300 ease-out">
-                <h1 className="text-center text-white font-semibold tracking-tight text-[20px] md:text-[24px] leading-snug">
+              <div className="rounded-3xl border border-white/40 bg-white/70 backdrop-blur-xl shadow-2xl p-6 md:p-7 transition-all duration-300 ease-out">
+                <h1 className="text-center text-gray-900 font-semibold tracking-tight text-[20px] md:text-[24px] leading-snug">
                   Quel montant souhaitez-vous donner à la {" "}
-                  <button onClick={() => setShowMosqueSelector(true)} className="underline decoration-white/40 underline-offset-4 hover:decoration-white transition-all">
+                  <button onClick={() => setShowMosqueSelector(true)} className="underline decoration-gray-400 underline-offset-4 hover:decoration-gray-600 transition-all">
                     mosquée de {getMosqueDisplayName(values.mosqueName)}
                   </button>
                   {" "}?
@@ -182,18 +211,19 @@ export default function StepAmountV2Page() {
                     options={["Unique", "Vendredi", "Mensuel"]}
                     value={values.frequency}
                     onChange={(v) => form.setValue("frequency", v as "Unique" | "Vendredi" | "Mensuel", { shouldDirty: true })}
-                    variant="light"
+                    variant="white"
                     className="w-full"
                   />
 
-                  <div className="w-full rounded-2xl bg-white/10 p-3.5">
+                  <div className="w-full rounded-2xl bg-white/50 border border-white/30 backdrop-blur-md p-3.5">
                     {otherAmountDisplay ? (
-                      <div className="h-11 flex items-center justify-center text-[18px] font-semibold text-white">{otherAmountDisplay}</div>
+                      <div className="h-11 flex items-center justify-center text-[18px] font-semibold text-gray-900">{otherAmountDisplay}</div>
                     ) : (
                       <GlassAmountPills
                         amounts={PRESET_AMOUNTS}
                         activeAmount={isPresetActive ? (values.amount as number) : undefined}
                         onSelect={(amt) => handlePresetClick(amt)}
+                        variant="white"
                       />
                     )}
                     <div className="mt-3">
@@ -210,7 +240,7 @@ export default function StepAmountV2Page() {
                           inputMode="numeric"
                           pattern="[0-9]*"
                           placeholder="Autre montant"
-                          className={"w-full h-11 rounded-2xl px-4 pr-10 border focus:outline-none focus:ring-2 focus:ring-white/35 text-[16px] " + (otherAmountDisplay ? "bg-transparent text-transparent caret-white placeholder-white/60 border-white/6" : "bg-transparent text-white placeholder-white/70 border-white/10")}
+                          className={"w-full h-11 rounded-2xl px-4 pr-10 border focus:outline-none focus:ring-2 focus:ring-white/40 text-[16px] backdrop-blur-md " + (otherAmountDisplay ? "bg-transparent text-transparent caret-gray-900 placeholder-gray-500 border-white/20" : "bg-white/50 text-gray-900 placeholder-gray-700 border-white/30")}
                           style={{ fontSize: "16px" }}
                           aria-invalid={!!otherAmountInput && isNaN(parseFloat(otherAmountInput))}
                           onKeyDown={(e) => { 
@@ -229,17 +259,17 @@ export default function StepAmountV2Page() {
                           }}
                         />
                         {!otherAmountDisplay && (
-                          <span className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-white/75 text-[16px]">€</span>
+                          <span className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-gray-600 text-[16px]">€</span>
                         )}
                       </div>
                     </div>
 
-                    <p className="mt-3 pl-4 pr-3 text-left text-[15px] text-white leading-relaxed">
+                    <p className="mt-3 pl-4 pr-3 text-left text-[15px] text-gray-700 leading-relaxed">
                       Votre don de {formatEuro(values.amount)}
                       {values.frequency !== "Unique" ? (values.frequency === "Vendredi" ? "/Vendredi" : "/mois") : ""}
                       {" "}ne vous coûtera que
                       {" "}
-                      <strong className="font-semibold text-white">
+                      <strong className="font-semibold text-gray-900">
                         {formatEuro(values.amount * 0.34)}
                         {values.frequency !== "Unique" ? (values.frequency === "Vendredi" ? "/Vendredi" : "/mois") : ""}
                       </strong>
@@ -251,7 +281,7 @@ export default function StepAmountV2Page() {
                     options={["Sadaqah", "Zakat"]}
                     value={values.donationType}
                     onChange={(v) => form.setValue("donationType", v as "Sadaqah" | "Zakat", { shouldDirty: true })}
-                    variant="light"
+                    variant="white"
                     className="w-full"
                   />
                 </div>
@@ -271,7 +301,7 @@ export default function StepAmountV2Page() {
             <button
               onClick={handleNext}
               disabled={!(typeof values.amount === "number" && Number.isFinite(values.amount) && values.amount > 0)}
-              className="w-1/2 h-11 rounded-2xl px-6 bg-white text-black font-semibold shadow-xl ring-1 ring-white/70 transition-all duration-300 ease-out hover:shadow-2xl hover:-translate-y-px hover:brightness-[0.98] disabled:opacity-40 disabled:cursor-not-allowed flex items-center justify-center gap-2 focus:outline-none focus:ring-2 focus:ring-black/20"
+              className="w-1/2 h-11 rounded-2xl px-6 bg-gray-900 text-white font-semibold shadow-xl ring-1 ring-gray-800 transition-all duration-300 ease-out hover:shadow-2xl hover:-translate-y-px hover:brightness-110 disabled:opacity-40 disabled:cursor-not-allowed flex items-center justify-center gap-2 focus:outline-none focus:ring-2 focus:ring-gray-600"
             >
               Suivant
               <ArrowRight size={18} className="opacity-80" />

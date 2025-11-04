@@ -13,4 +13,5 @@ export * from "./SideMenu";
 export * from "./Switch";
 export * from "./ApplePayButton";
 export * from "./MosqueSelectorModal";
+export * from "./headers/HeaderMosquee";
 

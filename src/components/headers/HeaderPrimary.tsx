@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
-import { Menu } from "lucide-react";
+import { Menu, ChevronDown } from "lucide-react";
 import Link from "next/link";
 
 type HeaderPrimaryProps = { onMenuClick?: () => void; wide?: boolean; glass?: boolean; glassTone?: "light" | "dark"; transparent?: boolean; hideNav?: boolean; overlay?: boolean };
@@ -9,6 +9,7 @@ type HeaderPrimaryProps = { onMenuClick?: () => void; wide?: boolean; glass?: bo
 export function HeaderPrimary({ onMenuClick, wide = false, glass = false, glassTone = "light", transparent = false, hideNav = false, overlay = false }: HeaderPrimaryProps) {
   const ref = useRef<HTMLDivElement | null>(null);
   const [_scrolled, setScrolled] = useState(false);
+  const [showSpecialMenu, setShowSpecialMenu] = useState(false);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY >= 16);
@@ -30,7 +31,7 @@ export function HeaderPrimary({ onMenuClick, wide = false, glass = false, glassT
     return () => window.removeEventListener("resize", onResize);
   }, []);
 
-  const maxW = wide ? 1280 : 560;
+  const maxW = wide ? 1280 : 1200;
   const bgClass = transparent
     ? "bg-transparent"
     : glass
@@ -46,15 +47,25 @@ export function HeaderPrimary({ onMenuClick, wide = false, glass = false, glassT
     <div className={(overlay ? "absolute inset-x-0 top-0 z-20 " : "") + "w-full transition-all duration-300 ease-out " + bgClass}>
       <div ref={ref} className="mx-auto flex h-14 items-center justify-between" style={{ maxWidth: maxW, paddingLeft: 16, paddingRight: 16 }}>
         <Link href="/qui-sommes-nous" className={"text-[16px] font-[800] tracking-[-0.2px] " + brandClass}>Neena</Link>
-        <nav className={(hideNav ? "hidden " : "hidden md:flex ") + "items-center gap-6 text-[14px] font-[600] " + navTextClass}>
-          <Link href="/" className={linkClass}>Accueil</Link>
-          <Link href="/step-amount-v2" className={linkClass}>Montant</Link>
-          <Link href="/step-personal-ds" className={linkClass}>Infos</Link>
-          <Link href="/step-payment-ds" className={linkClass}>Paiement</Link>
-          <Link href="/steps-ds" className={linkClass}>Tout-en-un</Link>
-          <Link href="/mosquee/creteil" className={linkClass}>Mosquée</Link>
+        
+        <nav className={(hideNav ? "hidden " : "hidden md:flex ") + "items-center gap-5 text-[13px] font-[600] " + navTextClass}>
+          <Link href="/qui-sommes-nous" className={linkClass}>Qui sommes-nous</Link>
+          <Link href="/mosquees" className={linkClass}>Mosquées partenaires</Link>
+          <Link href="/constructions" className={linkClass}>Construction de mosquée</Link>
+          <Link href="/duaa" className={linkClass}>Duaa</Link>
           <Link href="/benevolat" className={linkClass}>Bénévolat</Link>
+          <Link href="/devenir-partenaire" className={linkClass}>Devenir mosquée partenaire</Link>
         </nav>
+
+        <div className="hidden md:flex items-center gap-3">
+          <Link 
+            href="/auth/login" 
+            className="px-4 py-2 rounded-lg bg-white text-gray-900 text-[13px] font-[700] hover:bg-gray-100 transition-all shadow-md hover:shadow-lg"
+          >
+            Connexion
+          </Link>
+        </div>
+
         <button aria-label="Menu" aria-controls="side-menu" aria-expanded={false} onClick={onMenuClick} className="menu-button md:hidden">
           <Menu size={20} className={transparent || glass ? "text-white" : undefined} />
         </button>

@@ -434,3 +434,9 @@ Filtrer par : `/api/webhooks/stripe`
 **Version** : 1.0  
 **Statut** : ⚠️ Action requise - SUPABASE_SERVICE_ROLE_KEY à configurer
 
+
+
+
+
+
+
