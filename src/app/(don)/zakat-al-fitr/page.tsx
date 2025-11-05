@@ -195,7 +195,7 @@ export default function ZakatAlFitrPage() {
         </div>
       </div>
       {/* Fixed bottom action bar (sticky-like), aligned with card width */}
-      <div ref={bottomRef} className="fixed inset-x-0" style={{ bottom: "calc(env(safe-area-inset-bottom) + 14px)" }}>
+      <div className="fixed inset-x-0" style={{ bottom: "calc(env(safe-area-inset-bottom) + 14px)" }}>
         <div className="mx-auto w-full max-w-lg md:max-w-xl px-4">
           <div className="flex justify-end">
             <button
