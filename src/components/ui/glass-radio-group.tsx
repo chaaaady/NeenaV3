@@ -26,7 +26,7 @@ export function GlassRadioGroup({ options, value, onValueChange, className }: Gl
 
     if (activeButton) {
       const containerRect = container.getBoundingClientRect()
-      const buttonRect = activeButton.getBoundingClientRect()
+      const _buttonRect = activeButton.getBoundingClientRect()
 
       // Account for gap between buttons (12px gap = 0.75rem)
       const gap = 12

@@ -41,7 +41,7 @@ const PRESET_AMOUNTS = [5, 10, 25, 50, 75, 100];
 
 export default function StepAmountV17Page() {
   const form = useFormContext<DonationFormValues>();
-  const router = useRouter();
+  const _router = useRouter();
   const values = form.watch();
   const [otherAmountInput, setOtherAmountInput] = useState("");
   const [isMenuOpen, setIsMenuOpen] = useState(false);
