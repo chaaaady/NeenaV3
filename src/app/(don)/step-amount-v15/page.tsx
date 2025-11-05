@@ -434,18 +434,23 @@ export default function StepAmountV15Page() {
                       {/* Stripe Payment Form */}
                       <StripePaymentMount
                         amount={totalAmount}
-                        firstName={values.firstName || ""}
-                        lastName={values.lastName || ""}
                         email={values.email || ""}
-                        address={values.address || ""}
-                        mosqueName={values.mosqueName || ""}
-                        frequency={values.frequency}
-                        donationType={values.donationType}
-                        coverFees={values.coverFees || false}
-                        wantsReceipt={values.wantsReceipt || false}
-                        identityType={values.identityType || "Personnel"}
-                        companyName={values.companyName || ""}
-                        companySiret={values.companySiret || ""}
+                        metadata={{
+                          mosque: values.mosqueName || "",
+                          frequency: values.frequency,
+                          donationType: values.donationType,
+                          identityType: values.identityType || "Personnel",
+                          firstName: values.firstName || "",
+                          lastName: values.lastName || "",
+                          companyName: values.companyName || "",
+                          companySiret: values.companySiret || "",
+                          address: values.address || "",
+                          wantsReceipt: values.wantsReceipt ? "true" : "false",
+                          coverFees: values.coverFees ? "true" : "false",
+                          amountBase: baseAmount.toString(),
+                          amountTotal: totalAmount.toString(),
+                          email: values.email || ""
+                        }}
                         onReady={(submit) => {
                           submitRef.current = submit;
                         }}
