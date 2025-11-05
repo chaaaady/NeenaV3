@@ -8,6 +8,6 @@ export * from "./GlassSelect";
 export * from "./PrimaryButton";
 export * from "./StepLabels";
 export * from "./ToggleSwitch";
-export * from "./Textarea";
+export { GlassTextarea } from "./Textarea";
 export * from "./AddressAutocomplete";
 

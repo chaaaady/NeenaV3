@@ -20,7 +20,7 @@ export function ToggleSwitch({ checked, onChange, className, ariaLabel }: Toggle
       onClick={() => onChange(!checked)}
       className={cn(
         "relative inline-flex h-7 w-12 items-center rounded-full transition-colors duration-300 focus:outline-none focus:ring-2",
-        checked ? "bg-black focus:ring-black/30" : "bg-white/25 focus:ring-white/30",
+        checked ? "bg-white/60 focus:ring-white/30" : "bg-white/25 focus:ring-white/30",
         className
       )}
     >
