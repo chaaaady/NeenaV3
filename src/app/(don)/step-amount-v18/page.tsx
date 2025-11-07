@@ -336,7 +336,7 @@ export default function StepAmountV18Page() {
               className="w-full rounded-3xl bg-gradient-to-br from-white/20 via-white/15 to-white/10 backdrop-blur-xl border border-white/20 shadow-2xl p-6 md:p-8"
             >
               <div className="space-y-6 relative z-20">
-                <h2 className="text-xl font-bold text-white text-center">
+                <h2 className="text-[22px] font-semibold text-white text-center leading-tight">
                   Quel montant souhaitez-vous donner à la mosquée de {getMosqueDisplayName(values.mosqueName)} ?
                 </h2>
                 
@@ -375,7 +375,7 @@ export default function StepAmountV18Page() {
                         inputMode="numeric"
                         pattern="[0-9]*"
                         placeholder="Autre montant"
-                        style={{ fontSize: "16px" }}
+                        style={{ fontSize: "17px" }}
                         onBlur={() => { 
                           const num = parseFloat(otherAmountInput); 
                           if (isNaN(num)) setOtherAmountInput(""); 
@@ -392,12 +392,12 @@ export default function StepAmountV18Page() {
 
                 {values.amount > 0 && (
                   <div className="rounded-xl bg-white/10 border border-white/15 p-4">
-                    <p className="text-white text-sm font-semibold">
+                    <p className="text-white text-[15px] font-semibold leading-snug">
                       Coût réel : {formatEuro(values.amount * 0.34)}
                       {values.frequency === "Vendredi" && <span className="text-white/70">{" / vendredi"}</span>}
                       {values.frequency === "Mensuel" && <span className="text-white/70">{" / mois"}</span>}
                     </p>
-                    <p className="text-white/70 text-xs mt-1">
+                    <p className="text-white/70 text-[13px] mt-1">
                       Après déduction fiscale de 66%
                     </p>
                   </div>
@@ -436,8 +436,8 @@ export default function StepAmountV18Page() {
                     <div className="flex items-center gap-3">
                       <HandHeart className="w-5 h-5 text-white" />
                       <div className="text-left">
-                        <p className="text-white text-sm font-semibold">{formatEuro(totalAmount)}</p>
-                        <p className="text-white/70 text-xs">{values.frequency}</p>
+                        <p className="text-white text-[17px] font-semibold">{formatEuro(totalAmount)}</p>
+                        <p className="text-white/70 text-[13px]">{values.frequency}</p>
                       </div>
                     </div>
                     <ChevronUp className="w-5 h-5 text-white/60" />
@@ -451,7 +451,7 @@ export default function StepAmountV18Page() {
               className="w-full rounded-3xl bg-gradient-to-br from-white/20 via-white/15 to-white/10 backdrop-blur-xl border border-white/20 shadow-2xl p-6 md:p-8"
             >
               <div className="space-y-6 relative z-20">
-                <h2 className="text-xl font-bold text-white text-center">
+                <h2 className="text-[22px] font-semibold text-white text-center leading-tight">
                   Vos informations
                 </h2>
 
@@ -517,18 +517,18 @@ export default function StepAmountV18Page() {
 
                 <div className="rounded-xl bg-white/10 border border-white/15 p-4 relative z-20">
                   <div className="flex items-center justify-between mb-2">
-                    <label className="text-white text-sm font-semibold">Reçu fiscal</label>
+                    <label className="text-white text-[17px] font-semibold">Reçu fiscal</label>
                     <ToggleSwitch
                       checked={values.wantsReceipt || false}
                       onChange={(checked) => form.setValue("wantsReceipt", checked, { shouldDirty: true })}
                     />
                   </div>
                   {!values.wantsReceipt ? (
-                    <p className="text-white/70 text-xs mt-2">
+                    <p className="text-white/70 text-[13px] mt-2 leading-relaxed">
                       Veuillez indiquer si vous souhaitez recevoir afin de bénéficier de la déduction.
                     </p>
                   ) : (
-                    <p className="text-white/70 text-xs mt-2">
+                    <p className="text-white/70 text-[13px] mt-2 leading-relaxed">
                       Vous recevrez votre reçu fiscal en fin dannée.
                     </p>
                   )}
@@ -558,7 +558,7 @@ export default function StepAmountV18Page() {
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-3">
                       <HandHeart className="w-5 h-5 text-white" />
-                      <p className="text-white text-sm font-semibold">{formatEuro(totalAmount)}</p>
+                      <p className="text-white text-[17px] font-semibold">{formatEuro(totalAmount)}</p>
                     </div>
                     <ChevronUp className="w-5 h-5 text-white/60" />
                   </div>
@@ -572,7 +572,7 @@ export default function StepAmountV18Page() {
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-3">
                       <User className="w-5 h-5 text-white" />
-                      <p className="text-white text-sm font-semibold">{identityDisplay}</p>
+                      <p className="text-white text-[17px] font-semibold">{identityDisplay}</p>
                     </div>
                     <ChevronUp className="w-5 h-5 text-white/60" />
                   </div>
@@ -585,24 +585,24 @@ export default function StepAmountV18Page() {
               className="w-full rounded-3xl bg-gradient-to-br from-white/20 via-white/15 to-white/10 backdrop-blur-xl border border-white/20 shadow-2xl p-6 md:p-8"
             >
               <div className="space-y-6 relative z-20">
-                <h2 className="text-xl font-bold text-white text-center">
+                <h2 className="text-[22px] font-semibold text-white text-center leading-tight">
                   Votre paiement sécurisé
                 </h2>
 
                 <div className="rounded-xl bg-white/10 border border-white/15 p-4 relative z-20">
                   <div className="flex items-center justify-between mb-2">
-                    <label className="text-white text-sm font-semibold">Couvrir les frais</label>
+                    <label className="text-white text-[17px] font-semibold">Couvrir les frais</label>
                     <ToggleSwitch
                       checked={values.coverFees || false}
                       onChange={(checked) => form.setValue("coverFees", checked, { shouldDirty: true })}
                     />
                   </div>
                   {values.coverFees ? (
-                    <p className="text-white/70 text-xs mt-2">
+                    <p className="text-white/70 text-[13px] mt-2 leading-relaxed">
                       Offrez <span className="text-white font-semibold">{formatEuro(feeAmount)}</span> de plus pour que chaque euro donné arrive intégralement à la mosquée.
                     </p>
                   ) : (
-                    <p className="text-white/70 text-xs mt-2">
+                    <p className="text-white/70 text-[13px] mt-2 leading-relaxed">
                       Les frais de transaction (1,2%) seront déduits de votre don.
                     </p>
                   )}
@@ -641,7 +641,7 @@ export default function StepAmountV18Page() {
                 )}
 
                 {!canShowPayment && (
-                  <div className="text-center text-white/70 text-sm py-4">
+                  <div className="text-center text-white/70 text-[15px] py-4">
                     Veuillez remplir les sections précédentes pour continuer.
                   </div>
                 )}
@@ -668,18 +668,18 @@ export default function StepAmountV18Page() {
             <div className="w-full rounded-3xl bg-gradient-to-br from-white/20 via-white/15 to-white/10 backdrop-blur-xl border border-white/20 shadow-2xl p-5 md:p-6 max-h-[80vh] overflow-y-auto">
               <div className="space-y-4 relative z-20">
                 <div className="text-center space-y-2">
-                  <h1 className="text-[24px] md:text-[28px] font-semibold leading-tight text-white">
+                  <h1 className="text-[28px] font-bold leading-tight text-white">
                     Merci pour votre don à la mosquée {getMosqueDisplayName(values.mosqueName)}.
                   </h1>
-                  <p className="text-white/80 text-[14px] leading-relaxed">
+                  <p className="text-white/80 text-[15px] leading-relaxed">
                     QuAllah accepte votre sadaqa, vous comble de Sa miséricorde et la fasse rayonner au sein de la mosquée {getMosqueDisplayName(values.mosqueName)}.
                   </p>
                 </div>
 
                 <div className="rounded-2xl bg-white/5 border border-white/10 p-4 text-left space-y-3">
                   <div className="space-y-1">
-                    <div className="text-[14px] font-medium text-white">Partager une demande de duaa</div>
-                    <div className="text-[12px] text-white/65">Exprimez une intention pour laquelle vous souhaitez invoquer Allah.</div>
+                    <div className="text-[17px] font-semibold text-white">Partager une demande de duaa</div>
+                    <div className="text-[13px] text-white/65 leading-relaxed">Exprimez une intention pour laquelle vous souhaitez invoquer Allah.</div>
                   </div>
                   <div className="space-y-2.5">
                     <GlassSelect
@@ -707,11 +707,11 @@ export default function StepAmountV18Page() {
                       </PrimaryButton>
                     </div>
                   </div>
-                  {feedback ? <div className="text-[13px] text-emerald-200">{feedback}</div> : null}
+                  {feedback ? <div className="text-[15px] text-emerald-200 leading-relaxed">{feedback}</div> : null}
                   <div className="pt-2 border-t border-white/10">
                     <button
                       onClick={goToDuaas}
-                      className="text-[14px] text-white/70 hover:text-white transition-colors underline underline-offset-2"
+                      className="text-[15px] text-white/70 hover:text-white transition-colors underline underline-offset-2"
                     >
                       Decouvrir les duaas de la communaute
                     </button>

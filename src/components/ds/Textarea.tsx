@@ -16,6 +16,7 @@ export function GlassTextarea({ className, minRows = 4, ...props }: GlassTextare
         "w-full rounded-3xl px-4 py-3",
         "ring-1 ring-white/15 bg-white/8",
         "backdrop-blur-md text-white placeholder-white/60",
+        "text-[17px] leading-relaxed",
         "focus:outline-none focus:ring-2 focus:ring-white/35",
         "resize-none",
         className

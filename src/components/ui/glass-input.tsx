@@ -12,7 +12,7 @@ const GlassInput = React.forwardRef<HTMLInputElement, GlassInputProps>(
           "flex h-11 w-full rounded-2xl",
           "border border-white/10 bg-white/[0.08]",
           "backdrop-blur-md",
-          "px-4 py-2 text-[15px] md:text-[16px]",
+          "px-4 py-2 text-[17px]",
           "text-white placeholder:text-white/60",
           "ring-offset-background",
           "transition-all duration-200",

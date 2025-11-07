@@ -16,6 +16,7 @@ export function GlassInput({ className, rightAdornment, ...props }: GlassInputPr
           "w-full h-11 rounded-2xl px-4 pr-10 ring-1 ring-white/12 backdrop-blur-md",
           "focus:outline-none focus:ring-2 focus:ring-white/35",
           "text-white placeholder-white/70",
+          "text-[17px]",
           className
         )}
       />
