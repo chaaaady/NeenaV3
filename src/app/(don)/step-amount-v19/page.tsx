@@ -11,7 +11,7 @@ import { GlassAmountPills } from "@/components/ui/GlassAmountPills";
 import { getMosqueDisplayName } from "@/lib/mosques";
 import { GlassInput, ToggleSwitch, AddressAutocomplete, GlassTextarea, GlassSelect, PrimaryButton } from "@/components/ds";
 import { StripePaymentMount } from "./StripeMount";
-import { ChevronUp, ChevronDown, User, HandHeart } from "lucide-react";
+import { ChevronUp, User, HandHeart } from "lucide-react";
 import { useDuaaFeed } from "@/features/duaa/useDuaaFeed";
 import type { Category } from "@/types/duaa";
 
@@ -46,7 +46,7 @@ export default function StepAmountV19Page() {
   // Collapse states
   const [isAmountCollapsed, setIsAmountCollapsed] = useState(false);
   const [isInfoCollapsed, setIsInfoCollapsed] = useState(false);
-  const [showScrollHint, setShowScrollHint] = useState(true);
+  const [_showScrollHint, setShowScrollHint] = useState(true);
   const [activeSection, setActiveSection] = useState(0); // 0=Amount, 1=Info, 2=Payment, 3=ThankYou
 
   // Calculate amounts

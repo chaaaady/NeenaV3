@@ -11,7 +11,7 @@ import { GlassAmountPills } from "@/components/ui/GlassAmountPills";
 import { getMosqueDisplayName } from "@/lib/mosques";
 import { GlassInput, ToggleSwitch, AddressAutocomplete, GlassTextarea, GlassSelect, PrimaryButton } from "@/components/ds";
 import { StripePaymentMount } from "./StripeMount";
-import { ChevronUp, ChevronDown, User, HandHeart } from "lucide-react";
+import { ChevronUp, User, HandHeart } from "lucide-react";
 import { useDuaaFeed } from "@/features/duaa/useDuaaFeed";
 import type { Category } from "@/types/duaa";
 
