@@ -11,7 +11,7 @@ import { GlassAmountPills } from "@/components/ui/GlassAmountPills";
 import { getMosqueDisplayName } from "@/lib/mosques";
 import { GlassInput, ToggleSwitch, AddressAutocomplete, GlassTextarea, GlassSelect, PrimaryButton } from "@/components/ds";
 import { StripePaymentMount } from "./StripeMount";
-import { ChevronUp, User, HandHeart } from "lucide-react";
+import { ChevronUp, ChevronDown, User, HandHeart } from "lucide-react";
 import { useDuaaFeed } from "@/features/duaa/useDuaaFeed";
 import type { Category } from "@/types/duaa";
 
@@ -46,6 +46,7 @@ export default function StepAmountV18Page() {
   // Collapse states
   const [isAmountCollapsed, setIsAmountCollapsed] = useState(false);
   const [isInfoCollapsed, setIsInfoCollapsed] = useState(false);
+  const [showScrollHint, setShowScrollHint] = useState(true);
 
   // Calculate amounts
   const baseAmount = Number.isFinite(values.amount) ? values.amount : 0;
@@ -78,6 +79,7 @@ export default function StepAmountV18Page() {
       entries.forEach(entry => {
         if (!entry.isIntersecting && isAmountValid) {
           setIsAmountCollapsed(true);
+          setShowScrollHint(false); // Hide hint once user scrolls
         } else if (entry.isIntersecting) {
           setIsAmountCollapsed(false);
         }
@@ -413,6 +415,29 @@ export default function StepAmountV18Page() {
 
               </div>
             </div>
+
+            {/* Apple-Style Scroll Indicator */}
+            {showScrollHint && !isAmountCollapsed && isAmountValid && (
+              <div className="absolute bottom-6 left-1/2 -translate-x-1/2 z-10">
+                <div className="flex flex-col items-center gap-2">
+                  {/* Page Indicator (Apple-style dots) */}
+                  <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/10 backdrop-blur-sm">
+                    <div className="w-1.5 h-1.5 rounded-full bg-white" />
+                    <div className="w-1.5 h-1.5 rounded-full bg-white/30" />
+                    <div className="w-1.5 h-1.5 rounded-full bg-white/30" />
+                    <div className="w-1.5 h-1.5 rounded-full bg-white/30" />
+                  </div>
+                  
+                  {/* Home Indicator Style (like iPhone gesture bar) */}
+                  <div 
+                    className="w-20 h-1 rounded-full bg-white/20 mt-1"
+                    style={{
+                      animation: "pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite"
+                    }}
+                  />
+                </div>
+              </div>
+            )}
           </div>
         </div>
 
