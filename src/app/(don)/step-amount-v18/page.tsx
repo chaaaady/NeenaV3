@@ -324,7 +324,7 @@ export default function StepAmountV18Page() {
           style={{ 
             height: "100vh",
             paddingTop: "calc(env(safe-area-inset-top) + 3rem)",
-            paddingBottom: "calc(env(safe-area-inset-bottom) + 3rem)",
+            paddingBottom: "calc(env(safe-area-inset-bottom) + 1rem)",
             display: "flex",
             alignItems: "center",
             justifyContent: "center"
@@ -422,13 +422,13 @@ export default function StepAmountV18Page() {
           style={{ 
             height: "100vh",
             paddingTop: "calc(env(safe-area-inset-top) + 3rem)",
-            paddingBottom: "calc(env(safe-area-inset-bottom) + 3rem)",
+            paddingBottom: "calc(env(safe-area-inset-bottom) + 1rem)",
             display: "flex",
             alignItems: "center",
             justifyContent: "center"
           }}
         >
-          <div className="w-full max-w-2xl space-y-4">
+          <div className="w-full max-w-2xl space-y-3">
             {isAmountCollapsed && isAmountValid && (
               <div className="w-full rounded-3xl bg-gradient-to-br from-white/20 via-white/15 to-white/10 backdrop-blur-xl border border-white/20 shadow-2xl p-4">
                 <button onClick={handleExpandAmount} className="w-full">
@@ -545,13 +545,13 @@ export default function StepAmountV18Page() {
           style={{ 
             height: "100vh",
             paddingTop: "calc(env(safe-area-inset-top) + 3rem)",
-            paddingBottom: "calc(env(safe-area-inset-bottom) + 3rem)",
+            paddingBottom: "calc(env(safe-area-inset-bottom) + 1rem)",
             display: "flex",
             alignItems: "center",
             justifyContent: "center"
           }}
         >
-          <div className="w-full max-w-2xl space-y-4">
+          <div className="w-full max-w-2xl space-y-3">
             {isAmountCollapsed && isAmountValid && (
               <div className="w-full rounded-3xl bg-gradient-to-br from-white/20 via-white/15 to-white/10 backdrop-blur-xl border border-white/20 shadow-2xl p-4">
                 <button onClick={handleExpandAmount} className="w-full">
@@ -658,7 +658,7 @@ export default function StepAmountV18Page() {
           style={{ 
             height: "100vh",
             paddingTop: "calc(env(safe-area-inset-top) + 3rem)",
-            paddingBottom: "calc(env(safe-area-inset-bottom) + 3rem)",
+            paddingBottom: "calc(env(safe-area-inset-bottom) + 1rem)",
             display: "flex",
             alignItems: "center",
             justifyContent: "center"
