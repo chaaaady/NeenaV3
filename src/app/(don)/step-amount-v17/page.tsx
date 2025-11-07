@@ -235,8 +235,8 @@ export default function StepAmountV17Page() {
                   >
                     Mosquée de {getMosqueDisplayName(values.mosqueName)}
                     <ArrowRight className="w-4 h-4 inline" />
-                  </button>
-                </h1>
+                </button>
+              </h1>
               </div>
 
               <GlassProgress value={progress} />
@@ -290,68 +290,68 @@ export default function StepAmountV17Page() {
                             <Zap className="w-4 h-4" />
                             Fréquence
                           </Label>
-                          <GlassRadioGroup
-                            options={["Unique", "Vendredi", "Mensuel"]}
-                            value={values.frequency}
-                            onValueChange={(v) => form.setValue("frequency", v as "Unique" | "Vendredi" | "Mensuel", { shouldDirty: true })}
-                            className="w-full"
-                          />
-                        </div>
+                    <GlassRadioGroup
+                      options={["Unique", "Vendredi", "Mensuel"]}
+                      value={values.frequency}
+                      onValueChange={(v) => form.setValue("frequency", v as "Unique" | "Vendredi" | "Mensuel", { shouldDirty: true })}
+                      className="w-full"
+                    />
+                  </div>
 
                         {/* Amount Grid */}
                         <div className="space-y-3">
                           <Label className="text-white text-sm font-semibold">Montant</Label>
                           <div className="rounded-2xl bg-white/5 p-4 space-y-4">
-                            {otherAmountDisplay ? (
+                    {otherAmountDisplay ? (
                               <div className="flex items-center justify-center h-16">
                                 <div className="text-4xl font-bold text-white">
                                   {otherAmountDisplay}
                                 </div>
                               </div>
-                            ) : (
-                              <GlassAmountGrid
-                                amounts={PRESET_AMOUNTS}
-                                value={isPresetActive ? (values.amount as number) : undefined}
-                                onValueChange={handlePresetClick}
-                              />
-                            )}
+                    ) : (
+                      <GlassAmountGrid
+                        amounts={PRESET_AMOUNTS}
+                        value={isPresetActive ? (values.amount as number) : undefined}
+                        onValueChange={handlePresetClick}
+                      />
+                    )}
 
-                            <div className="relative">
-                              <GlassInput
-                                value={otherAmountInput}
-                                onChange={(e) => {
-                                  if (isPresetActive) {
-                                    form.setValue("amount", NaN as unknown as number, { shouldDirty: true });
-                                  }
-                                  handleOtherAmountChange(e.target.value);
-                                }}
-                                type="tel"
-                                inputMode="numeric"
-                                pattern="[0-9]*"
-                                placeholder="Autre montant"
-                                style={{ fontSize: "16px" }}
-                                onKeyDown={(e) => { 
-                                  if (e.key === "Enter") {
-                                    e.preventDefault();
-                                    (e.currentTarget as HTMLInputElement).blur();
-                                  }
-                                }}
-                                onBlur={() => { 
-                                  const num = parseFloat(otherAmountInput); 
+                      <div className="relative">
+                        <GlassInput
+                          value={otherAmountInput}
+                          onChange={(e) => {
+                            if (isPresetActive) {
+                              form.setValue("amount", NaN as unknown as number, { shouldDirty: true });
+                            }
+                            handleOtherAmountChange(e.target.value);
+                          }}
+                          type="tel"
+                          inputMode="numeric"
+                          pattern="[0-9]*"
+                          placeholder="Autre montant"
+                          style={{ fontSize: "16px" }}
+                          onKeyDown={(e) => { 
+                            if (e.key === "Enter") {
+                              e.preventDefault();
+                              (e.currentTarget as HTMLInputElement).blur();
+                            }
+                          }}
+                          onBlur={() => { 
+                            const num = parseFloat(otherAmountInput); 
                                   if (isNaN(num)) setOtherAmountInput("");
-                                }}
-                              />
-                              {otherAmountInput && (
+                          }}
+                        />
+                        {otherAmountInput && (
                                 <span className="absolute right-4 top-1/2 -translate-y-1/2 text-white text-base font-medium pointer-events-none">
-                                  €
-                                </span>
-                              )}
-                            </div>
-                          </div>
-                        </div>
+                            €
+                          </span>
+                        )}
+                      </div>
+                    </div>
+                  </div>
 
                         {/* Tax Info */}
-                        {values.amount > 0 && (
+                  {values.amount > 0 && (
                           <div className="rounded-xl bg-gradient-to-br from-emerald-500/15 to-green-500/15 border border-emerald-400/25 p-4">
                             <div className="flex items-start gap-3">
                               <TrendingUp className="w-5 h-5 text-emerald-200 flex-shrink-0 mt-0.5" />
@@ -364,22 +364,22 @@ export default function StepAmountV17Page() {
                                 </p>
                               </div>
                             </div>
-                          </div>
-                        )}
+                    </div>
+                  )}
 
                         {/* Donation Type */}
                         <div className="space-y-3">
                           <Label className="text-white text-sm font-semibold">Type de don</Label>
-                          <GlassRadioGroup
-                            options={["Sadaqah", "Zakat"]}
-                            value={values.donationType}
-                            onValueChange={(v) => form.setValue("donationType", v as "Sadaqah" | "Zakat", { shouldDirty: true })}
-                            className="w-full"
-                          />
-                        </div>
+                    <GlassRadioGroup
+                      options={["Sadaqah", "Zakat"]}
+                      value={values.donationType}
+                      onValueChange={(v) => form.setValue("donationType", v as "Sadaqah" | "Zakat", { shouldDirty: true })}
+                      className="w-full"
+                    />
+                  </div>
 
-                      </GlassCardContent>
-                    </GlassCard>
+                </GlassCardContent>
+              </GlassCard>
 
                     {isAmountValid && (
                       <button
@@ -397,96 +397,96 @@ export default function StepAmountV17Page() {
                     <GlassCard className="p-6">
                       <GlassCardContent className="p-0 space-y-6">
                         
-                        <GlassRadioGroup
-                          options={["Personnel", "Entreprise"]}
-                          value={values.identityType || "Personnel"}
-                          onValueChange={(v) => form.setValue("identityType", v as "Personnel" | "Entreprise", { shouldDirty: true })}
-                          className="w-full"
-                        />
+                  <GlassRadioGroup
+                    options={["Personnel", "Entreprise"]}
+                    value={values.identityType || "Personnel"}
+                    onValueChange={(v) => form.setValue("identityType", v as "Personnel" | "Entreprise", { shouldDirty: true })}
+                    className="w-full"
+                  />
 
-                        {values.identityType === "Entreprise" ? (
+                  {values.identityType === "Entreprise" ? (
                           <div className="space-y-4">
                             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                               <div className="relative">
                                 <Building2 className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-white/60" />
-                                <GlassInput
-                                  placeholder="Raison sociale"
-                                  value={values.companyName || ""}
-                                  onChange={(e) => form.setValue("companyName", e.target.value, { shouldDirty: true })}
+                      <GlassInput
+                        placeholder="Raison sociale"
+                        value={values.companyName || ""}
+                        onChange={(e) => form.setValue("companyName", e.target.value, { shouldDirty: true })}
                                   className="pl-11"
-                                />
+                      />
                               </div>
                               <div className="relative">
                                 <FileText className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-white/60" />
-                                <GlassInput
-                                  placeholder="SIRET"
-                                  value={values.companySiret || ""}
-                                  onChange={(e) => form.setValue("companySiret", e.target.value, { shouldDirty: true })}
+                      <GlassInput
+                        placeholder="SIRET"
+                        value={values.companySiret || ""}
+                        onChange={(e) => form.setValue("companySiret", e.target.value, { shouldDirty: true })}
                                   className="pl-11"
-                                />
+                      />
                               </div>
                             </div>
                             <div className="relative">
                               <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-white/60" />
-                              <GlassInput
-                                placeholder="Email"
-                                type="email"
-                                value={values.email || ""}
-                                onChange={(e) => form.setValue("email", e.target.value, { shouldDirty: true })}
+                        <GlassInput
+                          placeholder="Email"
+                          type="email"
+                          value={values.email || ""}
+                          onChange={(e) => form.setValue("email", e.target.value, { shouldDirty: true })}
                                 className="pl-11"
-                              />
-                            </div>
+                        />
+                      </div>
                             <div className="relative">
                               <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-white/60 z-10" />
-                              <AddressAutocomplete
-                                placeholder="Adresse"
-                                value={values.address || ""}
-                                onChange={(value) => form.setValue("address", value, { shouldDirty: true })}
-                              />
-                            </div>
-                          </div>
-                        ) : (
+                        <AddressAutocomplete
+                          placeholder="Adresse"
+                          value={values.address || ""}
+                          onChange={(value) => form.setValue("address", value, { shouldDirty: true })}
+                        />
+                      </div>
+                    </div>
+                  ) : (
                           <div className="space-y-4">
                             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                               <div className="relative">
                                 <UserCircle2 className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-white/60" />
-                                <GlassInput
-                                  placeholder="Prénom"
-                                  value={values.firstName || ""}
-                                  onChange={(e) => form.setValue("firstName", e.target.value, { shouldDirty: true })}
+                      <GlassInput
+                        placeholder="Prénom"
+                        value={values.firstName || ""}
+                        onChange={(e) => form.setValue("firstName", e.target.value, { shouldDirty: true })}
                                   className="pl-11"
-                                />
+                      />
                               </div>
                               <div className="relative">
                                 <UserCircle2 className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-white/60" />
-                                <GlassInput
-                                  placeholder="Nom"
-                                  value={values.lastName || ""}
-                                  onChange={(e) => form.setValue("lastName", e.target.value, { shouldDirty: true })}
+                      <GlassInput
+                        placeholder="Nom"
+                        value={values.lastName || ""}
+                        onChange={(e) => form.setValue("lastName", e.target.value, { shouldDirty: true })}
                                   className="pl-11"
-                                />
+                      />
                               </div>
                             </div>
                             <div className="relative">
                               <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-white/60" />
-                              <GlassInput
-                                placeholder="Email"
-                                type="email"
-                                value={values.email || ""}
-                                onChange={(e) => form.setValue("email", e.target.value, { shouldDirty: true })}
+                        <GlassInput
+                          placeholder="Email"
+                          type="email"
+                          value={values.email || ""}
+                          onChange={(e) => form.setValue("email", e.target.value, { shouldDirty: true })}
                                 className="pl-11"
-                              />
-                            </div>
+                        />
+                      </div>
                             <div className="relative">
                               <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-white/60 z-10" />
-                              <AddressAutocomplete
-                                placeholder="Adresse"
-                                value={values.address || ""}
-                                onChange={(value) => form.setValue("address", value, { shouldDirty: true })}
-                              />
-                            </div>
-                          </div>
-                        )}
+                        <AddressAutocomplete
+                          placeholder="Adresse"
+                          value={values.address || ""}
+                          onChange={(value) => form.setValue("address", value, { shouldDirty: true })}
+                        />
+                      </div>
+                    </div>
+                  )}
 
                         {/* Receipt */}
                         <div className="rounded-xl bg-white/5 border border-white/10 p-4">
@@ -495,15 +495,15 @@ export default function StepAmountV17Page() {
                               <FileText className="w-5 h-5 text-white/80" />
                               <span className="text-white text-sm font-medium">Reçu fiscal</span>
                             </div>
-                            <GlassSwitch
-                              checked={Boolean(values.wantsReceipt)}
-                              onCheckedChange={(c) => form.setValue("wantsReceipt", c, { shouldDirty: true })}
-                            />
-                          </div>
-                        </div>
+                      <GlassSwitch
+                        checked={Boolean(values.wantsReceipt)}
+                        onCheckedChange={(c) => form.setValue("wantsReceipt", c, { shouldDirty: true })}
+                      />
+                    </div>
+                  </div>
 
-                      </GlassCardContent>
-                    </GlassCard>
+                </GlassCardContent>
+              </GlassCard>
 
                     {isPersonalInfoComplete && (
                       <button
@@ -519,15 +519,15 @@ export default function StepAmountV17Page() {
                   {/* Tab: Payment */}
                   <TabsContent value="payment" className="space-y-6 animate-in fade-in slide-in-from-right-4 duration-300">
                     <GlassCard className="p-6">
-                      <GlassCardContent className="p-0">
-                        {!canShowPayment ? (
+                <GlassCardContent className="p-0">
+                  {!canShowPayment ? (
                           <div className="text-center py-12">
                             <Info className="w-12 h-12 text-white/40 mx-auto mb-3" />
                             <p className="text-white/70 text-sm">
                               Complétez les étapes précédentes
-                            </p>
-                          </div>
-                        ) : (
+                      </p>
+                    </div>
+                  ) : (
                           <div className="space-y-6">
                             
                             {/* Fee Toggle */}
@@ -540,18 +540,18 @@ export default function StepAmountV17Page() {
                                   <p className="text-white/70 text-xs">
                                     100% à la mosquée
                                   </p>
-                                </div>
-                                <GlassSwitch
-                                  checked={Boolean(values.coverFees)}
-                                  onCheckedChange={(checked) => form.setValue("coverFees", checked, { shouldDirty: true })}
-                                />
-                              </div>
-                            </div>
+                          </div>
+                          <GlassSwitch
+                            checked={Boolean(values.coverFees)}
+                            onCheckedChange={(checked) => form.setValue("coverFees", checked, { shouldDirty: true })}
+                          />
+                        </div>
+                      </div>
 
                             {/* Stripe */}
-                            <StripePaymentMount
-                              amount={totalAmount}
-                              email={values.email || ""}
+                      <StripePaymentMount
+                        amount={totalAmount}
+                        email={values.email || ""}
                               metadata={{
                                 mosque: values.mosqueName || "",
                                 frequency: values.frequency,
@@ -569,19 +569,19 @@ export default function StepAmountV17Page() {
                                 email: values.email || ""
                               }}
                               onReady={(submit) => { submitRef.current = submit; }}
-                              onProcessingChange={setIsProcessing}
-                              onErrorChange={setStripeError}
-                            />
+                        onProcessingChange={setIsProcessing}
+                        onErrorChange={setStripeError}
+                      />
 
-                            {stripeError && (
+                      {stripeError && (
                               <div className="rounded-xl bg-red-500/10 border border-red-500/20 p-4">
                                 <p className="text-red-200 text-sm text-center">{stripeError}</p>
-                              </div>
-                            )}
-                          </div>
-                        )}
-                      </GlassCardContent>
-                    </GlassCard>
+                        </div>
+                      )}
+                    </div>
+                  )}
+                </GlassCardContent>
+              </GlassCard>
                   </TabsContent>
 
                 </Tabs>

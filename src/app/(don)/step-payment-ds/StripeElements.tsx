@@ -226,26 +226,26 @@ export function StripePaymentForm({ clientSecret, onReady, onProcessingChange, o
 
       {/* Expiration et CVC */}
       <div className="grid grid-cols-2 gap-3">
-        <div>
+          <div>
           <label className="block text-white/80 text-[13px] mb-1.5">
             Expiration
           </label>
           <div className="w-full h-11 rounded-2xl px-4 ring-1 ring-white/12 backdrop-blur-md flex items-center bg-transparent">
-            <CardExpiryElement
+              <CardExpiryElement
               options={cardElementOptions}
               className="w-full"
-            />
+              />
+            </div>
           </div>
-        </div>
-        <div>
+          <div>
           <label className="block text-white/80 text-[13px] mb-1.5">
             CVC
           </label>
           <div className="w-full h-11 rounded-2xl px-4 ring-1 ring-white/12 backdrop-blur-md flex items-center bg-transparent">
-            <CardCvcElement
+              <CardCvcElement
               options={cardElementOptions}
               className="w-full"
-            />
+              />
           </div>
         </div>
       </div>

@@ -34,16 +34,16 @@ export function SideMenu({ isOpen, onClose, variant = "neena", mosqueeSlug = "cr
           paddingLeft: "env(safe-area-inset-left)",
           paddingRight: "env(safe-area-inset-right)"
         }}
-      >
+        >
         {/* Header avec bouton fermer */}
         <div className="absolute top-0 right-0 z-10" style={{ paddingTop: "calc(env(safe-area-inset-top) + 1rem)", paddingRight: "1.5rem" }}>
-          <button
-            onClick={onClose}
+            <button
+              onClick={onClose}
             className="w-11 h-11 rounded-full flex items-center justify-center bg-white/10 hover:bg-white/20 backdrop-blur-md transition-all"
-          >
+            >
             <X size={22} className="text-white" />
-          </button>
-        </div>
+            </button>
+          </div>
 
         {/* Navigation Centrée */}
         <div className="h-full flex items-center justify-center px-8">
@@ -162,9 +162,9 @@ export function SideMenu({ isOpen, onClose, variant = "neena", mosqueeSlug = "cr
                   <div className="pt-6 border-t border-white/10 mt-6">
                     <a href="https://billing.stripe.com/p/login/aEU8Ad04d5MMabufYY" target="_blank" rel="noopener noreferrer" onClick={onClose}>
                       <div className="py-2 text-[20px] font-medium text-white/70 hover:text-white/50 transition-colors leading-tight">
-                        Gérer mon abonnement
+                      Gérer mon abonnement
                       </div>
-                    </a>
+                  </a>
                   </div>
                 </>
               )}

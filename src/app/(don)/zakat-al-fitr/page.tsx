@@ -114,7 +114,7 @@ export default function ZakatAlFitrPage() {
         
         {/* Main content area - starts below header */}
         <div className="relative w-full h-full flex flex-col" style={{ paddingTop: "var(--hdr-primary-h)" }}>
-          
+
           {/* Card - centered in remaining space */}
           <div className="flex-1 flex items-center justify-center px-4 pt-6" style={{ paddingBottom: "calc(env(safe-area-inset-bottom) + 80px)" }}>
             <div className="w-full max-w-lg md:max-w-xl">

@@ -96,7 +96,7 @@ export default function ZakatAlMaalPage() {
         
         {/* Main content area - starts below header */}
         <div className="relative w-full h-full flex flex-col" style={{ paddingTop: "var(--hdr-primary-h)" }}>
-          
+
           {/* Card - scrollable content */}
           <div className="flex-1 overflow-y-auto px-4 pt-6 pb-4">
             <div className="w-full max-w-lg md:max-w-xl mx-auto">

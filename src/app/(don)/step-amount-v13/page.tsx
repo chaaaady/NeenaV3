@@ -214,24 +214,24 @@ export default function StepAmountV13Page() {
             <section className="w-full space-y-5">
               {/* Titre AU-DESSUS de la carte */}
               <h1 className="text-center text-white/95 font-semibold tracking-tight text-[20px] md:text-[24px] leading-snug">
-                Quel montant souhaitez-vous donner à la {" "}
+                  Quel montant souhaitez-vous donner à la {" "}
                 <button onClick={() => setShowMosqueSelector(true)} className="underline decoration-white/50 underline-offset-4 hover:decoration-white transition-all">
-                  mosquée de {getMosqueDisplayName(values.mosqueName)}
-                </button>
-                {" "}?
-              </h1>
+                    mosquée de {getMosqueDisplayName(values.mosqueName)}
+                  </button>
+                  {" "}?
+                </h1>
 
               <div className="rounded-3xl border border-white/20 bg-gradient-to-br from-white/[0.20] via-white/[0.15] to-white/[0.10] backdrop-blur-xl shadow-2xl p-6 md:p-7">
                 <div className="space-y-4">
                   <div>
                     <label className="block text-white/80 text-[13px] font-medium mb-2 pl-2">Fréquence</label>
-                    <GlassSegmented
-                      options={["Unique", "Vendredi", "Mensuel"]}
-                      value={values.frequency}
-                      onChange={(v) => form.setValue("frequency", v as "Unique" | "Vendredi" | "Mensuel", { shouldDirty: true })}
-                      variant="light"
-                      className="w-full"
-                    />
+                  <GlassSegmented
+                    options={["Unique", "Vendredi", "Mensuel"]}
+                    value={values.frequency}
+                    onChange={(v) => form.setValue("frequency", v as "Unique" | "Vendredi" | "Mensuel", { shouldDirty: true })}
+                    variant="light"
+                    className="w-full"
+                  />
                   </div>
 
                   <div className="w-full rounded-2xl bg-white/10 p-4">
@@ -298,14 +298,14 @@ export default function StepAmountV13Page() {
 
                   <div>
                     <label className="block text-white/80 text-[13px] font-medium mb-2 pl-2">Type de don</label>
-                    <GlassSegmented
-                      options={["Sadaqah", "Zakat"]}
-                      value={values.donationType}
-                      onChange={(v) => form.setValue("donationType", v as "Sadaqah" | "Zakat", { shouldDirty: true })}
-                      variant="light"
-                      className="w-full"
-                    />
-                  </div>
+                  <GlassSegmented
+                    options={["Sadaqah", "Zakat"]}
+                    value={values.donationType}
+                    onChange={(v) => form.setValue("donationType", v as "Sadaqah" | "Zakat", { shouldDirty: true })}
+                    variant="light"
+                    className="w-full"
+                  />
+                </div>
                 </div>
               </div>
             </section>
@@ -381,8 +381,8 @@ export default function StepAmountV13Page() {
                           value={values.address || ""}
                           onChange={(value) => form.setValue("address", value, { shouldDirty: true })}
                         />
-                      </div>
-                    </div>
+            </div>
+            </div>
                   )}
 
                   {/* Toggle reçu fiscal avec explication */}
@@ -398,9 +398,9 @@ export default function StepAmountV13Page() {
                     <p className="text-white/70 text-[12px] leading-relaxed">
                       Votre reçu fiscal vous sera automatiquement envoyé par e-mail pour votre déclaration d&apos;impôts
                     </p>
-                  </div>
-                </div>
-              </div>
+          </div>
+        </div>
+      </div>
             </section>
 
             {/* Section 3: Paiement sécurisé */}
