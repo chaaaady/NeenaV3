@@ -10,8 +10,8 @@ import { GlassAmountPills } from "@/components/ui/GlassAmountPills";
 import { getMosqueDisplayName } from "@/lib/mosques";
 import { GlassInput, ToggleSwitch, AddressAutocomplete } from "@/components/ds";
 import { StripePaymentMount } from "./StripeMount";
-import { CardOrchestrator } from "@/components/donation/CardOrchestrator";
-import { createAmountSummary, createInfoSummary } from "@/components/donation/SummaryBar";
+import { CardOrchestratorV2 } from "@/components/donation/CardOrchestratorV2";
+import { HandHeart, User } from "lucide-react";
 
 const PRESET_AMOUNTS = [5, 10, 25, 50, 75, 100];
 
@@ -127,7 +127,21 @@ export default function StepAmountV20Page() {
   const steps = [
     {
       id: 'amount',
-      getSummary: () => isAmountValid ? createAmountSummary(totalAmount, values.frequency || "Unique") : null,
+      header: (
+        <div className="flex items-center gap-3">
+          <HandHeart className="w-5 h-5 text-white" />
+          <div className="text-left">
+            {isAmountValid ? (
+              <>
+                <p className="text-white text-[17px] font-semibold">{formatEuro(totalAmount)}</p>
+                <p className="text-white/70 text-[13px]">{values.frequency || "Unique"}</p>
+              </>
+            ) : (
+              <p className="text-white text-[17px] font-semibold">Montant</p>
+            )}
+          </div>
+        </div>
+      ),
       content: (
         <div className="space-y-6 relative z-20">
           <h2 className="text-[22px] font-semibold text-white text-center leading-tight">
@@ -209,7 +223,18 @@ export default function StepAmountV20Page() {
     },
     {
       id: 'info',
-      getSummary: () => isPersonalInfoComplete ? createInfoSummary(identityDisplay) : null,
+      header: (
+        <div className="flex items-center gap-3">
+          <User className="w-5 h-5 text-white" />
+          <div className="text-left">
+            {isPersonalInfoComplete ? (
+              <p className="text-white text-[17px] font-semibold">{identityDisplay}</p>
+            ) : (
+              <p className="text-white text-[17px] font-semibold">Informations</p>
+            )}
+          </div>
+        </div>
+      ),
       content: (
         <div className="space-y-6 relative z-20">
           <h2 className="text-[22px] font-semibold text-white text-center leading-tight">
@@ -299,7 +324,17 @@ export default function StepAmountV20Page() {
     },
     {
       id: 'payment',
-      getSummary: () => null,
+      header: (
+        <div className="flex items-center gap-3">
+          <div className="w-5 h-5 text-white flex items-center justify-center">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <rect width="20" height="14" x="2" y="5" rx="2"/>
+              <line x1="2" x2="22" y1="10" y2="10"/>
+            </svg>
+          </div>
+          <p className="text-white text-[17px] font-semibold">Paiement</p>
+        </div>
+      ),
       content: (
         <div className="space-y-6 relative z-20">
           <h2 className="text-[22px] font-semibold text-white text-center leading-tight">
@@ -433,15 +468,8 @@ export default function StepAmountV20Page() {
         </div>
       </div>
 
-      {/* Card Orchestrator */}
-      <CardOrchestrator 
-        steps={steps}
-        summaryData={{
-          amount: totalAmount,
-          frequency: values.frequency,
-          userName: identityDisplay
-        }}
-      />
+      {/* Card Orchestrator V2 */}
+      <CardOrchestratorV2 steps={steps} />
     </div>
   );
 }
