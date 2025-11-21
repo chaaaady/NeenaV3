@@ -1,5 +1,5 @@
 import { redirect } from "next/navigation";
 
 export default function Home() {
-  redirect("/step-amount-v2");
+  redirect("/step-amount-v20");
 }
