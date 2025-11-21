@@ -5,8 +5,8 @@ import Image from "next/image";
 import Link from "next/link";
 import { SideMenu } from "@/components";
 import { ScrollReveal } from "@/components/ScrollReveal";
-import { HeaderPrimary } from "@/components/headers/HeaderPrimary";
-import { Search, Filter, MapPin } from "lucide-react";
+import { Search, Filter, MapPin, Menu } from "lucide-react";
+import { useCurrentPrayer } from "@/hooks";
 
 type Mosque = {
   id: string;
@@ -75,15 +75,69 @@ const MOSQUEES: Mosque[] = [
   },
 ];
 
+// Prayer backgrounds configuration
+const PRAYER_BACKGROUNDS = [
+  {
+    id: "fajr",
+    name: "Fajr",
+    image: "/prayer-fajr.jpg",
+    statusBarColor: "#062951",
+    flip: false,
+  },
+  {
+    id: "dhuhr",
+    name: "Dhuhr",
+    image: "/prayers/dhuhr.jpg",
+    statusBarColor: "#2d74b2",
+    flip: false,
+  },
+  {
+    id: "asr",
+    name: "Asr",
+    image: "/prayer-asr.jpg",
+    statusBarColor: "#4d5375",
+    flip: false,
+  },
+  {
+    id: "maghrib",
+    name: "Maghrib",
+    image: "/prayers/maghrib.jpg",
+    statusBarColor: "#313759",
+    flip: false,
+  },
+  {
+    id: "isha",
+    name: "Isha",
+    image: "/prayers/isha.jpg",
+    statusBarColor: "#2f3d5a",
+    flip: true,
+  },
+];
+
 export default function MosqueesPage() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedDepartment, setSelectedDepartment] = useState<string | null>(null);
   const [isFilterOpen, setIsFilterOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
 
-  // Set theme-color for iPhone notch
+  // Get current prayer for dynamic background
+  const currentPrayerId = useCurrentPrayer("mosquee-sahaba-creteil");
+  const currentBackground = PRAYER_BACKGROUNDS.find(bg => bg.id === currentPrayerId) || PRAYER_BACKGROUNDS[0];
+
+  // Handle scroll for header
   useEffect(() => {
-    const themeColor = "#5a8bb5";
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 20);
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  // Set theme-color for iPhone notch based on current prayer
+  useEffect(() => {
+    const themeColor = currentBackground.statusBarColor;
     let meta = document.querySelector('meta[name="theme-color"]');
     
     if (!meta) {
@@ -102,7 +156,7 @@ export default function MosqueesPage() {
         meta?.remove();
       }
     };
-  }, []);
+  }, [currentBackground.statusBarColor]);
 
   // Extract unique departments
   const departments = useMemo(() => {
@@ -126,12 +180,56 @@ export default function MosqueesPage() {
 
   return (
     <>
-      <HeaderPrimary wide transparent overlay onMenuClick={() => setIsMenuOpen(true)} />
       <SideMenu isOpen={isMenuOpen} onClose={() => setIsMenuOpen(false)} />
       
-      <div className="relative w-full min-h-[100svh] bg-gradient-to-b from-[#5a8bb5] via-[#6b9ec7] to-[#5a8bb5]">
-        <main className="relative px-4 pb-24 pt-[calc(var(--hdr-primary-h)+24px)] md:px-6 max-w-6xl mx-auto">
+      {/* Sticky Header - appears on scroll */}
+      <header
+        className={`fixed top-0 left-0 right-0 z-40 transition-transform duration-300 ${
+          scrolled ? "translate-y-0" : "-translate-y-full"
+        }`}
+      >
+        <div className="h-14 px-4 flex items-center justify-between border-b border-white/15 bg-white/10 backdrop-blur-xl">
+          <div className="text-white font-bold text-[17px]">Neena</div>
+          <button
+            onClick={() => setIsMenuOpen(true)}
+            className="w-10 h-10 flex items-center justify-center hover:bg-white/10 transition-all rounded-lg"
+          >
+            <Menu className="w-6 h-6 text-white" />
+          </button>
+        </div>
+      </header>
+
+      <div className="relative w-full min-h-[100svh] overflow-hidden">
+        {/* Dynamic Background Image */}
+        <div 
+          className="fixed inset-0 w-full h-full"
+          style={{
+            backgroundImage: `url(${currentBackground.image})`,
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+            backgroundRepeat: 'no-repeat',
+            transform: currentBackground.flip ? 'scaleY(-1)' : 'none',
+          }}
+        />
+
+        {/* Overlay */}
+        <div className="fixed inset-0 bg-black/40" />
+
+        <main className="relative px-4 pb-24 pt-20 md:px-6 max-w-6xl mx-auto">
           
+          {/* Initial Header - visible at top */}
+          <div className="absolute top-0 left-0 right-0 z-30 px-4">
+            <div className="h-14 flex items-center justify-between">
+              <div className="text-white font-bold text-[17px]">Neena</div>
+              <button
+                onClick={() => setIsMenuOpen(true)}
+                className="w-10 h-10 flex items-center justify-center hover:bg-white/10 transition-all rounded-lg"
+              >
+                <Menu className="w-6 h-6 text-white" />
+              </button>
+            </div>
+          </div>
+
           {/* Hero Section */}
           <ScrollReveal delay={0}>
             <div className="rounded-3xl border border-white/15 bg-gradient-to-br from-white/[0.18] to-white/[0.12] backdrop-blur-xl shadow-2xl p-6 md:p-8 text-center space-y-4">

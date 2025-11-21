@@ -4,9 +4,9 @@ import { useMemo, useState, useEffect } from "react";
 import { HeaderPrimary } from "@/components/headers/HeaderPrimary";
 import { SideMenu } from "@/components";
 import { ScrollReveal } from "@/components/ScrollReveal";
-import { DuaaModal } from "@/components/DuaaModal";
 import { GlassCard, GlassTextarea, GlassSelect, PrimaryButton } from "@/components/ds";
 import { useDuaaFeed } from "@/features/duaa/useDuaaFeed";
+import { useCurrentPrayer } from "@/hooks/useCurrentPrayer";
 import type { Category, Duaa, Request } from "@/types/duaa";
 
 export default function DuaasPage() {
@@ -19,6 +19,22 @@ export default function DuaasPage() {
   const [selectedCategory, setSelectedCategory] = useState<string>("");
   const [modalOpen, setModalOpen] = useState(false);
   const [currentDuaa, setCurrentDuaa] = useState<{ duaa: Duaa; request: Request } | null>(null);
+
+  // Déterminer la prière actuelle et le background correspondant
+  const currentPrayer = useCurrentPrayer("mosquee-sahaba-creteil");
+  
+  const PRAYER_BACKGROUNDS: Record<string, { image: string; flip: boolean; statusBarColor: string }> = {
+    fajr: { image: '/prayer-fajr.jpg', flip: false, statusBarColor: '#041a31' },
+    dhuhr: { image: '/prayer-dhuhr.jpg', flip: false, statusBarColor: '#1b466b' },
+    asr: { image: '/prayer-asr.jpg', flip: false, statusBarColor: '#2e3246' },
+    maghrib: { image: '/prayer-maghrib.jpg', flip: false, statusBarColor: '#1f2339' },
+    isha: { image: '/prayer-isha.jpg', flip: true, statusBarColor: '#1e2738' },
+  };
+  
+  const currentBackground = useMemo(() => 
+    PRAYER_BACKGROUNDS[currentPrayer] || PRAYER_BACKGROUNDS.fajr,
+    [currentPrayer]
+  );
 
   // Load categories
   useEffect(() => {
@@ -38,9 +54,9 @@ export default function DuaasPage() {
       });
   }, []);
 
-  // Set theme-color for iPhone notch
+  // Set theme-color for iPhone notch - dynamically based on current prayer
   useEffect(() => {
-    const themeColor = "#5a8bb5";
+    const themeColor = currentBackground.statusBarColor;
     let meta = document.querySelector('meta[name="theme-color"]');
     
     if (!meta) {
@@ -59,7 +75,7 @@ export default function DuaasPage() {
         meta?.remove();
       }
     };
-  }, []);
+  }, [currentBackground.statusBarColor]);
 
   const formatter = useMemo(
     () => new Intl.DateTimeFormat("fr-FR", { dateStyle: "medium", timeStyle: "short" }),
@@ -104,7 +120,30 @@ export default function DuaasPage() {
       <HeaderPrimary wide transparent overlay onMenuClick={() => setIsMenuOpen(true)} />
       <SideMenu isOpen={isMenuOpen} onClose={() => setIsMenuOpen(false)} />
 
-      <div className="min-h-[100svh] w-full bg-gradient-to-b from-[#5a8bb5] via-[#6b9ec7] to-[#5a8bb5]">
+      <div className="relative min-h-[100svh] w-full">
+        {/* Background image dynamique selon la prière actuelle */}
+        <div 
+          className="fixed inset-0 overflow-hidden" 
+          style={{ 
+            top: "calc(-1 * env(safe-area-inset-top))",
+            bottom: "calc(-1 * env(safe-area-inset-bottom))",
+            left: "calc(-1 * env(safe-area-inset-left))",
+            right: "calc(-1 * env(safe-area-inset-right))"
+          }}
+        >
+          <div
+            className="absolute inset-0 w-full h-full transition-opacity duration-1000"
+            style={{
+              backgroundImage: `url(${currentBackground.image})`,
+              backgroundSize: 'cover',
+              backgroundPosition: 'center',
+              transform: currentBackground.flip ? 'scaleY(-1)' : 'none',
+            }}
+          />
+          
+          {/* Overlay pour lisibilité */}
+          <div className="absolute inset-0 bg-black/40" />
+        </div>
         <main className="px-4 pb-28 pt-[calc(var(--hdr-primary-h)+28px)] md:px-8">
           <div className="mx-auto flex w-full max-w-4xl flex-col gap-6">
             <ScrollReveal delay={0}>
@@ -219,14 +258,31 @@ export default function DuaasPage() {
       </div>
 
       {/* Duaa Modal */}
-      {currentDuaa && (
-        <DuaaModal
-          isOpen={modalOpen}
-          onClose={() => setModalOpen(false)}
-          duaa={currentDuaa.duaa}
-          context={currentDuaa.request.context_text}
-          onDuaaDone={handleDuaaDone}
-        />
+      {currentDuaa && modalOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm" onClick={() => setModalOpen(false)}>
+          <div className="relative w-full max-w-lg bg-white/10 backdrop-blur-xl border border-white/20 rounded-3xl p-6 shadow-2xl" onClick={(e) => e.stopPropagation()}>
+            <button
+              onClick={() => setModalOpen(false)}
+              className="absolute top-4 right-4 text-white/60 hover:text-white transition-colors"
+            >
+              ✕
+            </button>
+            <h3 className="text-xl font-semibold text-white mb-4">{currentDuaa.duaa.text_ar}</h3>
+            <p className="text-white/80 mb-4">{currentDuaa.duaa.translit}</p>
+            <p className="text-white/60 mb-6 text-sm">{currentDuaa.duaa.translation_fr}</p>
+            {currentDuaa.request.context_text && (
+              <div className="bg-white/5 rounded-2xl p-4 mb-6">
+                <p className="text-white/70 text-sm">{currentDuaa.request.context_text}</p>
+              </div>
+            )}
+            <button
+              onClick={handleDuaaDone}
+              className="w-full bg-white text-black font-semibold py-3 rounded-2xl hover:bg-white/90 transition-all active:scale-[0.98]"
+            >
+              J&apos;ai fait la duaa
+            </button>
+          </div>
+        </div>
       )}
     </>
   );

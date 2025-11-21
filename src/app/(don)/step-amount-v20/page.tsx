@@ -1,7 +1,8 @@
 "use client";
 
-import { useState, useEffect, useMemo, useRef } from "react";
+import { useState, useEffect, useMemo, useRef, Suspense } from "react";
 import { useFormContext } from "react-hook-form";
+import { useSearchParams } from "next/navigation";
 import { SideMenu, MosqueSelectorModal } from "@/components";
 import { formatEuro } from "@/lib/currency";
 import { DonationFormValues } from "@/lib/schema";
@@ -10,24 +11,55 @@ import { GlassAmountPills } from "@/components/ui/GlassAmountPills";
 import { getMosqueDisplayName } from "@/lib/mosques";
 import { GlassInput, ToggleSwitch, AddressAutocomplete } from "@/components/ds";
 import { StripePaymentMount } from "./StripeMount";
-import { CardOrchestratorV2 } from "@/components/donation/CardOrchestratorV2";
+import { ResponsiveOrchestrator } from "@/components/donation/ResponsiveOrchestrator";
 import { HandHeart, User } from "lucide-react";
+import { useCurrentPrayer } from "@/hooks/useCurrentPrayer";
 
 const PRESET_AMOUNTS = [5, 10, 25, 50, 75, 100];
 
+const PRAYER_BACKGROUNDS = [
+  { id: 'fajr', name: 'Fajr', image: '/prayer-fajr.jpg', flip: false, statusBarColor: '#041a31' },
+  { id: 'dhuhr', name: 'Dhuhr', image: '/prayer-dhuhr.jpg', flip: false, statusBarColor: '#1b466b' },
+  { id: 'asr', name: 'Asr', image: '/prayer-asr.jpg', flip: false, statusBarColor: '#2e3246' },
+  { id: 'maghrib', name: 'Maghrib', image: '/prayer-maghrib.jpg', flip: false, statusBarColor: '#1f2339' },
+  { id: 'isha', name: 'Isha', image: '/prayer-isha.jpg', flip: true, statusBarColor: '#1e2738' },
+  { id: 'v20', name: 'Original', image: '/background-v20.jpg', flip: true, statusBarColor: '#353535' }
+];
+
 export default function StepAmountV20Page() {
+  return (
+    <Suspense fallback={<div className="h-screen w-full bg-black" />}>
+      <StepAmountV20Content />
+    </Suspense>
+  );
+}
+
+function StepAmountV20Content() {
   const form = useFormContext<DonationFormValues>();
   const values = form.watch();
+  const searchParams = useSearchParams();
   const [otherAmountInput, setOtherAmountInput] = useState("");
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [showMosqueSelector, setShowMosqueSelector] = useState(false);
   const [_stripeError, setStripeError] = useState<string | null>(null);
   const submitRef = useRef<(() => Promise<void>) | null>(null);
-  const videoRef = useRef<HTMLVideoElement>(null);
+  
+  // Récupérer la mosquée depuis l'URL ou le formulaire
+  const mosqueeSlug = searchParams.get("mosquee") || "mosquee-sahaba-creteil";
+  
+  // Déterminer la prière actuelle
+  const currentPrayer = useCurrentPrayer(mosqueeSlug);
+  
+  // Sélectionner le background en fonction de la prière actuelle
+  const selectedBackground = useMemo(() => {
+    const bg = PRAYER_BACKGROUNDS.find(b => b.id === currentPrayer);
+    return bg || PRAYER_BACKGROUNDS[0];
+  }, [currentPrayer]);
 
   // Calculate amounts
   const baseAmount = Number.isFinite(values.amount) ? values.amount : 0;
-  const feeAmount = values.coverFees ? Math.round(baseAmount * 0.012 * 100) / 100 : 0;
+  const feeAmount = values.coverFees ? Math.round((baseAmount * 0.012 + 0.25) * 100) / 100 : 0;
+  const calculatedFeeAmount = Math.round((baseAmount * 0.012 + 0.25) * 100) / 100;
   const totalAmount = baseAmount + feeAmount;
 
   // Validation
@@ -52,20 +84,53 @@ export default function StepAmountV20Page() {
     return values.firstName && values.lastName ? `${values.firstName} ${values.lastName}` : "Donateur";
   }, [values.identityType, values.companyName, values.firstName, values.lastName]);
 
-  // Set theme-color for iPhone notch
+  // Désactiver le scroll de la page (pour éviter conflit avec l'effet de rétractation)
   useEffect(() => {
-    const themeColor = "#ffffff";
-    let meta = document.querySelector('meta[name="theme-color"]');
+    // Sauvegarder les styles originaux
+    const originalBodyOverflow = document.body.style.overflow;
+    const originalHtmlOverflow = document.documentElement.style.overflow;
+    const originalBodyHeight = document.body.style.height;
+    const originalHtmlHeight = document.documentElement.style.height;
     
+    // Désactiver le scroll
+    document.body.style.overflow = 'hidden';
+    document.documentElement.style.overflow = 'hidden';
+    document.body.style.height = '100vh';
+    document.documentElement.style.height = '100vh';
+    
+    return () => {
+      // Restaurer les styles originaux
+      document.body.style.overflow = originalBodyOverflow;
+      document.documentElement.style.overflow = originalHtmlOverflow;
+      document.body.style.height = originalBodyHeight;
+      document.documentElement.style.height = originalHtmlHeight;
+    };
+  }, []);
+
+  // Set theme-color for iPhone notch/status bar - adapté au background
+  useEffect(() => {
+    // Utiliser la couleur du background sélectionné
+    const themeColor = selectedBackground.statusBarColor;
+    
+    // Meta theme-color pour la barre d'état
+    let meta = document.querySelector('meta[name="theme-color"]');
     if (!meta) {
       meta = document.createElement("meta");
       meta.setAttribute("name", "theme-color");
       document.head.appendChild(meta);
     }
-    
-    const previousColor = meta.getAttribute("content");
     meta.setAttribute("content", themeColor);
 
+    // Apple status bar style
+    let appleStatusBar = document.querySelector('meta[name="apple-mobile-web-app-status-bar-style"]');
+    if (!appleStatusBar) {
+      appleStatusBar = document.createElement("meta");
+      appleStatusBar.setAttribute("name", "apple-mobile-web-app-status-bar-style");
+      document.head.appendChild(appleStatusBar);
+    }
+    appleStatusBar.setAttribute("content", "black-translucent");
+
+    // Viewport
     const viewport = document.querySelector('meta[name="viewport"]');
     if (viewport) {
       viewport.setAttribute(
@@ -73,15 +138,7 @@ export default function StepAmountV20Page() {
         "width=device-width, initial-scale=1, viewport-fit=cover"
       );
     }
-
-    const bg = document.body.style.backgroundColor;
-    document.body.style.backgroundColor = themeColor;
-
-    return () => {
-      if (previousColor) meta.setAttribute("content", previousColor);
-      document.body.style.backgroundColor = bg;
-    };
-  }, []);
+  }, [selectedBackground]);
 
   // Init default amount
   useEffect(() => {
@@ -92,12 +149,6 @@ export default function StepAmountV20Page() {
   }, []);
 
   const [otherAmountDisplay, setOtherAmountDisplay] = useState("");
-
-  useEffect(() => {
-    if (videoRef.current) {
-      videoRef.current.playbackRate = 0.9;
-    }
-  }, []);
 
   const handlePresetClick = (amt: number) => {
     setOtherAmountInput("");
@@ -133,8 +184,12 @@ export default function StepAmountV20Page() {
           <div className="text-left">
             {isAmountValid ? (
               <>
-                <p className="text-white text-[17px] font-semibold">{formatEuro(totalAmount)}</p>
-                <p className="text-white/70 text-[13px]">{values.frequency || "Unique"}</p>
+                <p className="text-white text-[17px] font-semibold">
+                  {formatEuro(totalAmount)}
+                  {values.frequency === "Vendredi" && <span className="text-white/70 font-normal">{" / vendredi"}</span>}
+                  {values.frequency === "Mensuel" && <span className="text-white/70 font-normal">{" / mois"}</span>}
+                </p>
+                <p className="text-white/70 text-[13px]">{values.frequency === "Vendredi" ? "Jumuaa" : values.frequency || "Unique"}</p>
               </>
             ) : (
               <p className="text-white text-[17px] font-semibold">Montant</p>
@@ -143,7 +198,7 @@ export default function StepAmountV20Page() {
         </div>
       ),
       content: (
-        <div className="space-y-6 relative z-20">
+        <div className="space-y-5 relative z-20">
           <h2 className="text-[22px] font-semibold text-white text-center leading-tight">
             Quel montant souhaitez-vous donner à la mosquée de {getMosqueDisplayName(values.mosqueName)} ?
           </h2>
@@ -157,7 +212,7 @@ export default function StepAmountV20Page() {
           </div>
 
           <div className="space-y-3">
-            <div className="rounded-2xl bg-white/5 p-4 space-y-4">
+            <div className="rounded-2xl bg-white/5 p-3 space-y-3">
               {otherAmountDisplay ? (
                 <div className="flex items-center justify-center h-16">
                   <div className="text-4xl font-bold text-white">{otherAmountDisplay}</div>
@@ -199,14 +254,22 @@ export default function StepAmountV20Page() {
           </div>
 
           {values.amount > 0 && (
-            <div className="rounded-xl bg-white/10 border border-white/15 p-4">
+            <div className="rounded-xl bg-white/10 border border-white/15 p-3">
               <p className="text-white text-[15px] font-semibold leading-snug">
-                Coût réel : {formatEuro(values.amount * 0.34)}
-                {values.frequency === "Vendredi" && <span className="text-white/70">{" / vendredi"}</span>}
-                {values.frequency === "Mensuel" && <span className="text-white/70">{" / mois"}</span>}
+                Coût après déduction fiscale : 
+                {values.frequency === "Unique" ? (
+                  <span> {formatEuro(values.amount * 0.34)}</span>
+                ) : (
+                  <>
+                    <br />
+                    {formatEuro(values.amount * 0.34)}
+                    {values.frequency === "Vendredi" && "/vendredi"}
+                    {values.frequency === "Mensuel" && "/mois"}
+                  </>
+                )}
               </p>
-              <p className="text-white/70 text-[13px] mt-1">
-                Après déduction fiscale de 66%
+              <p className="text-white/70 text-[13px] mt-1.5">
+                {formatEuro(values.amount * 0.66)} vous seront déduits de vos impôts
               </p>
             </div>
           )}
@@ -228,7 +291,12 @@ export default function StepAmountV20Page() {
           <User className="w-5 h-5 text-white" />
           <div className="text-left">
             {isPersonalInfoComplete ? (
-              <p className="text-white text-[17px] font-semibold">{identityDisplay}</p>
+              <>
+                <p className="text-white text-[17px] font-semibold">{identityDisplay}</p>
+                <p className="text-white/70 text-[13px]">
+                  {values.wantsReceipt ? 'Avec reçu fiscal' : 'Sans reçu fiscal'}
+                </p>
+              </>
             ) : (
               <p className="text-white text-[17px] font-semibold">Informations</p>
             )}
@@ -236,9 +304,9 @@ export default function StepAmountV20Page() {
         </div>
       ),
       content: (
-        <div className="space-y-6 relative z-20">
+        <div className="space-y-5 relative z-20">
           <h2 className="text-[22px] font-semibold text-white text-center leading-tight">
-            Vos informations
+            Renseignez vos informations
           </h2>
 
           <GlassSegmented
@@ -248,8 +316,8 @@ export default function StepAmountV20Page() {
           />
 
           {values.identityType === "Entreprise" ? (
-            <div className="space-y-4">
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div className="space-y-3">
+              <div className="grid grid-cols-2 gap-3">
                 <GlassInput
                   placeholder="Raison sociale"
                   value={values.companyName || ""}
@@ -274,8 +342,8 @@ export default function StepAmountV20Page() {
               />
             </div>
           ) : (
-            <div className="space-y-4">
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-3 gap-y-5">
+            <div className="space-y-3">
+              <div className="grid grid-cols-2 gap-3">
                 <GlassInput
                   placeholder="Prénom"
                   value={values.firstName || ""}
@@ -301,8 +369,8 @@ export default function StepAmountV20Page() {
             </div>
           )}
 
-          <div className="rounded-xl bg-white/10 border border-white/15 p-4 relative z-20">
-            <div className="flex items-center justify-between mb-2">
+          <div className="rounded-xl bg-white/10 border border-white/15 p-3 relative z-20">
+            <div className="flex items-center justify-between mb-1.5">
               <label className="text-white text-[17px] font-semibold">Reçu fiscal</label>
               <ToggleSwitch
                 checked={values.wantsReceipt || false}
@@ -310,12 +378,12 @@ export default function StepAmountV20Page() {
               />
             </div>
             {!values.wantsReceipt ? (
-              <p className="text-white/70 text-[13px] mt-2 leading-relaxed">
+              <p className="text-white/70 text-[13px] mt-1.5 leading-relaxed">
                 Veuillez indiquer si vous souhaitez recevoir afin de bénéficier de la déduction.
               </p>
             ) : (
-              <p className="text-white/70 text-[13px] mt-2 leading-relaxed">
-                Vous recevrez votre reçu fiscal en fin dannée.
+              <p className="text-white/70 text-[13px] mt-1.5 leading-relaxed">
+                Vous recevrez votre reçu fiscal en début d&apos;année {new Date().getFullYear() + 1}
               </p>
             )}
           </div>
@@ -343,7 +411,7 @@ export default function StepAmountV20Page() {
 
           <div className="rounded-xl bg-white/10 border border-white/15 p-4 relative z-20">
             <div className="flex items-center justify-between mb-2">
-              <label className="text-white text-[17px] font-semibold">Couvrir les frais</label>
+              <label className="text-white text-[17px] font-semibold">Couvrir les frais bancaires</label>
               <ToggleSwitch
                 checked={values.coverFees || false}
                 onChange={(checked) => form.setValue("coverFees", checked, { shouldDirty: true })}
@@ -351,11 +419,11 @@ export default function StepAmountV20Page() {
             </div>
             {values.coverFees ? (
               <p className="text-white/70 text-[13px] mt-2 leading-relaxed">
-                Offrez <span className="text-white font-semibold">{formatEuro(feeAmount)}</span> de plus pour que chaque euro donné arrive intégralement à la mosquée.
+                Merci pour votre générosité
               </p>
             ) : (
               <p className="text-white/70 text-[13px] mt-2 leading-relaxed">
-                Les frais de transaction (1,2%) seront déduits de votre don.
+                Offrez <span className="text-white font-semibold">{formatEuro(calculatedFeeAmount)}</span> de plus pour que chaque euro donné arrive intégralement à la mosquée.
               </p>
             )}
           </div>
@@ -401,7 +469,13 @@ export default function StepAmountV20Page() {
   ];
 
   return (
-    <div className="h-screen w-full overflow-hidden relative bg-white">
+    <div 
+      className="h-screen w-full overflow-hidden relative bg-white"
+      style={{ 
+        touchAction: 'none', // Empêche le scroll natif
+        overscrollBehavior: 'none' // Empêche le bounce scroll
+      }}
+    >
       <SideMenu isOpen={isMenuOpen} onClose={() => setIsMenuOpen(false)} variant="mosquee" mosqueeSlug="creteil" />
       <MosqueSelectorModal 
         isOpen={showMosqueSelector}
@@ -410,7 +484,7 @@ export default function StepAmountV20Page() {
         onMosqueSelect={(mosque) => form.setValue("mosqueName", mosque, { shouldDirty: true })}
       />
 
-      {/* Video Background */}
+      {/* Image Background avec transition */}
       <div 
         className="fixed inset-0 overflow-hidden" 
         style={{ 
@@ -420,28 +494,18 @@ export default function StepAmountV20Page() {
           right: "calc(-1 * env(safe-area-inset-right))"
         }}
       >
-        <video
-          autoPlay
-          loop
-          muted
-          playsInline
-          preload="none"
-          poster="/bg-video-poster-v14.jpg"
-          className="absolute inset-0 w-full h-full object-cover"
-          style={{ minWidth: "100%", minHeight: "100%" }}
-          ref={videoRef}
-        >
-          <source src="/bg-video.mp4" type="video/mp4" />
-          <source src="/bg-video.webm" type="video/webm" />
-        </video>
-        
-        <div className="absolute inset-0 bg-black/40" />
-        <div 
-          className="absolute inset-0 opacity-10"
+        <div
+          className="absolute inset-0 w-full h-full transition-all duration-700 ease-in-out"
           style={{
-            background: "linear-gradient(135deg, rgba(59,130,246,0.2) 0%, rgba(37,99,235,0.3) 50%, rgba(59,130,246,0.2) 100%)"
+            backgroundImage: `url(${selectedBackground.image})`,
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+            transform: selectedBackground.flip ? 'scaleY(-1)' : 'none',
           }}
         />
+        
+        {/* Overlay pour lisibilité */}
+        <div className="absolute inset-0 bg-black/40" />
       </div>
 
       {/* Header - Fixed */}
@@ -468,8 +532,8 @@ export default function StepAmountV20Page() {
         </div>
       </div>
 
-      {/* Card Orchestrator V2 */}
-      <CardOrchestratorV2 steps={steps} />
+      {/* Responsive Orchestrator */}
+      <ResponsiveOrchestrator steps={steps} />
     </div>
   );
 }

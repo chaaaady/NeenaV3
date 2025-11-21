@@ -22,9 +22,9 @@ export function SideMenu({ isOpen, onClose, variant = "neena", mosqueeSlug = "cr
 
   return (
     <>
-      {/* Backdrop avec blur */}
+      {/* Backdrop avec blur - Apple style */}
       <div 
-        className={`fixed inset-0 z-[100] bg-black/50 backdrop-blur-xl transition-all duration-500 ${
+        className={`fixed inset-0 z-[100] bg-black/60 backdrop-blur-2xl transition-all duration-300 ${
           isOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'
         }`}
         onClick={onClose}
@@ -35,139 +35,137 @@ export function SideMenu({ isOpen, onClose, variant = "neena", mosqueeSlug = "cr
           paddingRight: "env(safe-area-inset-right)"
         }}
         >
-        {/* Header avec bouton fermer */}
-        <div className="absolute top-0 right-0 z-10" style={{ paddingTop: "calc(env(safe-area-inset-top) + 1rem)", paddingRight: "1.5rem" }}>
+        {/* Header avec logo et bouton fermer - Apple style */}
+        <div 
+          className="absolute top-0 left-0 right-0 z-10" 
+          style={{ 
+            paddingTop: "env(safe-area-inset-top)",
+            paddingLeft: "env(safe-area-inset-left)",
+            paddingRight: "env(safe-area-inset-right)"
+          }}
+        >
+          <div className="flex items-center justify-between px-5 h-16">
+            {/* Logo Neena - même position que la page principale */}
+            <a href="/qui-sommes-nous" className="text-[20px] font-[900] text-white tracking-[-0.5px] hover:opacity-70 transition-opacity">
+              Neena
+            </a>
+            
+            {/* Bouton fermer - Apple style */}
             <button
               onClick={onClose}
-            className="w-11 h-11 rounded-full flex items-center justify-center bg-white/10 hover:bg-white/20 backdrop-blur-md transition-all"
+              className="w-10 h-10 rounded-full flex items-center justify-center bg-white/15 hover:bg-white/25 backdrop-blur-xl transition-all active:scale-95"
             >
-            <X size={22} className="text-white" />
+              <X size={20} className="text-white" strokeWidth={2.5} />
             </button>
           </div>
+        </div>
 
-        {/* Navigation Centrée */}
-        <div className="h-full flex items-center justify-center px-8">
-          <div className="w-full max-w-lg space-y-1">
-            <nav className="space-y-1">
-              {variant === "neena" ? (
-                <>
-                  <Link href="/auth/login" onClick={onClose}>
-                    <div className="py-3 text-[32px] md:text-[36px] font-bold text-white hover:text-white/70 transition-colors leading-tight">
-                      Connexion
-                    </div>
-                  </Link>
+        {/* Navigation Centrée - Apple style */}
+        <div className="h-full flex items-center justify-center px-6 overflow-y-auto" onClick={(e) => e.stopPropagation()}>
+          <div className="w-full max-w-md py-12">
+            <nav className="space-y-8">
+              {/* Section MOSQUÉE (seulement si variant mosquee) */}
+              {variant === "mosquee" && (
+                <div>
+                  <div className="px-4 mb-2">
+                    <p className="text-white/40 text-[11px] font-semibold uppercase tracking-widest">Mosquée de Créteil</p>
+                  </div>
+                  <div className="space-y-1">
+                    <Link href={`/mosquee/${mosqueeSlug}/v8`} onClick={onClose}>
+                      <div className="py-3 px-4 text-[19px] font-semibold text-white hover:text-white/80 hover:bg-white/8 rounded-2xl transition-all leading-tight active:scale-[0.98]">
+                        Information sur la mosquée
+                      </div>
+                    </Link>
 
-                  <Link href="/qui-sommes-nous" onClick={onClose}>
-                    <div className="py-3 text-[32px] md:text-[36px] font-bold text-white hover:text-white/70 transition-colors leading-tight">
-                      Qui sommes-nous
-                    </div>
-                  </Link>
+                    <a href="https://billing.stripe.com/p/login/aEU8Ad04d5MMabufYY" target="_blank" rel="noopener noreferrer" onClick={onClose}>
+                      <div className="py-3 px-4 text-[19px] font-semibold text-white hover:text-white/80 hover:bg-white/8 rounded-2xl transition-all leading-tight active:scale-[0.98]">
+                        Gérer mon abonnement
+                      </div>
+                    </a>
+                  </div>
+                </div>
+              )}
 
-                  <Link href="/mosquees" onClick={onClose}>
-                    <div className="py-3 text-[32px] md:text-[36px] font-bold text-white hover:text-white/70 transition-colors leading-tight">
-                      Mosquées
-                    </div>
-                  </Link>
+              {/* Section NEENA */}
+              {variant === "neena" && (
+                <div>
+                  <div className="px-4 mb-2">
+                    <p className="text-white/40 text-[11px] font-semibold uppercase tracking-widest">Neena</p>
+                  </div>
+                  <div className="space-y-1">
+                    <Link href="/qui-sommes-nous" onClick={onClose}>
+                      <div className="py-3 px-4 text-[19px] font-semibold text-white hover:text-white/80 hover:bg-white/8 rounded-2xl transition-all leading-tight active:scale-[0.98]">
+                        Qui est Neena ?
+                      </div>
+                    </Link>
 
-                  <Link href="/constructions" onClick={onClose}>
-                    <div className="py-3 text-[32px] md:text-[36px] font-bold text-white hover:text-white/70 transition-colors leading-tight">
-                      Construction
-                    </div>
-                  </Link>
+                    <Link href="/mosquees" onClick={onClose}>
+                      <div className="py-3 px-4 text-[19px] font-semibold text-white hover:text-white/80 hover:bg-white/8 rounded-2xl transition-all leading-tight active:scale-[0.98]">
+                        Mosquées partenaires
+                      </div>
+                    </Link>
 
+                    <Link href="/constructions" onClick={onClose}>
+                      <div className="py-3 px-4 text-[19px] font-semibold text-white hover:text-white/80 hover:bg-white/8 rounded-2xl transition-all leading-tight active:scale-[0.98]">
+                        Projets de construction
+                      </div>
+                    </Link>
+                  </div>
+                </div>
+              )}
+
+              {/* Section SERVICES */}
+              <div>
+                <div className="px-4 mb-2">
+                  <p className="text-white/40 text-[11px] font-semibold uppercase tracking-widest">Services</p>
+                </div>
+                <div className="space-y-1">
                   <Link href="/duaa" onClick={onClose}>
-                    <div className="py-3 text-[32px] md:text-[36px] font-bold text-white hover:text-white/70 transition-colors leading-tight">
-                      Duaa
+                    <div className="py-3 px-4 text-[19px] font-semibold text-white hover:text-white/80 hover:bg-white/8 rounded-2xl transition-all leading-tight active:scale-[0.98]">
+                      Demander une Duaa
                     </div>
                   </Link>
 
                   <Link href="/benevolat" onClick={onClose}>
-                    <div className="py-3 text-[32px] md:text-[36px] font-bold text-white hover:text-white/70 transition-colors leading-tight">
-                      Bénévolat
+                    <div className="py-3 px-4 text-[19px] font-semibold text-white hover:text-white/80 hover:bg-white/8 rounded-2xl transition-all leading-tight active:scale-[0.98]">
+                      Devenir bénévole
                     </div>
                   </Link>
+                </div>
+              </div>
 
-                  <Link href="/devenir-partenaire" onClick={onClose}>
-                    <div className="py-3 text-[32px] md:text-[36px] font-bold text-white hover:text-white/70 transition-colors leading-tight">
-                      Partenaire
-                    </div>
-                  </Link>
-                </>
-              ) : (
-                <>
-                  <Link href="/auth/login" onClick={onClose}>
-                    <div className="py-3 text-[32px] md:text-[36px] font-bold text-white hover:text-white/70 transition-colors leading-tight">
-                      Connexion
-                    </div>
-                  </Link>
+              {variant === "mosquee" && (
+                <div>
+                  <div className="px-4 mb-2">
+                    <p className="text-white/40 text-[11px] font-semibold uppercase tracking-widest">Neena</p>
+                  </div>
+                  <div className="space-y-1">
+                    <Link href="/qui-sommes-nous" onClick={onClose}>
+                      <div className="py-3 px-4 text-[19px] font-semibold text-white hover:text-white/80 hover:bg-white/8 rounded-2xl transition-all leading-tight active:scale-[0.98]">
+                        Qui est Neena ?
+                      </div>
+                    </Link>
+                  </div>
+                </div>
+              )}
 
-                  <Link href={`/mosquee/${mosqueeSlug}/v8`} onClick={onClose}>
-                    <div className="py-3 text-[32px] md:text-[36px] font-bold text-white hover:text-white/70 transition-colors leading-tight">
-                      Information
-                    </div>
-                  </Link>
-
-                  <Link href="/step-amount-v2" onClick={onClose}>
-                    <div className="py-3 text-[32px] md:text-[36px] font-bold text-white hover:text-white/70 transition-colors leading-tight">
+              {/* Bouton selon variant */}
+              <div className="pt-4 px-4">
+                {variant === "mosquee" ? (
+                  <Link href="/step-amount-v20" onClick={onClose}>
+                    <div className="py-3 px-4 bg-white text-black font-semibold text-[16px] rounded-2xl transition-all hover:opacity-90 active:scale-[0.98] text-center">
                       Faire un don
                     </div>
                   </Link>
-
-                  <Link href="/duaa" onClick={onClose}>
-                    <div className="py-3 text-[32px] md:text-[36px] font-bold text-white hover:text-white/70 transition-colors leading-tight">
-                      Duaa
+                ) : (
+                  <Link href="/auth/login" onClick={onClose}>
+                    <div className="py-3 px-4 bg-white text-black font-semibold text-[16px] rounded-2xl transition-all hover:opacity-90 active:scale-[0.98] text-center">
+                      Se connecter
                     </div>
                   </Link>
+                )}
+              </div>
 
-                  <Link href="/benevolat" onClick={onClose}>
-                    <div className="py-3 text-[32px] md:text-[36px] font-bold text-white hover:text-white/70 transition-colors leading-tight">
-                      Bénévolat
-                    </div>
-                  </Link>
-
-                  <Link href="/qui-sommes-nous" onClick={onClose}>
-                    <div className="py-3 text-[32px] md:text-[36px] font-bold text-white hover:text-white/70 transition-colors leading-tight">
-                      Qui est Neena
-                    </div>
-                  </Link>
-
-                  <div className="pt-6 pb-2">
-                    <p className="text-white/40 text-[13px] font-semibold uppercase tracking-wider">Spécial</p>
-                  </div>
-
-                  <Link href="/zakat-al-fitr" onClick={onClose}>
-                    <div className="py-2 text-[24px] md:text-[28px] font-semibold text-white/90 hover:text-white/70 transition-colors leading-tight">
-                      Zakat al Fitr
-                    </div>
-                  </Link>
-
-                  <Link href="/qurbani" onClick={onClose}>
-                    <div className="py-2 text-[24px] md:text-[28px] font-semibold text-white/90 hover:text-white/70 transition-colors leading-tight">
-                      Qurbani
-                    </div>
-                  </Link>
-
-                  <Link href="/zakat-al-maal" onClick={onClose}>
-                    <div className="py-2 text-[24px] md:text-[28px] font-semibold text-white/90 hover:text-white/70 transition-colors leading-tight">
-                      Zakat al Maal
-                    </div>
-                  </Link>
-
-                  <Link href="/aqiqa" onClick={onClose}>
-                    <div className="py-2 text-[24px] md:text-[28px] font-semibold text-white/90 hover:text-white/70 transition-colors leading-tight">
-                      Aqiqa
-                    </div>
-                  </Link>
-
-                  <div className="pt-6 border-t border-white/10 mt-6">
-                    <a href="https://billing.stripe.com/p/login/aEU8Ad04d5MMabufYY" target="_blank" rel="noopener noreferrer" onClick={onClose}>
-                      <div className="py-2 text-[20px] font-medium text-white/70 hover:text-white/50 transition-colors leading-tight">
-                      Gérer mon abonnement
-                      </div>
-                  </a>
-                  </div>
-                </>
-              )}
             </nav>
           </div>
         </div>

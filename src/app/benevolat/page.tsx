@@ -1,11 +1,12 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import Image from "next/image";
 import { SideMenu } from "@/components";
 import { ScrollReveal } from "@/components/ScrollReveal";
 import { HeaderPrimary } from "@/components/headers/HeaderPrimary";
 import { GlassCard, GlassInput, GlassSelect, PrimaryButton } from "@/components/ds";
+import { useCurrentPrayer } from "@/hooks/useCurrentPrayer";
 
 export default function BenevolatPage() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -19,9 +20,25 @@ export default function BenevolatPage() {
   const [helpNeena, setHelpNeena] = useState(false);
   const [message, setMessage] = useState("");
 
-  // Set theme-color for iPhone notch
+  // Déterminer la prière actuelle et le background correspondant
+  const currentPrayer = useCurrentPrayer("mosquee-sahaba-creteil");
+  
+  const PRAYER_BACKGROUNDS: Record<string, { image: string; flip: boolean; statusBarColor: string }> = {
+    fajr: { image: '/prayer-fajr.jpg', flip: false, statusBarColor: '#041a31' },
+    dhuhr: { image: '/prayer-dhuhr.jpg', flip: false, statusBarColor: '#1b466b' },
+    asr: { image: '/prayer-asr.jpg', flip: false, statusBarColor: '#2e3246' },
+    maghrib: { image: '/prayer-maghrib.jpg', flip: false, statusBarColor: '#1f2339' },
+    isha: { image: '/prayer-isha.jpg', flip: true, statusBarColor: '#1e2738' },
+  };
+  
+  const currentBackground = useMemo(() => 
+    PRAYER_BACKGROUNDS[currentPrayer] || PRAYER_BACKGROUNDS.fajr,
+    [currentPrayer]
+  );
+
+  // Set theme-color for iPhone notch - dynamically based on current prayer
   useEffect(() => {
-    const themeColor = "#5a8bb5"; // Match gradient start
+    const themeColor = currentBackground.statusBarColor;
     let meta = document.querySelector('meta[name="theme-color"]');
     
     if (!meta) {
@@ -40,14 +57,37 @@ export default function BenevolatPage() {
         meta?.remove();
       }
     };
-  }, []);
+  }, [currentBackground.statusBarColor]);
 
   return (
     <>
       <HeaderPrimary wide transparent overlay onMenuClick={() => setIsMenuOpen(true)} />
       <SideMenu isOpen={isMenuOpen} onClose={() => setIsMenuOpen(false)} />
       
-      <div className="relative w-full min-h-[100svh] bg-gradient-to-b from-[#5a8bb5] via-[#6b9ec7] to-[#5a8bb5]">
+      <div className="relative w-full min-h-[100svh]">
+        {/* Background image dynamique selon la prière actuelle */}
+        <div 
+          className="fixed inset-0 overflow-hidden" 
+          style={{ 
+            top: "calc(-1 * env(safe-area-inset-top))",
+            bottom: "calc(-1 * env(safe-area-inset-bottom))",
+            left: "calc(-1 * env(safe-area-inset-left))",
+            right: "calc(-1 * env(safe-area-inset-right))"
+          }}
+        >
+          <div
+            className="absolute inset-0 w-full h-full transition-opacity duration-1000"
+            style={{
+              backgroundImage: `url(${currentBackground.image})`,
+              backgroundSize: 'cover',
+              backgroundPosition: 'center',
+              transform: currentBackground.flip ? 'scaleY(-1)' : 'none',
+            }}
+          />
+          
+          {/* Overlay pour lisibilité */}
+          <div className="absolute inset-0 bg-black/40" />
+        </div>
         <main className="relative px-4 pb-24 pt-[calc(var(--hdr-primary-h)+24px)] md:px-6 max-w-3xl mx-auto">
           {/* Hero Card with Image */}
           <ScrollReveal delay={0}>

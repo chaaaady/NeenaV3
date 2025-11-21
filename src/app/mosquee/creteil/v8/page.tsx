@@ -5,10 +5,9 @@ import { useSearchParams } from "next/navigation";
 import Image from "next/image";
 import { SideMenu, HeaderMosquee } from "@/components";
 import { ScrollReveal } from "@/components/ScrollReveal";
-import CurrentPrayerSection from "@/components/CurrentPrayerSection";
-import CurrentTimeSection from "@/components/CurrentTimeSection";
 import { MapPin, Check, Car, Users, Accessibility, Info, CreditCard, User, Globe, Book } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
+import { useCurrentPrayer } from "@/hooks/useCurrentPrayer";
 
 const MOSQUE_NAME = "Mosquée de Créteil";
 const MOSQUE_ADDRESS = "5 Rue Jean Gabin, 94000 Créteil";
@@ -48,13 +47,24 @@ function MosqueCreteilV8Content() {
   const mawaqitSlug = (params.get("slug") || "mosquee-sahaba-creteil").trim();
   const mawaqitUrl = params.get("url") || undefined;
 
-  // Static blue background (same as step-payment)
-  const background = "bg-gradient-to-b from-[#5a8bb5] via-[#6b9ec7] to-[#5a8bb5]";
   const glassBlurClass = "backdrop-blur-xl";
 
-  // Set theme-color for iPhone notch
+  // Déterminer la prière actuelle et le background correspondant
+  const currentPrayer = useCurrentPrayer(mawaqitSlug);
+  
+  const PRAYER_BACKGROUNDS: Record<string, { image: string; flip: boolean; statusBarColor: string }> = {
+    fajr: { image: '/prayer-fajr.jpg', flip: false, statusBarColor: '#041a31' },
+    dhuhr: { image: '/prayer-dhuhr.jpg', flip: false, statusBarColor: '#1b466b' },
+    asr: { image: '/prayer-asr.jpg', flip: false, statusBarColor: '#2e3246' },
+    maghrib: { image: '/prayer-maghrib.jpg', flip: false, statusBarColor: '#1f2339' },
+    isha: { image: '/prayer-isha.jpg', flip: true, statusBarColor: '#1e2738' },
+  };
+  
+  const currentBackground = PRAYER_BACKGROUNDS[currentPrayer] || PRAYER_BACKGROUNDS.fajr;
+
+  // Set theme-color for iPhone notch - dynamically based on current prayer
   useEffect(() => {
-    const themeColor = "#5a8bb5";
+    const themeColor = currentBackground.statusBarColor;
     let meta = document.querySelector('meta[name="theme-color"]');
     
     if (!meta) {
@@ -73,7 +83,7 @@ function MosqueCreteilV8Content() {
         meta?.remove();
       }
     };
-  }, []);
+  }, [currentBackground.statusBarColor]);
 
   const [showStickyHeader, setShowStickyHeader] = useState(false);
 
@@ -92,14 +102,38 @@ function MosqueCreteilV8Content() {
 
   return (
     <>
-      {/* Header sticky qui apparaît au scroll */}
-      <div className={`fixed top-0 left-0 right-0 z-20 transition-all duration-300 ${showStickyHeader ? 'translate-y-0 opacity-100' : '-translate-y-full opacity-0'}`}>
+      {/* Header sticky qui apparaît au scroll (desktop) */}
+      <div className={`fixed top-0 left-0 right-0 z-20 transition-transform duration-300 ${showStickyHeader ? 'translate-y-0' : '-translate-y-full'}`}>
         <HeaderMosquee wide glass glassTone="light" onMenuClick={() => setIsMenuOpen(true)} mosqueeSlug="creteil" />
       </div>
 
       <SideMenu isOpen={isMenuOpen} onClose={() => setIsMenuOpen(false)} variant="mosquee" mosqueeSlug="creteil" />
 
-      <div className={`relative w-full min-h-[100svh] ${background}`}>
+      <div className="relative w-full min-h-[100svh]">
+        {/* Background image dynamique selon la prière actuelle */}
+        <div 
+          className="fixed inset-0 overflow-hidden" 
+          style={{ 
+            top: "calc(-1 * env(safe-area-inset-top))",
+            bottom: "calc(-1 * env(safe-area-inset-bottom))",
+            left: "calc(-1 * env(safe-area-inset-left))",
+            right: "calc(-1 * env(safe-area-inset-right))"
+          }}
+        >
+          <div
+            className="absolute inset-0 w-full h-full transition-opacity duration-1000"
+            style={{
+              backgroundImage: `url(${currentBackground.image})`,
+              backgroundSize: 'cover',
+              backgroundPosition: 'center',
+              transform: currentBackground.flip ? 'scaleY(-1)' : 'none',
+            }}
+          />
+          
+          {/* Overlay pour lisibilité */}
+          <div className="absolute inset-0 bg-black/40" />
+        </div>
+
         {/* Logo Neena en haut de la page (scroll avec le contenu) */}
         <div className="absolute top-0 left-0 z-10 p-4">
           <a href="/qui-sommes-nous" className="text-[20px] font-[800] text-white tracking-[-0.2px] drop-shadow-lg hover:opacity-80 transition-opacity">
@@ -107,21 +141,33 @@ function MosqueCreteilV8Content() {
           </a>
         </div>
 
-        {/* Burger menu mobile en haut à droite */}
-        <button 
-          aria-label="Menu" 
-          onClick={() => setIsMenuOpen(true)} 
-          className="absolute top-4 right-4 z-10 md:hidden w-10 h-10 flex items-center justify-center hover:opacity-70 transition-opacity"
-        >
-          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-white">
-            <line x1="4" x2="20" y1="12" y2="12" />
-            <line x1="4" x2="20" y1="6" y2="6" />
-            <line x1="4" x2="20" y1="18" y2="18" />
-          </svg>
-        </button>
-        {/* Dynamic background based on current prayer time */}
+        {/* Bouton Donner + Burger menu mobile en haut à droite */}
+        <div className="absolute top-4 right-4 z-10 flex items-center gap-2">
+          {/* Bouton Donner mobile (visible au scroll) */}
+          <a 
+            href="/step-amount-v20"
+            className={`md:hidden px-3 py-1.5 bg-white text-gray-900 hover:bg-white/90 rounded-lg font-semibold text-[13px] transition-all shadow-lg ${
+              showStickyHeader ? 'opacity-100 scale-100' : 'opacity-0 scale-90 pointer-events-none'
+            }`}
+          >
+            Donner
+          </a>
+          
+          {/* Burger menu mobile */}
+          <button 
+            aria-label="Menu" 
+            onClick={() => setIsMenuOpen(true)} 
+            className="md:hidden w-10 h-10 flex items-center justify-center rounded-lg hover:bg-white/10 transition-all"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-white">
+              <line x1="4" x2="20" y1="12" y2="12" />
+              <line x1="4" x2="20" y1="6" y2="6" />
+              <line x1="4" x2="20" y1="18" y2="18" />
+            </svg>
+          </button>
+        </div>
         
-        <main className="relative px-4 pb-24 pt-[calc(var(--hdr-primary-h)+12px)] md:px-6 max-w-3xl mx-auto">
+        <main className="relative px-4 pb-24 pt-20 md:px-6 max-w-3xl mx-auto">
           {/* Hero Card */}
           <div id="hero-v8" className={`rounded-3xl border border-white/15 bg-gradient-to-br from-white/[0.18] to-white/[0.12] ${glassBlurClass} shadow-2xl p-6 md:p-7 space-y-4`}>
             {/* Hero Image Carousel */}
@@ -170,7 +216,7 @@ function MosqueCreteilV8Content() {
                 Itinéraire
               </a>
               <a 
-                href="/step-amount-v2" 
+                href="/step-amount-v20" 
                 className="flex-1 flex items-center justify-center gap-2 h-11 px-4 text-gray-900 bg-white hover:bg-white/90 rounded-2xl shadow-lg transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/40"
               >
                 <CreditCard size={16} />
@@ -179,13 +225,12 @@ function MosqueCreteilV8Content() {
             </div>
           </div>
 
-          {/* Current Prayer Card */}
-          <ScrollReveal delay={0}>
+          {/* Current Prayer Card - Temporairement désactivé */}
+          {/* <ScrollReveal delay={0}>
             <div className={`mt-4 rounded-3xl border border-white/15 bg-gradient-to-br from-white/[0.18] to-white/[0.12] ${glassBlurClass} shadow-2xl p-6 md:p-7 space-y-4`}>
-              <CurrentPrayerSection slug={mawaqitSlug} url={mawaqitUrl} embedded />
-              <CurrentTimeSection embedded />
+              Prière actuelle et heure
             </div>
-          </ScrollReveal>
+          </ScrollReveal> */}
 
           {/* Prayer Times Card */}
           <ScrollReveal delay={100}>

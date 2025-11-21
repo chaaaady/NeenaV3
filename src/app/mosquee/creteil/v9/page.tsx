@@ -5,26 +5,29 @@ import { useSearchParams } from "next/navigation";
 import Image from "next/image";
 import { SideMenu } from "@/components";
 import { ScrollReveal } from "@/components/ScrollReveal";
-import { HeaderPrimary } from "@/components/headers/HeaderPrimary"; // Menu Neena général
-import { HeaderSecondary } from "@/components/headers/HeaderSecondary";
-import { useMiniHeaderTrigger } from "@/hooks/useMiniHeaderTrigger";
-import { MapPin, Check, TrendingUp, Building, Users, Heart, CreditCard, Target, Clock, Sparkles } from "lucide-react";
-import type { LucideIcon } from "lucide-react";
+import { MapPin, TrendingUp, Building, Users, Heart, CreditCard, Target, Clock, Sparkles } from "lucide-react";
+import { useCurrentPrayer } from "@/hooks/useCurrentPrayer";
 
 const MOSQUE_NAME = "Future mosquée d'Ivry-sur-Seine";
 const MOSQUE_ADDRESS = "Ivry-sur-Seine, Val-de-Marne";
-const MAPS_URL = `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(MOSQUE_ADDRESS)}`;
 
 // Crowdfunding data
 const GOAL_AMOUNT = 1200000;
 const COLLECTED_AMOUNT = 785056;
 const PERCENTAGE = Math.round((COLLECTED_AMOUNT / GOAL_AMOUNT) * 100);
 
+// Prayer backgrounds configuration
+const PRAYER_BACKGROUNDS: Record<string, { image: string; flip: boolean; statusBarColor: string }> = {
+  fajr: { image: '/prayer-fajr.jpg', flip: false, statusBarColor: '#041a31' },
+  dhuhr: { image: '/prayer-dhuhr.jpg', flip: false, statusBarColor: '#1b466b' },
+  asr: { image: '/prayer-asr.jpg', flip: false, statusBarColor: '#2e3246' },
+  maghrib: { image: '/prayer-maghrib.jpg', flip: false, statusBarColor: '#1f2339' },
+  isha: { image: '/prayer-isha.jpg', flip: true, statusBarColor: '#1e2738' },
+};
+
 export default function MosqueCreteilV9Page() {
   return (
-    <Suspense fallback={
-      <div className="relative w-full min-h-[100svh] bg-gradient-to-b from-[#5a8bb5] via-[#6b9ec7] to-[#5a8bb5]" />
-    }>
+    <Suspense fallback={<div className="relative w-full min-h-[100svh]" />}>
       <MosqueCreteilV9Content />
     </Suspense>
   );
@@ -33,14 +36,14 @@ export default function MosqueCreteilV9Page() {
 function MosqueCreteilV9Content() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const params = useSearchParams();
-  const { visible: miniVisible } = useMiniHeaderTrigger("hero-v9");
   const [animatedPercentage, setAnimatedPercentage] = useState(0);
   const [animatedAmount, setAnimatedAmount] = useState(0);
+  const [showStickyHeader, setShowStickyHeader] = useState(false);
 
   // Hero image (configurable via ?img=...)
   const heroImages = useMemo(() => {
     const url = params.get("img");
-    return [url || "/hero-creteil.png"]; // Using Créteil image for now
+    return [url || "/hero-creteil.png"];
   }, [params]);
 
   const [slide, setSlide] = useState(0);
@@ -53,13 +56,19 @@ function MosqueCreteilV9Content() {
     return () => clearInterval(id);
   }, [heroImages.length, isHeroPaused]);
 
-  // Static blue background (same as step-payment)
-  const background = "bg-gradient-to-b from-[#5a8bb5] via-[#6b9ec7] to-[#5a8bb5]";
+  // Déterminer la prière actuelle et le background correspondant
+  const currentPrayer = useCurrentPrayer("mosquee-sahaba-creteil");
+  
+  const currentBackground = useMemo(() => 
+    PRAYER_BACKGROUNDS[currentPrayer] || PRAYER_BACKGROUNDS.fajr,
+    [currentPrayer]
+  );
+
   const glassBlurClass = "backdrop-blur-xl";
 
   // Set theme-color for iPhone notch
   useEffect(() => {
-    const themeColor = "#5a8bb5";
+    const themeColor = currentBackground.statusBarColor;
     let meta = document.querySelector('meta[name="theme-color"]');
     
     if (!meta) {
@@ -78,11 +87,25 @@ function MosqueCreteilV9Content() {
         meta?.remove();
       }
     };
+  }, [currentBackground.statusBarColor]);
+
+  // Detect scroll for sticky header
+  useEffect(() => {
+    const onScroll = () => {
+      const heroEl = document.getElementById("hero-v9");
+      if (heroEl) {
+        const rect = heroEl.getBoundingClientRect();
+        setShowStickyHeader(rect.bottom <= 0);
+      }
+    };
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
   // Animate percentage and amount on mount
   useEffect(() => {
-    const duration = 2000; // 2 seconds
+    const duration = 2000;
     const steps = 60;
     const percentageStep = PERCENTAGE / steps;
     const amountStep = COLLECTED_AMOUNT / steps;
@@ -103,10 +126,11 @@ function MosqueCreteilV9Content() {
 
   // Timeline data
   const timelineSteps = [
-    { title: "Recherche du terrain", status: "completed", date: "2022" },
     { title: "Achat du terrain", status: "completed", date: "2023" },
     { title: "Permis de construire", status: "in-progress", date: "2024" },
     { title: "Début des travaux", status: "upcoming", date: "2025" },
+    { title: "Construction", status: "upcoming", date: "2025-2026" },
+    { title: "Finitions", status: "upcoming", date: "2026" },
     { title: "Ouverture", status: "upcoming", date: "2026" },
   ];
 
@@ -115,25 +139,100 @@ function MosqueCreteilV9Content() {
     return Math.round(num).toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ");
   };
 
-  // Calculate circumference for circular progress
-  const radius = 70;
-  const circumference = 2 * Math.PI * radius;
-  const strokeDashoffset = circumference - (animatedPercentage / 100) * circumference;
+  // Calculate circumference for circular progress (not used with progress bar)
+  const _radius = 70;
+  const _circumference = 2 * Math.PI * _radius;
+
+  // Key features
+  const features = [
+    { icon: <Users className="w-5 h-5" />, label: "Capacité", value: "800 personnes" },
+    { icon: <Building className="w-5 h-5" />, label: "Surface", value: "2 500 m²" },
+    { icon: <Heart className="w-5 h-5" />, label: "Services", value: "École, bibliothèque" },
+    { icon: <Target className="w-5 h-5" />, label: "Niveaux", value: "3 étages" },
+    { icon: <MapPin className="w-5 h-5" />, label: "Parking", value: "150 places" },
+    { icon: <Sparkles className="w-5 h-5" />, label: "Architecture", value: "Moderne et écologique" },
+  ];
 
   return (
     <>
-      <HeaderPrimary wide transparent overlay onMenuClick={() => setIsMenuOpen(true)} />
-      <HeaderSecondary title="Mosquée d'Ivry-sur-Seine" visible={miniVisible} />
+      {/* Header sticky qui apparaît au scroll */}
+      <div className={`fixed top-0 left-0 right-0 z-20 transition-transform duration-300 ${showStickyHeader ? 'translate-y-0' : '-translate-y-full'}`}>
+        <div className="bg-gradient-to-b from-white/10 to-white/5 backdrop-blur-2xl shadow-2xl">
+          <div className="mx-auto flex h-14 items-center justify-between px-4" style={{ maxWidth: 1280 }}>
+            <a href="/qui-sommes-nous" className="text-[20px] font-[800] text-white tracking-[-0.2px]">
+              Neena
+            </a>
+            <button 
+              aria-label="Menu" 
+              onClick={() => setIsMenuOpen(true)} 
+              className="md:hidden w-10 h-10 flex items-center justify-center rounded-lg hover:bg-white/10 transition-all"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-white">
+                <line x1="4" x2="20" y1="12" y2="12" />
+                <line x1="4" x2="20" y1="6" y2="6" />
+                <line x1="4" x2="20" y1="18" y2="18" />
+              </svg>
+            </button>
+          </div>
+        </div>
+      </div>
+
       <SideMenu isOpen={isMenuOpen} onClose={() => setIsMenuOpen(false)} />
 
-      <div className={`relative w-full min-h-[100svh] ${background}`}>
-        <main className="relative px-4 pb-24 pt-[calc(var(--hdr-primary-h)+12px)] md:px-6 max-w-3xl mx-auto">
+      <div className="relative w-full min-h-[100svh]">
+        {/* Background image dynamique selon la prière actuelle */}
+        <div 
+          className="fixed inset-0 overflow-hidden" 
+          style={{ 
+            top: "calc(-1 * env(safe-area-inset-top))",
+            bottom: "calc(-1 * env(safe-area-inset-bottom))",
+            left: "calc(-1 * env(safe-area-inset-left))",
+            right: "calc(-1 * env(safe-area-inset-right))"
+          }}
+        >
+          <div
+            className="absolute inset-0 w-full h-full transition-opacity duration-1000"
+            style={{
+              backgroundImage: `url(${currentBackground.image})`,
+              backgroundSize: 'cover',
+              backgroundPosition: 'center',
+              transform: currentBackground.flip ? 'scaleY(-1)' : 'none',
+            }}
+          />
+          
+          {/* Overlay pour lisibilité */}
+          <div className="absolute inset-0 bg-black/40" />
+        </div>
+
+        {/* Logo Neena en haut de la page */}
+        <div className="absolute top-0 left-0 z-10 p-4">
+          <a href="/qui-sommes-nous" className="text-[20px] font-[800] text-white tracking-[-0.2px] drop-shadow-lg hover:opacity-80 transition-opacity">
+            Neena
+          </a>
+        </div>
+
+        {/* Burger menu mobile en haut à droite */}
+        <div className="absolute top-4 right-4 z-10">
+          <button 
+            aria-label="Menu" 
+            onClick={() => setIsMenuOpen(true)} 
+            className="md:hidden w-10 h-10 flex items-center justify-center rounded-lg hover:bg-white/10 transition-all"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-white">
+              <line x1="4" x2="20" y1="12" y2="12" />
+              <line x1="4" x2="20" y1="6" y2="6" />
+              <line x1="4" x2="20" y1="18" y2="18" />
+            </svg>
+          </button>
+        </div>
+        
+        <main className="relative px-4 pb-24 pt-20 md:px-6 max-w-3xl mx-auto">
           {/* Hero Card */}
-          <ScrollReveal>
-          <div id="hero-v9" className={`rounded-3xl border border-white/15 bg-gradient-to-br from-white/[0.18] to-white/[0.12] ${glassBlurClass} shadow-2xl p-5 md:p-6 space-y-2.5`}>
+          <ScrollReveal delay={0}>
+          <div id="hero-v9" className={`rounded-3xl border border-white/15 bg-gradient-to-br from-white/[0.18] to-white/[0.12] ${glassBlurClass} shadow-2xl p-6 md:p-7 space-y-4`}>
             {/* Hero Image */}
             <div
-              className="w-full rounded-2xl overflow-hidden relative h-[180px]"
+              className="w-full rounded-2xl overflow-hidden relative h-[200px]"
               onMouseEnter={() => setIsHeroPaused(true)}
               onMouseLeave={() => setIsHeroPaused(false)}
               onTouchStart={() => setIsHeroPaused(true)}
@@ -152,255 +251,140 @@ function MosqueCreteilV9Content() {
               {/* Overlay with project badge */}
               <div className="absolute top-4 left-4 z-20">
                 <div className="px-3 py-1.5 rounded-full bg-white/90 backdrop-blur-sm border border-white/50 flex items-center gap-2">
-                  <Sparkles className="w-4 h-4 text-[#5a8bb5]" />
-                  <span className="text-[#5a8bb5] text-sm font-semibold">Projet en cours</span>
+                  <Sparkles className="w-4 h-4 text-emerald-600" />
+                  <span className="text-gray-900 text-[13px] font-[700]">Projet en cours</span>
                 </div>
               </div>
             </div>
 
             {/* Title and Address */}
-            <div className="space-y-0">
-              <h1 className="text-lg font-bold text-white leading-tight">{MOSQUE_NAME}</h1>
-              <div className="flex items-center gap-1.5 text-white/70 mt-0.5">
-                <MapPin className="w-3 h-3" />
-                <span className="text-[12px]">{MOSQUE_ADDRESS}</span>
+            <div>
+              <h1 className="text-[20px] font-[800] text-white leading-tight">{MOSQUE_NAME}</h1>
+              <div className="mt-1 text-[13px] text-white/80 flex items-center gap-1">
+                <MapPin size={14} />
+                <span>{MOSQUE_ADDRESS}</span>
               </div>
             </div>
 
-            {/* Progress Gauge - Circular Apple Style */}
-            <div className="relative flex flex-col items-center justify-center py-3">
-              <svg className="w-40 h-40 transform -rotate-90">
-                {/* Background circle */}
-                <circle
-                  cx="80"
-                  cy="80"
-                  r={radius}
-                  stroke="rgba(255, 255, 255, 0.1)"
-                  strokeWidth="8"
-                  fill="none"
+            {/* Progress Bar */}
+            <div className="space-y-3">
+              <div className="flex items-center justify-between">
+                <span className="text-[13px] text-white/80">Progression</span>
+                <span className="text-[20px] font-[800] text-white">{Math.round(animatedPercentage)}%</span>
+              </div>
+              <div className="relative w-full h-3 bg-white/10 rounded-full overflow-hidden">
+                <div 
+                  className="absolute top-0 left-0 h-full bg-gradient-to-r from-white via-white/90 to-white/80 rounded-full transition-all duration-[2000ms] ease-out"
+                  style={{ width: `${animatedPercentage}%` }}
                 />
-                {/* Progress circle */}
-                <circle
-                  cx="80"
-                  cy="80"
-                  r={radius}
-                  stroke="url(#gradient)"
-                  strokeWidth="8"
-                  fill="none"
-                  strokeLinecap="round"
-                  strokeDasharray={circumference}
-                  strokeDashoffset={strokeDashoffset}
-                  className="transition-all duration-[2000ms] ease-out"
-                />
-                <defs>
-                  <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                    <stop offset="0%" stopColor="#ffffff" />
-                    <stop offset="100%" stopColor="#e8f0f8" />
-                  </linearGradient>
-                </defs>
-              </svg>
-              {/* Center content */}
-              <div className="absolute inset-0 flex flex-col items-center justify-center">
-                <div className="text-3xl font-bold text-white">{Math.round(animatedPercentage)}%</div>
-                <div className="text-[11px] text-white/70 mt-0.5">de l&apos;objectif</div>
               </div>
             </div>
 
             {/* Amount details */}
-            <div className="grid grid-cols-2 gap-2.5 p-2.5 rounded-2xl bg-white/5 border border-white/10">
+            <div className="grid grid-cols-2 gap-3 p-3 rounded-2xl bg-white/5 border border-white/10">
               <div className="text-center">
-                <div className="text-base font-bold text-white whitespace-nowrap">{formatNumber(animatedAmount)} €</div>
-                <div className="text-[10px] text-white/70 mt-0.5">Montant collecté</div>
+                <div className="text-[16px] font-[700] text-white whitespace-nowrap">{formatNumber(animatedAmount)} €</div>
+                <div className="text-[11px] text-white/70 mt-0.5">Collecté</div>
               </div>
               <div className="text-center">
-                <div className="text-base font-bold text-white whitespace-nowrap">{formatNumber(GOAL_AMOUNT)} €</div>
-                <div className="text-[10px] text-white/70 mt-0.5">Objectif</div>
+                <div className="text-[16px] font-[700] text-white whitespace-nowrap">{formatNumber(GOAL_AMOUNT)} €</div>
+                <div className="text-[11px] text-white/70 mt-0.5">Objectif</div>
               </div>
             </div>
 
-            {/* CTA Buttons */}
-            <div className="flex gap-2.5">
-              <a
-                href={MAPS_URL}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex-1 flex items-center justify-center gap-1.5 py-2 px-3 rounded-2xl bg-white/10 hover:bg-white/15 border border-white/15 text-white font-medium transition-all text-[13px]"
-              >
-                <MapPin className="w-3.5 h-3.5" />
-                <span>Localisation</span>
-              </a>
-              <a
-                href="/step-amount-v2"
-                className="flex-1 flex items-center justify-center gap-1.5 py-2 px-3 rounded-2xl bg-white hover:bg-white/90 text-[#5a8bb5] font-medium transition-all shadow-lg text-[13px]"
-              >
-                <CreditCard className="w-3.5 h-3.5" />
-                <span>Faire un don</span>
-              </a>
-            </div>
+            {/* CTA Button */}
+            <a
+              href="/step-amount-v20"
+              className="w-full flex items-center justify-center gap-2 h-11 px-4 text-gray-900 bg-white hover:bg-white/90 rounded-2xl shadow-lg transition-all"
+            >
+              <CreditCard size={16} />
+              Faire un don
+            </a>
           </div>
           </ScrollReveal>
 
           {/* Timeline Section */}
           <ScrollReveal delay={100}>
-          <div className={`mt-6 rounded-3xl border border-white/15 bg-gradient-to-br from-white/[0.18] to-white/[0.12] ${glassBlurClass} shadow-2xl p-6 md:p-7`}>
-            <h2 className="text-xl font-bold text-white mb-6 flex items-center gap-2">
-              <TrendingUp className="w-5 h-5 text-white" />
-              Avancement du projet
+          <div className={`mt-4 rounded-3xl border border-white/15 bg-gradient-to-br from-white/[0.18] to-white/[0.12] ${glassBlurClass} shadow-2xl p-6 md:p-7 space-y-3`}>
+            <h2 className="text-[18px] font-[800] text-white flex items-center gap-2">
+              <TrendingUp className="w-5 h-5" />
+              Avancement
             </h2>
-            
-            <div className="relative">
-              {/* Timeline line */}
-              <div className="absolute left-4 top-8 bottom-8 w-0.5 bg-white/20"></div>
-              
-              {/* Timeline steps */}
-              <div className="space-y-6">
-                {timelineSteps.map((step, index) => (
-                  <div key={index} className="flex gap-4 items-center">
-                    {/* Circle indicator */}
-                    <div className="relative z-10">
-                      <div className={`w-8 h-8 rounded-full border-2 flex items-center justify-center ${
-                        step.status === 'completed' 
-                          ? 'bg-white/90 border-white' 
-                          : step.status === 'in-progress'
-                          ? 'bg-[#5a8bb5] border-[#6b9ec7] animate-pulse'
-                          : 'bg-white/10 border-white/30'
-                      }`}>
-                        {step.status === 'completed' && <Check className="w-4 h-4 text-[#5a8bb5]" />}
-                        {step.status === 'in-progress' && <Clock className="w-4 h-4 text-white" />}
-                      </div>
+
+            <div className="space-y-3">
+              {timelineSteps.map((step, idx) => (
+                <div key={idx} className="flex items-start gap-3">
+                  {/* Timeline dot */}
+                  <div className="flex flex-col items-center">
+                    <div className={`w-9 h-9 rounded-full border-2 flex items-center justify-center ${
+                      step.status === "completed" ? "bg-white border-white" :
+                      step.status === "in-progress" ? "bg-white/20 border-white" :
+                      "bg-transparent border-white/30"
+                    }`}>
+                      {step.status === "completed" && <Clock className="w-4 h-4 text-gray-900" />}
+                      {step.status === "in-progress" && <div className="w-2.5 h-2.5 rounded-full bg-white animate-pulse" />}
+                      {step.status === "upcoming" && <div className="w-2 h-2 rounded-full bg-white/30" />}
                     </div>
-                    
-                    {/* Content */}
-                    <div className="flex-1 p-3 rounded-xl bg-white/5 border border-white/10">
-                      <div className="flex justify-between items-center">
-                        <h3 className={`font-semibold ${
-                          step.status === 'completed' ? 'text-white' : 'text-white/70'
-                        }`}>
-                          {step.title}
-                        </h3>
-                        <span className="text-xs text-white/50">{step.date}</span>
-                      </div>
+                    {idx < timelineSteps.length - 1 && (
+                      <div className={`w-0.5 h-10 mt-2 ${
+                        step.status === "completed" ? "bg-white" : "bg-white/20"
+                      }`} />
+                    )}
+                  </div>
+
+                  {/* Timeline content */}
+                  <div className="flex-1 pt-1.5">
+                    <div className="flex items-center justify-between">
+                      <h3 className={`text-[15px] font-[700] ${
+                        step.status === "upcoming" ? "text-white/60" : "text-white"
+                      }`}>{step.title}</h3>
+                      <span className={`text-[13px] font-[600] ${
+                        step.status === "upcoming" ? "text-white/40" : "text-white/70"
+                      }`}>{step.date}</span>
                     </div>
                   </div>
-                ))}
-              </div>
+                </div>
+              ))}
             </div>
           </div>
           </ScrollReveal>
 
-          {/* Project Vision */}
+          {/* Features */}
           <ScrollReveal delay={200}>
-          <div className={`mt-6 rounded-3xl border border-white/15 bg-gradient-to-br from-white/[0.18] to-white/[0.12] ${glassBlurClass} shadow-2xl p-6 md:p-7`}>
-            <h2 className="text-xl font-bold text-white mb-4 flex items-center gap-2">
-              <Building className="w-5 h-5 text-white" />
-              Un projet ambitieux pour notre communauté
-            </h2>
-            
-            <div className="space-y-4 text-white/80">
-              <p>
-                La future mosquée d&apos;Ivry-sur-Seine sera un lieu de culte moderne et accueillant, 
-                conçu pour répondre aux besoins spirituels et sociaux de notre communauté grandissante.
-              </p>
-              
-              <div className="grid gap-3">
-                <FeatureItem
-                  icon={Users}
-                  title="Capacité d'accueil"
-                  description="Plus de 1500 fidèles pourront prier ensemble"
-                />
-                <FeatureItem
-                  icon={Building}
-                  title="Espaces multifonctionnels"
-                  description="Salles de classe, bibliothèque et espaces communautaires"
-                />
-                <FeatureItem
-                  icon={Target}
-                  title="Architecture moderne"
-                  description="Un design harmonieux qui s'intègre parfaitement au quartier"
-                />
-              </div>
+          <div className={`mt-4 rounded-3xl border border-white/15 bg-gradient-to-br from-white/[0.18] to-white/[0.12] ${glassBlurClass} shadow-2xl p-6 md:p-7 space-y-3`}>
+            <h2 className="text-[18px] font-[800] text-white">Détails</h2>
+
+            <div className="grid grid-cols-1 gap-2.5">
+              {features.map((feature, idx) => (
+                <div key={idx} className="flex items-center gap-3 p-3 rounded-2xl bg-white/5 border border-white/10">
+                  <div className="w-9 h-9 rounded-xl border border-white/20 bg-white/10 flex items-center justify-center text-white">
+                    {feature.icon}
+                  </div>
+                  <div className="flex-1">
+                    <div className="text-[12px] text-white/70">{feature.label}</div>
+                    <div className="text-[15px] font-[700] text-white">{feature.value}</div>
+                  </div>
+                </div>
+              ))}
             </div>
           </div>
           </ScrollReveal>
 
-          {/* Why Support */}
+          {/* CTA Final */}
           <ScrollReveal delay={300}>
-          <div className={`mt-6 rounded-3xl border border-white/15 bg-gradient-to-br from-white/[0.18] to-white/[0.12] ${glassBlurClass} shadow-2xl p-6 md:p-7`}>
-            <h2 className="text-xl font-bold text-white mb-4 flex items-center gap-2">
-              <Heart className="w-5 h-5 text-white" />
-              Pourquoi soutenir ce projet ?
-            </h2>
-            
-            <div className="space-y-3">
-              <ReasonCard
-                title="Un investissement pour l'éternité"
-                description="Chaque contribution participe à la construction d'un lieu de culte qui servira des générations"
-              />
-              <ReasonCard
-                title="Renforcer notre communauté"
-                description="Un espace dédié pour nos activités religieuses, éducatives et sociales"
-              />
-              <ReasonCard
-                title="Transparence totale"
-                description="Suivi en temps réel de l'utilisation des fonds et rapports réguliers"
-              />
-            </div>
-
-            {/* Final CTA */}
-            <div className="mt-6 p-4 rounded-2xl bg-white/10 border border-white/20">
-              <p className="text-white text-center mb-4">
-                Ensemble, construisons un lieu de paix et de spiritualité
-              </p>
-              <a
-                href="/step-amount-v2"
-                className="w-full flex items-center justify-center gap-2 py-3 px-6 rounded-2xl bg-white hover:bg-white/90 text-[#5a8bb5] font-semibold transition-all shadow-lg"
-              >
-                <CreditCard className="w-5 h-5" />
-                <span>Participer à la construction</span>
-              </a>
-            </div>
+          <div className={`mt-4 rounded-3xl border border-white/15 bg-gradient-to-br from-white/[0.18] to-white/[0.12] ${glassBlurClass} shadow-2xl p-6 md:p-7`}>
+            <a
+              href="/step-amount-v20"
+              className="w-full flex items-center justify-center gap-2 h-12 px-4 text-gray-900 bg-white hover:bg-white/90 rounded-2xl shadow-lg transition-all font-[700] text-[15px]"
+            >
+              <CreditCard size={18} />
+              Faire un don
+            </a>
           </div>
           </ScrollReveal>
 
-          {/* Contact Info */}
-          <ScrollReveal delay={400}>
-          <div className={`mt-6 rounded-3xl border border-white/15 bg-gradient-to-br from-white/[0.18] to-white/[0.12] ${glassBlurClass} shadow-2xl p-6 md:p-7`}>
-            <h2 className="text-xl font-bold text-white mb-4">Contact</h2>
-            <div className="space-y-2 text-white/80">
-              <p>Pour plus d&apos;informations sur le projet :</p>
-              <p className="font-medium">Email: contact@mosqueedivry.fr</p>
-              <p className="font-medium">Tél: 06 24 79 96 08</p>
-            </div>
-          </div>
-          </ScrollReveal>
         </main>
       </div>
     </>
-  );
-}
-
-// Helper Components
-function FeatureItem({ icon: Icon, title, description }: { icon: LucideIcon; title: string; description: string }) {
-  return (
-    <div className="flex gap-3 p-3 rounded-xl bg-white/5 border border-white/10">
-      <div className="flex-shrink-0">
-        <div className="w-10 h-10 rounded-lg bg-white/20 border border-white/30 flex items-center justify-center">
-          <Icon className="w-5 h-5 text-white" />
-        </div>
-      </div>
-      <div className="flex-1">
-        <h3 className="font-semibold text-white text-sm">{title}</h3>
-        <p className="text-xs text-white/60 mt-0.5">{description}</p>
-      </div>
-    </div>
-  );
-}
-
-function ReasonCard({ title, description }: { title: string; description: string }) {
-  return (
-    <div className="p-4 rounded-xl bg-white/5 border border-white/10">
-      <h3 className="font-semibold text-white mb-1">{title}</h3>
-      <p className="text-sm text-white/70">{description}</p>
-    </div>
   );
 }
