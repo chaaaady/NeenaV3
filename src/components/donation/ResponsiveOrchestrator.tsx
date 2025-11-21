@@ -1,6 +1,6 @@
 "use client";
 
-import { ReactNode, useState, useRef, useEffect } from "react";
+import { ReactNode, useState, useRef } from "react";
 
 interface CardStep {
   id: string;
@@ -41,8 +41,8 @@ export function ResponsiveOrchestrator({ steps }: ResponsiveOrchestratorProps) {
     baseBottomSpace = 20;
   }
 
-  // Space for peek at the bottom
-  const peekSpace = expandedIndex < steps.length - 1 ? PEEK_HEIGHT + UNIFORM_GAP : 0;
+  // Space for peek at the bottom (currently unused but kept for future reference)
+  // const peekSpace = expandedIndex < steps.length - 1 ? PEEK_HEIGHT + UNIFORM_GAP : 0;
 
   // Handle drag to navigate
   const handleTouchStart = (e: React.TouchEvent) => {

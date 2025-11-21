@@ -33,6 +33,7 @@ export default function BenevolatPage() {
   
   const currentBackground = useMemo(() => 
     PRAYER_BACKGROUNDS[currentPrayer] || PRAYER_BACKGROUNDS.fajr,
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [currentPrayer]
   );
 
