@@ -14,7 +14,6 @@ import { StripePaymentMount } from "./StripeMount";
 import { SnapScrollOrchestrator } from "@/components/donation/SnapScrollOrchestrator";
 import { HandHeart, User } from "lucide-react";
 import { useCurrentPrayer } from "@/hooks/useCurrentPrayer";
-import { PrayerInfo } from "@/components/prayer/PrayerInfo";
 
 const PRESET_AMOUNTS = [5, 10, 25, 50, 75, 100];
 
@@ -515,29 +514,21 @@ function StepAmountV26Content() {
         paddingLeft: "env(safe-area-inset-left)",
         paddingRight: "env(safe-area-inset-right)"
       }}>
-        <div className="px-5 space-y-2">
-          {/* Logo and Menu */}
-          <div className="flex items-center justify-between h-12">
-            <a href="/qui-sommes-nous" className="text-[20px] font-[900] text-white tracking-[-0.5px]">
-              Neena
-            </a>
-            <button 
-              aria-label="Menu" 
-              onClick={() => setIsMenuOpen(true)} 
-              className="md:hidden w-10 h-10 flex items-center justify-center rounded-lg hover:bg-white/10 transition-all"
-            >
-              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-white">
-                <line x1="4" x2="20" y1="12" y2="12" />
-                <line x1="4" x2="20" y1="6" y2="6" />
-                <line x1="4" x2="20" y1="18" y2="18" />
-              </svg>
-            </button>
-          </div>
-
-          {/* Prayer Info */}
-          <div className="flex justify-center pb-2">
-            <PrayerInfo mosqueeSlug={mosqueeSlug} />
-          </div>
+        <div className="flex items-center justify-between px-5 h-12">
+          <a href="/qui-sommes-nous" className="text-[20px] font-[900] text-white tracking-[-0.5px]">
+            Neena
+          </a>
+          <button 
+            aria-label="Menu" 
+            onClick={() => setIsMenuOpen(true)} 
+            className="md:hidden w-10 h-10 flex items-center justify-center rounded-lg hover:bg-white/10 transition-all"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-white">
+              <line x1="4" x2="20" y1="12" y2="12" />
+              <line x1="4" x2="20" y1="6" y2="6" />
+              <line x1="4" x2="20" y1="18" y2="18" />
+            </svg>
+          </button>
         </div>
       </div>
 

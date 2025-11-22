@@ -8,6 +8,7 @@ import { ScrollReveal } from "@/components/ScrollReveal";
 import { MapPin, Check, Car, Users, Accessibility, Info, CreditCard, User, Globe, Book } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import { useCurrentPrayer } from "@/hooks/useCurrentPrayer";
+import { PrayerInfo } from "@/components/prayer/PrayerInfo";
 
 const MOSQUE_NAME = "Mosquée de Créteil";
 const MOSQUE_ADDRESS = "5 Rue Jean Gabin, 94000 Créteil";
@@ -134,11 +135,12 @@ function MosqueCreteilV8Content() {
           <div className="absolute inset-0 bg-black/40" />
         </div>
 
-        {/* Logo Neena en haut de la page (scroll avec le contenu) */}
-        <div className="absolute top-0 left-0 z-10 p-4">
-          <a href="/qui-sommes-nous" className="text-[20px] font-[800] text-white tracking-[-0.2px] drop-shadow-lg hover:opacity-80 transition-opacity">
+        {/* Logo Neena et Prayer Info en haut de la page (scroll avec le contenu) */}
+        <div className="absolute top-0 left-0 z-10 p-4 space-y-3">
+          <a href="/qui-sommes-nous" className="text-[20px] font-[800] text-white tracking-[-0.2px] drop-shadow-lg hover:opacity-80 transition-opacity block">
             Neena
           </a>
+          <PrayerInfo mosqueeSlug={mawaqitSlug} />
         </div>
 
         {/* Bouton Donner + Burger menu mobile en haut à droite */}

@@ -14,7 +14,7 @@ interface SnapScrollOrchestratorProps {
 
 const CARD_COLLAPSED_HEIGHT = 72;
 const UNIFORM_GAP = 16;
-const HEADER_HEIGHT = 100; // Increased to accommodate prayer info
+const HEADER_HEIGHT = 64;
 
 // The famous "Apple Ease"
 const APPLE_EASE = "cubic-bezier(0.19, 1, 0.22, 1)";
