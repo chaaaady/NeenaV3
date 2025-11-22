@@ -293,13 +293,13 @@ function MosqueCreteilV9Content() {
             </div>
 
             {/* CTA Button */}
-            <a
+              <a
               href="/step-amount-v20"
               className="w-full flex items-center justify-center gap-2 h-11 px-4 text-gray-900 bg-white hover:bg-white/90 rounded-2xl shadow-lg transition-all"
-            >
+              >
               <CreditCard size={16} />
               Faire un don
-            </a>
+              </a>
           </div>
           </ScrollReveal>
 
@@ -310,7 +310,7 @@ function MosqueCreteilV9Content() {
               <TrendingUp className="w-5 h-5" />
               Avancement
             </h2>
-
+            
             <div className="space-y-3">
               {timelineSteps.map((step, idx) => (
                 <div key={idx} className="flex items-start gap-3">
@@ -320,18 +320,18 @@ function MosqueCreteilV9Content() {
                       step.status === "completed" ? "bg-white border-white" :
                       step.status === "in-progress" ? "bg-white/20 border-white" :
                       "bg-transparent border-white/30"
-                    }`}>
+                      }`}>
                       {step.status === "completed" && <Clock className="w-4 h-4 text-gray-900" />}
                       {step.status === "in-progress" && <div className="w-2.5 h-2.5 rounded-full bg-white animate-pulse" />}
                       {step.status === "upcoming" && <div className="w-2 h-2 rounded-full bg-white/30" />}
-                    </div>
+                      </div>
                     {idx < timelineSteps.length - 1 && (
                       <div className={`w-0.5 h-10 mt-2 ${
                         step.status === "completed" ? "bg-white" : "bg-white/20"
                       }`} />
                     )}
-                  </div>
-
+                    </div>
+                    
                   {/* Timeline content */}
                   <div className="flex-1 pt-1.5">
                     <div className="flex items-center justify-between">
@@ -341,10 +341,10 @@ function MosqueCreteilV9Content() {
                       <span className={`text-[13px] font-[600] ${
                         step.status === "upcoming" ? "text-white/40" : "text-white/70"
                       }`}>{step.date}</span>
+                      </div>
                     </div>
                   </div>
-                </div>
-              ))}
+                ))}
             </div>
           </div>
           </ScrollReveal>
@@ -364,7 +364,7 @@ function MosqueCreteilV9Content() {
                     <div className="text-[12px] text-white/70">{feature.label}</div>
                     <div className="text-[15px] font-[700] text-white">{feature.value}</div>
                   </div>
-                </div>
+              </div>
               ))}
             </div>
           </div>
@@ -376,10 +376,10 @@ function MosqueCreteilV9Content() {
             <a
               href="/step-amount-v20"
               className="w-full flex items-center justify-center gap-2 h-12 px-4 text-gray-900 bg-white hover:bg-white/90 rounded-2xl shadow-lg transition-all font-[700] text-[15px]"
-            >
+              >
               <CreditCard size={18} />
               Faire un don
-            </a>
+              </a>
           </div>
           </ScrollReveal>
 

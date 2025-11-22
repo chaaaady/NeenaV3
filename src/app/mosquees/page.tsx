@@ -338,7 +338,7 @@ export default function MosqueesPage() {
                     </p>
                   </div>
                   <div className="flex items-center gap-3">
-                    <span className="hidden md:inline-block text-white/50 text-[13px] font-medium">
+                    <span className="hidden md:inline-block text-white text-[13px] font-semibold">
                       Découvrir
                     </span>
                     <div className="w-8 h-8 rounded-full bg-white/10 group-hover:bg-white/20 flex items-center justify-center transition-all">

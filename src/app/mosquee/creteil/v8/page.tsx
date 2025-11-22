@@ -145,17 +145,17 @@ export default function MosqueCreteilV8Page() {
           </a>
           
           {/* Burger menu mobile */}
-          <button 
-            aria-label="Menu" 
-            onClick={() => setIsMenuOpen(true)} 
+        <button 
+          aria-label="Menu" 
+          onClick={() => setIsMenuOpen(true)} 
             className="md:hidden w-10 h-10 flex items-center justify-center rounded-lg hover:bg-white/10 transition-all"
-          >
-            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-white">
-              <line x1="4" x2="20" y1="12" y2="12" />
-              <line x1="4" x2="20" y1="6" y2="6" />
-              <line x1="4" x2="20" y1="18" y2="18" />
-            </svg>
-          </button>
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-white">
+            <line x1="4" x2="20" y1="12" y2="12" />
+            <line x1="4" x2="20" y1="6" y2="6" />
+            <line x1="4" x2="20" y1="18" y2="18" />
+          </svg>
+        </button>
         </div>
         
         <main className="relative px-4 pb-12 pt-20 md:px-6 max-w-3xl mx-auto">
@@ -219,23 +219,23 @@ export default function MosqueCreteilV8Page() {
           {/* Prayer Progress Card */}
           <div className="mt-4">
             <PrayerProgressCard mosqueeSlug={mawaqitSlug} prayerTimes={prayerTimes} />
-          </div>
+            </div>
 
           {/* Prayer Times Card */}
-          <div className={`mt-4 rounded-3xl border border-white/15 bg-gradient-to-br from-white/[0.18] to-white/[0.12] ${glassBlurClass} shadow-2xl p-6 md:p-7 space-y-4`}>
-            <h2 className="text-[18px] font-[800] text-white">Horaires de prière</h2>
+            <div className={`mt-4 rounded-3xl border border-white/15 bg-gradient-to-br from-white/[0.18] to-white/[0.12] ${glassBlurClass} shadow-2xl p-6 md:p-7 space-y-4`}>
+              <h2 className="text-[18px] font-[800] text-white">Horaires de prière</h2>
             <PrayerTimesCard slug={mawaqitSlug} url={mawaqitUrl} onTimesLoaded={setPrayerTimes} />
-          </div>
+            </div>
 
           {/* Jumu'a Card */}
-          <div className={`mt-4 rounded-3xl border border-white/15 bg-gradient-to-br from-white/[0.18] to-white/[0.12] ${glassBlurClass} shadow-2xl p-6 md:p-7 space-y-4`}>
-            <h2 className="text-[18px] font-[800] text-white">Jumu&apos;a</h2>
-            <JumaaCard slug={mawaqitSlug} url={mawaqitUrl} />
-          </div>
+            <div className={`mt-4 rounded-3xl border border-white/15 bg-gradient-to-br from-white/[0.18] to-white/[0.12] ${glassBlurClass} shadow-2xl p-6 md:p-7 space-y-4`}>
+              <h2 className="text-[18px] font-[800] text-white">Jumu&apos;a</h2>
+              <JumaaCard slug={mawaqitSlug} url={mawaqitUrl} />
+            </div>
 
           {/* Practical Info Card */}
-          <div className={`mt-4 rounded-3xl border border-white/15 bg-gradient-to-br from-white/[0.18] to-white/[0.12] ${glassBlurClass} shadow-2xl p-6 md:p-7 space-y-4`}>
-            <h2 className="text-[18px] font-[800] text-white">Informations pratiques</h2>
+            <div className={`mt-4 rounded-3xl border border-white/15 bg-gradient-to-br from-white/[0.18] to-white/[0.12] ${glassBlurClass} shadow-2xl p-6 md:p-7 space-y-4`}>
+              <h2 className="text-[18px] font-[800] text-white">Informations pratiques</h2>
             <div>
               {[
                 { icon: Car, label: "Parking", value: true },
@@ -272,26 +272,26 @@ export default function MosqueCreteilV8Page() {
           </div>
 
           {/* Volunteering Card */}
-          <div className={`mt-4 rounded-3xl border border-white/15 bg-gradient-to-br from-white/[0.18] to-white/[0.12] ${glassBlurClass} shadow-2xl p-6 md:p-7 space-y-4`}>
-            <h2 className="text-[18px] font-[800] text-white">Bénévolat</h2>
-            <div className="w-full rounded-2xl overflow-hidden h-[230px] relative">
-              <Image src="/benevolat.png" alt="Bénévolat RAM 94" fill className="object-cover" />
+            <div className={`mt-4 rounded-3xl border border-white/15 bg-gradient-to-br from-white/[0.18] to-white/[0.12] ${glassBlurClass} shadow-2xl p-6 md:p-7 space-y-4`}>
+              <h2 className="text-[18px] font-[800] text-white">Bénévolat</h2>
+              <div className="w-full rounded-2xl overflow-hidden h-[230px] relative">
+                <Image src="/benevolat.png" alt="Bénévolat RAM 94" fill className="object-cover" />
+              </div>
+              <p className="text-[12.5px] text-white/80 leading-snug">Rejoignez l&apos;équipe pour soutenir l&apos;organisation des prières, Jumu&apos;a et événements.</p>
+              <div className="flex justify-end">
+                <a href="/benevolat" className="inline-flex items-center gap-2 h-10 px-4 text-gray-900 bg-white hover:bg-white/90 rounded-2xl shadow-lg transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/40">
+                  Devenir bénévole
+                </a>
+              </div>
             </div>
-            <p className="text-[12.5px] text-white/80 leading-snug">Rejoignez l&apos;équipe pour soutenir l&apos;organisation des prières, Jumu&apos;a et événements.</p>
-            <div className="flex justify-end">
-              <a href="/benevolat" className="inline-flex items-center gap-2 h-10 px-4 text-gray-900 bg-white hover:bg-white/90 rounded-2xl shadow-lg transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/40">
-                Devenir bénévole
-              </a>
-            </div>
-          </div>
 
           {/* About Neena Card */}
-          <div className={`mt-4 rounded-3xl border border-white/15 bg-gradient-to-br from-white/[0.18] to-white/[0.12] ${glassBlurClass} shadow-2xl p-6 md:p-7`}>
-            <p className="text-[12.5px] text-white/80 leading-snug">
-              Neena est une association à but non lucratif. Notre mission est d&apos;assurer la transition digitale des mosquées et d&apos;aider à mieux informer leurs fidèles.
-              Nous ne prélevons aucune commission sur les dons et nous ne facturons aucun frais à la mosquée.
-            </p>
-          </div>
+            <div className={`mt-4 rounded-3xl border border-white/15 bg-gradient-to-br from-white/[0.18] to-white/[0.12] ${glassBlurClass} shadow-2xl p-6 md:p-7`}>
+              <p className="text-[12.5px] text-white/80 leading-snug">
+                Neena est une association à but non lucratif. Notre mission est d&apos;assurer la transition digitale des mosquées et d&apos;aider à mieux informer leurs fidèles.
+                Nous ne prélevons aucune commission sur les dons et nous ne facturons aucun frais à la mosquée.
+              </p>
+            </div>
 
           {/* Footer */}
           <div className="mt-6 px-4 py-6 border-t border-white/20 text-[12px] text-white/80 flex flex-col md:flex-row items-center justify-between gap-4 bg-white/10 backdrop-blur-md rounded-2xl">

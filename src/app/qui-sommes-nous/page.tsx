@@ -165,7 +165,7 @@ export default function QuiSommesNousPage() {
 
         {/* Burger menu mobile en haut à droite */}
         <div className="absolute top-4 right-4 z-10">
-          <button 
+            <button 
             aria-label="Menu" 
             onClick={() => setIsMenuOpen(true)} 
             className="md:hidden w-10 h-10 flex items-center justify-center rounded-lg hover:bg-white/10 transition-all"
@@ -175,8 +175,8 @@ export default function QuiSommesNousPage() {
               <line x1="4" x2="20" y1="6" y2="6" />
               <line x1="4" x2="20" y1="18" y2="18" />
             </svg>
-          </button>
-        </div>
+            </button>
+          </div>
 
         {/* Contenu principal */}
         <main className="relative px-4 pb-24 pt-20 md:px-6 max-w-5xl mx-auto">
@@ -227,22 +227,22 @@ export default function QuiSommesNousPage() {
               <h2 className="text-[18px] font-[800] text-white">Ce que nous offrons</h2>
             
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {features.map((feature, idx) => (
-                  <div 
-                    key={idx}
+              {features.map((feature, idx) => (
+                <div 
+                  key={idx}
                     className="flex items-center gap-3 p-4 rounded-2xl border border-white/10 bg-white/5 backdrop-blur-md"
-                  >
+                >
                     <div className="flex-shrink-0 w-10 h-10 rounded-xl border border-white/20 bg-white/10 backdrop-blur-md flex items-center justify-center text-white">
-                      {feature.icon}
-                    </div>
-                    <div className="flex-1">
+                    {feature.icon}
+                  </div>
+                  <div className="flex-1">
                       <h3 className="text-white font-[700] text-[15px] mb-1 leading-tight">{feature.title}</h3>
                       <p className="text-white/70 text-[13px] leading-relaxed">{feature.description}</p>
-                    </div>
                   </div>
-                ))}
-              </div>
+                </div>
+              ))}
             </div>
+          </div>
           </ScrollReveal>
 
           {/* Avantages */}
@@ -255,35 +255,35 @@ export default function QuiSommesNousPage() {
                   <div key={idx} className="flex items-center gap-3 p-3 rounded-xl bg-white/5 border border-white/10">
                     <div className="flex-shrink-0 w-5 h-5 rounded-full border border-white/30 bg-white/15 backdrop-blur-md flex items-center justify-center">
                       <Check className="w-3 h-3 text-white" />
-                    </div>
-                    <p className="text-white text-[14px]">{avantage}</p>
                   </div>
-                ))}
-              </div>
+                    <p className="text-white text-[14px]">{avantage}</p>
+                </div>
+              ))}
             </div>
+          </div>
           </ScrollReveal>
 
           {/* CTA Final */}
           <ScrollReveal delay={400}>
             <div className={`mt-4 rounded-3xl border border-white/15 bg-gradient-to-br from-white/[0.18] to-white/[0.12] ${glassBlurClass} shadow-2xl p-6 md:p-7 space-y-4`}>
               <h2 className="text-[18px] font-[800] text-white">
-                Prêt à moderniser votre mosquée ?
-              </h2>
+              Prêt à moderniser votre mosquée ?
+            </h2>
               <p className="text-[14px] md:text-[15px] text-white/80 leading-relaxed">
-                Rejoignez les mosquées qui ont déjà fait confiance à Neena pour digitaliser leur présence 
-                et augmenter leurs collectes de manière transparente et efficace.
-              </p>
-              
+              Rejoignez les mosquées qui ont déjà fait confiance à Neena pour digitaliser leur présence 
+              et augmenter leurs collectes de manière transparente et efficace.
+            </p>
+            
               <div className="space-y-3">
-                <button 
+              <button 
                   onClick={() => window.location.href = 'mailto:contact@neena.fr?subject=Contact%20Neena'}
                   className="w-full px-6 py-3 bg-white hover:bg-white/90 text-gray-900 font-[700] text-[15px] rounded-2xl shadow-lg transition-all flex items-center justify-center gap-2"
-                >
-                  Nous contacter
+              >
+                Nous contacter
                   <ArrowRight className="w-4 h-4" />
-                </button>
-                <button 
-                  onClick={() => window.location.href = '/mosquee/creteil/v8'}
+              </button>
+              <button 
+                onClick={() => window.location.href = '/mosquee/creteil/v8'}
                   className="w-full px-6 py-3 bg-white/15 hover:bg-white/25 border border-white/20 text-white font-[600] text-[15px] rounded-2xl backdrop-blur-md transition-all flex items-center justify-center"
                 >
                   Exemple : Page mosquée
@@ -303,7 +303,7 @@ export default function QuiSommesNousPage() {
                 <button 
                   onClick={() => window.location.href = '/zakat-fitr-creteil'}
                   className="w-full px-6 py-3 bg-white/15 hover:bg-white/25 border border-white/20 text-white font-[600] text-[15px] rounded-2xl backdrop-blur-md transition-all flex items-center justify-center"
-                >
+              >
                   Exemple : Page spécifique (Zakat al-Fitr)
                 </button>
                 <button 
@@ -311,9 +311,9 @@ export default function QuiSommesNousPage() {
                   className="w-full px-6 py-3 bg-white/15 hover:bg-white/25 border border-white/20 text-white font-[600] text-[15px] rounded-2xl backdrop-blur-md transition-all flex items-center justify-center"
                 >
                   Exemple : Page spécifique (Qurbani)
-                </button>
-              </div>
+              </button>
             </div>
+          </div>
           </ScrollReveal>
 
         </main>

@@ -4,8 +4,7 @@ import { useState, useEffect, useMemo } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { SideMenu } from "@/components";
-import { ScrollReveal } from "@/components/ScrollReveal";
-import { MapPin, TrendingUp, Building, Clock, Target, Menu } from "lucide-react";
+import { Search, Filter, Menu } from "lucide-react";
 import { useCurrentPrayer } from "@/hooks";
 
 type ConstructionProject = {
@@ -126,6 +125,9 @@ const PRAYER_BACKGROUNDS = [
 
 export default function ConstructionsPage() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [selectedDepartment, setSelectedDepartment] = useState<string | null>(null);
+  const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
 
   // Get current prayer for dynamic background
@@ -168,6 +170,26 @@ export default function ConstructionsPage() {
     };
   }, [currentBackground.statusBarColor]);
 
+  // Extract unique departments
+  const departments = useMemo(() => {
+    const depts = Array.from(new Set(PROJECTS.map(p => p.department))).sort();
+    return depts;
+  }, []);
+
+  // Filter projects
+  const filteredProjects = useMemo(() => {
+    return PROJECTS.filter(project => {
+      const matchesSearch = searchQuery === "" ||
+        project.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        project.city.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        project.description.toLowerCase().includes(searchQuery.toLowerCase());
+
+      const matchesDepartment = selectedDepartment === null || project.department === selectedDepartment;
+
+      return matchesSearch && matchesDepartment;
+    });
+  }, [searchQuery, selectedDepartment]);
+
   return (
     <>
       <SideMenu isOpen={isMenuOpen} onClose={() => setIsMenuOpen(false)} />
@@ -179,7 +201,9 @@ export default function ConstructionsPage() {
         }`}
       >
         <div className="h-14 px-4 flex items-center justify-between border-b border-white/15 bg-white/10 backdrop-blur-xl">
-          <div className="text-white font-bold text-[17px]">Neena</div>
+          <Link href="/qui-sommes-nous" className="text-white font-bold text-[17px] hover:opacity-80 transition-opacity">
+            Neena
+          </Link>
           <button
             onClick={() => setIsMenuOpen(true)}
             className="w-10 h-10 flex items-center justify-center hover:bg-white/10 transition-all rounded-lg"
@@ -205,155 +229,157 @@ export default function ConstructionsPage() {
         {/* Overlay */}
         <div className="fixed inset-0 bg-black/40" />
 
-        {/* Initial Header - visible at top */}
-        <div className="absolute top-0 left-0 right-0 z-30 px-4">
-          <div className="h-14 flex items-center justify-between">
-            <div className="text-white font-bold text-[17px]">Neena</div>
-            <button
-              onClick={() => setIsMenuOpen(true)}
-              className="w-10 h-10 flex items-center justify-center hover:bg-white/10 transition-all rounded-lg"
-            >
-              <Menu className="w-6 h-6 text-white" />
-            </button>
-          </div>
-        </div>
-
-        <main className="relative px-4 pb-24 pt-20 md:px-6 max-w-6xl mx-auto">
+        <main className="relative px-4 pb-24 pt-20 md:px-6 max-w-5xl mx-auto">
           
-          {/* Hero Section */}
-          <ScrollReveal delay={0}>
-            <div className="rounded-3xl border border-white/15 bg-gradient-to-br from-white/[0.18] to-white/[0.12] backdrop-blur-xl shadow-2xl p-6 md:p-8 text-center space-y-4">
-              <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-white/20 backdrop-blur-md mb-2">
-                <Building className="w-8 h-8 text-white" />
+          {/* Initial Header - visible at top */}
+          <div className="absolute top-0 left-0 right-0 z-30 px-4">
+            <div className="h-14 flex items-center justify-between">
+              <Link href="/qui-sommes-nous" className="text-white font-bold text-[17px] hover:opacity-80 transition-opacity">
+                Neena
+              </Link>
+              <button
+                onClick={() => setIsMenuOpen(true)}
+                className="w-10 h-10 flex items-center justify-center hover:bg-white/10 transition-all rounded-lg"
+              >
+                <Menu className="w-6 h-6 text-white" />
+              </button>
+            </div>
+          </div>
+
+          {/* Hero Section with Image */}
+          <div className="rounded-3xl border border-white/15 bg-gradient-to-br from-white/[0.18] to-white/[0.12] backdrop-blur-xl shadow-2xl overflow-hidden">
+            {/* Hero Image */}
+            <div className="relative h-[280px] w-full">
+              <Image
+                src="/hero-creteil-2.png"
+                alt="Projets de construction"
+                fill
+                className="object-cover"
+              />
+              {/* Gradient overlay for text readability */}
+              <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/30 to-black/60" />
+              
+              {/* Hero Text */}
+              <div className="absolute inset-0 flex flex-col items-center justify-center text-center px-6 space-y-3">
+                <h1 className="text-white font-[800] text-[36px] md:text-[44px] leading-tight tracking-tight drop-shadow-2xl">
+                  Projets de construction
+                </h1>
+                <p className="text-white/90 text-[15px] md:text-[16px] leading-relaxed max-w-xl font-medium drop-shadow-lg">
+                  Participez à la construction de nouvelles mosquées
+                </p>
               </div>
-              <h1 className="text-white font-bold text-[28px] md:text-[36px] leading-tight">
-                Projets de construction de mosquées
-              </h1>
-              <p className="text-white/80 text-[15px] md:text-[16px] leading-relaxed max-w-2xl mx-auto">
-                Participez à la construction de nouvelles mosquées et centres islamiques à travers la France. Chaque don compte pour bâtir des lieux de culte pour les générations futures.
+            </div>
+
+            {/* Search Bar inside hero card */}
+            <div className="p-4 border-t border-white/10">
+              <div className="flex items-center gap-3">
+                {/* Search Input */}
+                <div className="flex-1 relative">
+                  <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-white/50" />
+                  <input
+                    type="text"
+                    placeholder="Rechercher un projet..."
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    className="w-full h-11 pl-12 pr-4 rounded-xl border border-white/10 bg-white/5 text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-white/20 focus:border-white/30 transition-all text-[14px] font-medium"
+                  />
+                </div>
+
+                {/* Filter Button */}
+                <button
+                  onClick={() => setIsFilterOpen(!isFilterOpen)}
+                  className={`flex-shrink-0 w-11 h-11 rounded-xl border flex items-center justify-center transition-all ${
+                    selectedDepartment !== null
+                      ? "border-white/30 bg-white/20"
+                      : "border-white/10 bg-white/5 hover:bg-white/10"
+                  }`}
+                >
+                  <Filter className="w-5 h-5 text-white" />
+                </button>
+              </div>
+
+              {/* Filter Dropdown */}
+              {isFilterOpen && (
+                <div className="mt-3 p-3 rounded-xl border border-white/10 bg-white/5 backdrop-blur-md">
+                  <div className="text-[12px] font-semibold text-white/60 mb-2 uppercase tracking-wide">Département</div>
+                  <div className="flex flex-wrap gap-2">
+                    <button
+                      onClick={() => setSelectedDepartment(null)}
+                      className={`px-3 py-1.5 rounded-lg text-[13px] font-semibold transition-all ${
+                        selectedDepartment === null
+                          ? "bg-white text-zinc-900"
+                          : "bg-white/10 text-white/80 hover:bg-white/15"
+                      }`}
+                    >
+                      Tous
+                    </button>
+                    {departments.map(dept => (
+                      <button
+                        key={dept}
+                        onClick={() => setSelectedDepartment(dept)}
+                        className={`px-3 py-1.5 rounded-lg text-[13px] font-semibold transition-all ${
+                          selectedDepartment === dept
+                            ? "bg-white text-zinc-900"
+                            : "bg-white/10 text-white/80 hover:bg-white/15"
+                        }`}
+                      >
+                        {dept}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+
+          {/* Results Count */}
+          <div className="mt-6 text-white/60 text-[13px] font-medium">
+            {filteredProjects.length} projet{filteredProjects.length > 1 ? "s" : ""}
+          </div>
+
+          {/* Projects Simple List */}
+          <div className="mt-4 rounded-2xl border border-white/15 bg-gradient-to-br from-white/[0.15] to-white/[0.10] backdrop-blur-xl shadow-xl overflow-hidden">
+            {filteredProjects.map((project, index) => (
+              <Link key={project.id} href={project.slug}>
+                <div className={`flex items-center justify-between p-4 hover:bg-white/10 transition-all cursor-pointer group ${
+                  index !== filteredProjects.length - 1 ? "border-b border-white/10" : ""
+                }`}>
+                  <div className="flex-1">
+                    <div className="flex items-center gap-2 mb-1">
+                      <h3 className="text-white font-[700] text-[16px] leading-tight group-hover:text-white/90 transition-colors">
+                        {project.name}
+                      </h3>
+                    </div>
+                    <p className="text-white/60 text-[13px] font-medium mb-1">
+                      {project.city} • Département {project.department}
+                    </p>
+                    <div className="flex items-center gap-3 text-[12px]">
+                      <span className="text-white/50">{project.progress}% • {formatAmount(project.currentAmount)} / {formatAmount(project.targetAmount)}</span>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <span className="hidden md:inline-block text-white text-[13px] font-semibold">
+                      Découvrir
+                    </span>
+                    <div className="w-8 h-8 rounded-full bg-white/10 group-hover:bg-white/20 flex items-center justify-center transition-all">
+                      <svg className="w-4 h-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                      </svg>
+                    </div>
+                  </div>
+                </div>
+              </Link>
+            ))}
+          </div>
+
+          {/* Empty State */}
+          {filteredProjects.length === 0 && (
+            <div className="mt-8 rounded-2xl border border-white/15 bg-gradient-to-br from-white/[0.15] to-white/[0.10] backdrop-blur-xl shadow-xl p-8 text-center">
+              <p className="text-white/60 text-[14px] font-medium">
+                Aucun projet ne correspond à votre recherche.
               </p>
             </div>
-          </ScrollReveal>
-
-          {/* Stats */}
-          <ScrollReveal delay={100}>
-            <div className="mt-6 grid grid-cols-1 md:grid-cols-3 gap-4">
-              <div className="rounded-2xl border border-white/15 bg-gradient-to-br from-white/[0.18] to-white/[0.12] backdrop-blur-xl shadow-xl p-5 text-center">
-                <p className="text-white/70 text-[13px] font-medium mb-1">Projets actifs</p>
-                <p className="text-white text-[32px] font-bold">{PROJECTS.length}</p>
-              </div>
-              <div className="rounded-2xl border border-white/15 bg-gradient-to-br from-white/[0.18] to-white/[0.12] backdrop-blur-xl shadow-xl p-5 text-center">
-                <p className="text-white/70 text-[13px] font-medium mb-1">Montant collecté</p>
-                <p className="text-white text-[28px] font-bold">
-                  {formatAmount(PROJECTS.reduce((acc, p) => acc + p.currentAmount, 0))}
-                </p>
-              </div>
-              <div className="rounded-2xl border border-white/15 bg-gradient-to-br from-white/[0.18] to-white/[0.12] backdrop-blur-xl shadow-xl p-5 text-center">
-                <p className="text-white/70 text-[13px] font-medium mb-1">Objectif total</p>
-                <p className="text-white text-[28px] font-bold">
-                  {formatAmount(PROJECTS.reduce((acc, p) => acc + p.targetAmount, 0))}
-                </p>
-              </div>
-            </div>
-          </ScrollReveal>
-
-          {/* Projects Grid */}
-          <div className="mt-8">
-            <div className="mb-4 text-white/70 text-[14px]">
-              {PROJECTS.length} projet{PROJECTS.length > 1 ? "s" : ""} en cours
-            </div>
-            
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              {PROJECTS.map((project, idx) => (
-                <ScrollReveal key={project.id} delay={idx * 100}>
-                  <Link href={project.slug}>
-                    <div className="rounded-3xl border border-white/15 bg-gradient-to-br from-white/[0.18] to-white/[0.12] backdrop-blur-xl shadow-2xl overflow-hidden hover:scale-[1.02] transition-all duration-300 cursor-pointer group">
-                      {/* Image */}
-                      <div className="relative h-[200px] w-full">
-                        <Image
-                          src={project.image}
-                          alt={project.name}
-                          fill
-                          className="object-cover"
-                        />
-                        {/* Status Badge */}
-                        <div className="absolute top-4 right-4">
-                          <span className={`inline-flex items-center px-3 py-1.5 rounded-full text-[12px] font-semibold backdrop-blur-md ${
-                            project.status === "En cours" 
-                              ? "bg-emerald-500/90 text-white" 
-                              : project.status === "Planifié"
-                              ? "bg-blue-500/90 text-white"
-                              : "bg-amber-500/90 text-white"
-                          }`}>
-                            {project.status}
-                          </span>
-                        </div>
-                      </div>
-
-                      {/* Content */}
-                      <div className="p-6 space-y-4">
-                        <div>
-                          <h3 className="text-white font-bold text-[20px] leading-tight mb-1 group-hover:text-white/90 transition-colors">
-                            {project.name}
-                          </h3>
-                          <div className="flex items-center gap-2 text-white/70 text-[13px]">
-                            <MapPin className="w-4 h-4" />
-                            <span>{project.city}, {project.department}</span>
-                          </div>
-                        </div>
-
-                        <p className="text-white/80 text-[14px] leading-relaxed">
-                          {project.description}
-                        </p>
-
-                        {/* Progress Bar */}
-                        <div className="space-y-2">
-                          <div className="flex items-center justify-between text-[13px]">
-                            <span className="text-white/70">Progression</span>
-                            <span className="text-white font-semibold">{project.progress}%</span>
-                          </div>
-                          <div className="w-full h-3 rounded-full bg-white/20 overflow-hidden">
-                            <div 
-                              className="h-full bg-gradient-to-r from-emerald-400 to-emerald-500 rounded-full transition-all duration-500"
-                              style={{ width: `${project.progress}%` }}
-                            />
-                          </div>
-                          <div className="flex items-center justify-between text-[13px]">
-                            <span className="text-white/70">{formatAmount(project.currentAmount)} collectés</span>
-                            <span className="text-white font-semibold">sur {formatAmount(project.targetAmount)}</span>
-                          </div>
-                        </div>
-
-                        {/* Info Grid */}
-                        <div className="grid grid-cols-2 gap-3 pt-2">
-                          <div className="rounded-xl bg-white/10 p-3">
-                            <div className="flex items-center gap-2 mb-1">
-                              <Clock className="w-4 h-4 text-white/60" />
-                              <p className="text-white/60 text-[11px] font-medium uppercase">Début</p>
-                            </div>
-                            <p className="text-white text-[13px] font-semibold">{project.startDate}</p>
-                          </div>
-                          <div className="rounded-xl bg-white/10 p-3">
-                            <div className="flex items-center gap-2 mb-1">
-                              <Target className="w-4 h-4 text-white/60" />
-                              <p className="text-white/60 text-[11px] font-medium uppercase">Fin prévue</p>
-                            </div>
-                            <p className="text-white text-[13px] font-semibold">{project.estimatedCompletion}</p>
-                          </div>
-                        </div>
-
-                        {/* CTA */}
-                        <button className="w-full mt-4 px-6 py-3 rounded-xl bg-white/90 hover:bg-white text-zinc-900 font-semibold text-[14px] shadow-lg transition-all flex items-center justify-center gap-2">
-                          <TrendingUp className="w-4 h-4" />
-                          Découvrir le projet
-                        </button>
-                      </div>
-                    </div>
-                  </Link>
-                </ScrollReveal>
-              ))}
-            </div>
-          </div>
+          )}
 
         </main>
       </div>
