@@ -32,6 +32,7 @@ export function PrayerProgressCard({ mosqueeSlug = "mosquee-sahaba-creteil", pra
   const [currentPrayerTime, setCurrentPrayerTime] = useState<string>("");
   const [nextPrayerTime, setNextPrayerTime] = useState<string>("");
   const [progress, setProgress] = useState<number>(0);
+  const [timeRemaining, setTimeRemaining] = useState<string>("");
 
   const timeToMinutes = (time: string): number => {
     const [hours, minutes] = time.split(":").map(Number);
@@ -105,6 +106,18 @@ export function PrayerProgressCard({ mosqueeSlug = "mosquee-sahaba-creteil", pra
       const progressPercent = (elapsed / totalDuration) * 100;
       const finalProgress = Math.min(100, Math.max(0, progressPercent));
       
+      // Calculer le temps restant
+      const remainingMinutes = totalDuration - elapsed;
+      const hours = Math.floor(remainingMinutes / 60);
+      const minutes = Math.floor(remainingMinutes % 60);
+      
+      let timeRemainingText = "";
+      if (hours > 0) {
+        timeRemainingText = `dans ${hours}h${minutes > 0 ? ` ${minutes}min` : ''}`;
+      } else {
+        timeRemainingText = `dans ${minutes}min`;
+      }
+      
       console.log('Prayer Progress Debug:', {
         currentTime: `${now.getHours()}:${now.getMinutes().toString().padStart(2, '0')}`,
         currentMinutes,
@@ -117,10 +130,13 @@ export function PrayerProgressCard({ mosqueeSlug = "mosquee-sahaba-creteil", pra
         totalDuration,
         elapsed,
         progressPercent,
-        finalProgress
+        finalProgress,
+        remainingMinutes,
+        timeRemainingText
       });
       
       setProgress(finalProgress);
+      setTimeRemaining(timeRemainingText);
     };
 
     calculateProgress();
@@ -165,6 +181,13 @@ export function PrayerProgressCard({ mosqueeSlug = "mosquee-sahaba-creteil", pra
           style={{ width: `${progress}%` }}
         />
       </div>
+
+      {/* Time Remaining */}
+      {timeRemaining && (
+        <div className="mt-2 text-center">
+          <span className="text-white/60 text-[11px] font-medium">{timeRemaining}</span>
+        </div>
+      )}
     </div>
   );
 }
