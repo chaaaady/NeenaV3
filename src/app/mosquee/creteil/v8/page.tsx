@@ -169,7 +169,7 @@ function MosqueCreteilV8Content() {
           </button>
         </div>
         
-        <main className="relative px-4 pb-24 pt-20 md:px-6 max-w-3xl mx-auto">
+        <main className="relative px-4 pb-12 pt-20 md:px-6 max-w-3xl mx-auto">
           {/* Hero Card */}
           <div id="hero-v8" className={`rounded-3xl border border-white/15 bg-gradient-to-br from-white/[0.18] to-white/[0.12] ${glassBlurClass} shadow-2xl p-6 md:p-7 space-y-4`}>
             {/* Hero Image Carousel */}
