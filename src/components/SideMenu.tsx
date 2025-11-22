@@ -152,7 +152,7 @@ export function SideMenu({ isOpen, onClose, variant = "neena", mosqueeSlug = "cr
               {/* Bouton selon variant */}
               <div className="pt-4 px-4">
                 {variant === "mosquee" ? (
-                  <Link href="/step-amount-v20" onClick={onClose}>
+                  <Link href="/step-amount-v26" onClick={onClose}>
                     <div className="py-3 px-4 bg-white text-black font-semibold text-[16px] rounded-2xl transition-all hover:opacity-90 active:scale-[0.98] text-center">
                       Faire un don
                     </div>
