@@ -343,7 +343,7 @@ function PrayerTimesCard({ slug, url, onTimesLoaded }: { slug?: string; url?: st
               }
             });
             
-            console.log('Extracted prayer times for progress card:', times);
+            // Extracted prayer times for progress card
             onTimesLoaded(times);
           }
         } else {
@@ -358,7 +358,7 @@ function PrayerTimesCard({ slug, url, onTimesLoaded }: { slug?: string; url?: st
       }
     };
     fetchTimes();
-  }, [slug, url]);
+  }, [slug, url, onTimesLoaded]);
 
   if (loading) return <div className="text-white/80">Chargement...</div>;
   if (!timings) return <div className="text-white/80">Indisponible</div>;

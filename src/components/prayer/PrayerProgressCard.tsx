@@ -3,14 +3,6 @@
 import { useEffect, useState } from "react";
 import { Clock } from "lucide-react";
 
-interface PrayerTimes {
-  fajr: string;
-  dhuhr: string;
-  asr: string;
-  maghrib: string;
-  isha: string;
-}
-
 interface PrayerProgressCardProps {
   mosqueeSlug?: string;
   prayerTimes?: Record<string, string> | null;
@@ -26,7 +18,7 @@ const PRAYER_NAMES: Record<string, string> = {
 
 const PRAYER_ORDER = ["fajr", "dhuhr", "asr", "maghrib", "isha"];
 
-export function PrayerProgressCard({ mosqueeSlug = "mosquee-sahaba-creteil", prayerTimes }: PrayerProgressCardProps) {
+export function PrayerProgressCard({ prayerTimes }: PrayerProgressCardProps) {
   const [currentPrayerKey, setCurrentPrayerKey] = useState<string>("fajr");
   const [nextPrayerKey, setNextPrayerKey] = useState<string>("dhuhr");
   const [currentPrayerTime, setCurrentPrayerTime] = useState<string>("");
@@ -118,22 +110,7 @@ export function PrayerProgressCard({ mosqueeSlug = "mosquee-sahaba-creteil", pra
         timeRemainingText = `Prochaine prière dans ${minutes}min`;
       }
       
-      console.log('Prayer Progress Debug:', {
-        currentTime: `${now.getHours()}:${now.getMinutes().toString().padStart(2, '0')}`,
-        currentMinutes,
-        currentPrayer: currentPrayer.key,
-        currentPrayerTime: currentPrayer.time,
-        currentPrayerMinutes,
-        nextPrayer: nextPrayer.key,
-        nextPrayerTime: nextPrayer.time,
-        nextPrayerMinutes: nextPrayerMinutes % 1440,
-        totalDuration,
-        elapsed,
-        progressPercent,
-        finalProgress,
-        remainingMinutes,
-        timeRemainingText
-      });
+      // Debug info removed for production
       
       setProgress(finalProgress);
       setTimeRemaining(timeRemainingText);

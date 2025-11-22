@@ -4,7 +4,7 @@ import { useState, useEffect, useMemo } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { SideMenu } from "@/components";
-import { Search, Filter, MapPin, Menu } from "lucide-react";
+import { Search, Filter, Menu } from "lucide-react";
 import { useCurrentPrayer } from "@/hooks";
 
 type Mosque = {
