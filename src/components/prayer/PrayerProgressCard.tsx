@@ -113,9 +113,9 @@ export function PrayerProgressCard({ mosqueeSlug = "mosquee-sahaba-creteil", pra
       
       let timeRemainingText = "";
       if (hours > 0) {
-        timeRemainingText = `dans ${hours}h${minutes > 0 ? ` ${minutes}min` : ''}`;
+        timeRemainingText = `Prochaine prière dans ${hours}h${minutes > 0 ? ` ${minutes}min` : ''}`;
       } else {
-        timeRemainingText = `dans ${minutes}min`;
+        timeRemainingText = `Prochaine prière dans ${minutes}min`;
       }
       
       console.log('Prayer Progress Debug:', {
@@ -184,8 +184,8 @@ export function PrayerProgressCard({ mosqueeSlug = "mosquee-sahaba-creteil", pra
 
       {/* Time Remaining */}
       {timeRemaining && (
-        <div className="mt-2 text-center">
-          <span className="text-white/60 text-[11px] font-medium">{timeRemaining}</span>
+        <div className="mt-2.5 text-center">
+          <span className="text-white/70 text-[13px] font-medium">{timeRemaining}</span>
         </div>
       )}
     </div>
