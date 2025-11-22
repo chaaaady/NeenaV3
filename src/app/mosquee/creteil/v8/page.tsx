@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo, useEffect } from "react";
+import { useState, useMemo, useEffect, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import Image from "next/image";
 import { SideMenu, HeaderMosquee } from "@/components";
@@ -13,7 +13,7 @@ const MOSQUE_NAME = "Mosquée de Créteil";
 const MOSQUE_ADDRESS = "5 Rue Jean Gabin, 94000 Créteil";
 const MAPS_URL = `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(MOSQUE_ADDRESS)}`;
 
-export default function MosqueCreteilV8Page() {
+function MosqueCreteilV8Content() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const params = useSearchParams();
   const [prayerTimes, setPrayerTimes] = useState<Record<string, string> | null>(null);
@@ -482,3 +482,14 @@ function JumaaCard({ slug, url }: { slug?: string; url?: string }) {
   );
 }
 
+export default function MosqueCreteilV8Page() {
+  return (
+    <Suspense fallback={
+      <div className="relative w-full min-h-screen bg-gradient-to-br from-slate-900 to-slate-800 flex items-center justify-center">
+        <div className="text-white text-lg">Chargement...</div>
+      </div>
+    }>
+      <MosqueCreteilV8Content />
+    </Suspense>
+  );
+}
