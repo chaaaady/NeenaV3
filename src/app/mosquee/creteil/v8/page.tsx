@@ -1,10 +1,9 @@
 "use client";
 
-import { useState, useMemo, useEffect, Suspense } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { useSearchParams } from "next/navigation";
 import Image from "next/image";
 import { SideMenu, HeaderMosquee } from "@/components";
-import { ScrollReveal } from "@/components/ScrollReveal";
 import { MapPin, Check, Car, Users, Accessibility, Info, CreditCard, User, Globe, Book } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import { useCurrentPrayer } from "@/hooks/useCurrentPrayer";
@@ -15,16 +14,6 @@ const MOSQUE_ADDRESS = "5 Rue Jean Gabin, 94000 Créteil";
 const MAPS_URL = `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(MOSQUE_ADDRESS)}`;
 
 export default function MosqueCreteilV8Page() {
-  return (
-    <Suspense fallback={
-      <div className="relative w-full min-h-[100svh] bg-gradient-to-b from-[#5a8bb5] via-[#6b9ec7] to-[#5a8bb5]" />
-    }>
-      <MosqueCreteilV8Content />
-    </Suspense>
-  );
-}
-
-function MosqueCreteilV8Content() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const params = useSearchParams();
   const [prayerTimes, setPrayerTimes] = useState<Record<string, string> | null>(null);
@@ -228,32 +217,25 @@ function MosqueCreteilV8Content() {
           </div>
 
           {/* Prayer Progress Card */}
-          <ScrollReveal delay={0}>
-            <div className="mt-4">
-              <PrayerProgressCard mosqueeSlug={mawaqitSlug} prayerTimes={prayerTimes} />
-            </div>
-          </ScrollReveal>
+          <div className="mt-4">
+            <PrayerProgressCard mosqueeSlug={mawaqitSlug} prayerTimes={prayerTimes} />
+          </div>
 
           {/* Prayer Times Card */}
-          <ScrollReveal delay={100}>
-            <div className={`mt-4 rounded-3xl border border-white/15 bg-gradient-to-br from-white/[0.18] to-white/[0.12] ${glassBlurClass} shadow-2xl p-6 md:p-7 space-y-4`}>
-              <h2 className="text-[18px] font-[800] text-white">Horaires de prière</h2>
-              <PrayerTimesCard slug={mawaqitSlug} url={mawaqitUrl} onTimesLoaded={setPrayerTimes} />
-            </div>
-          </ScrollReveal>
+          <div className={`mt-4 rounded-3xl border border-white/15 bg-gradient-to-br from-white/[0.18] to-white/[0.12] ${glassBlurClass} shadow-2xl p-6 md:p-7 space-y-4`}>
+            <h2 className="text-[18px] font-[800] text-white">Horaires de prière</h2>
+            <PrayerTimesCard slug={mawaqitSlug} url={mawaqitUrl} onTimesLoaded={setPrayerTimes} />
+          </div>
 
           {/* Jumu'a Card */}
-          <ScrollReveal delay={200}>
-            <div className={`mt-4 rounded-3xl border border-white/15 bg-gradient-to-br from-white/[0.18] to-white/[0.12] ${glassBlurClass} shadow-2xl p-6 md:p-7 space-y-4`}>
-              <h2 className="text-[18px] font-[800] text-white">Jumu&apos;a</h2>
-              <JumaaCard slug={mawaqitSlug} url={mawaqitUrl} />
-            </div>
-          </ScrollReveal>
+          <div className={`mt-4 rounded-3xl border border-white/15 bg-gradient-to-br from-white/[0.18] to-white/[0.12] ${glassBlurClass} shadow-2xl p-6 md:p-7 space-y-4`}>
+            <h2 className="text-[18px] font-[800] text-white">Jumu&apos;a</h2>
+            <JumaaCard slug={mawaqitSlug} url={mawaqitUrl} />
+          </div>
 
           {/* Practical Info Card */}
-          <ScrollReveal delay={300}>
-            <div className={`mt-4 rounded-3xl border border-white/15 bg-gradient-to-br from-white/[0.18] to-white/[0.12] ${glassBlurClass} shadow-2xl p-6 md:p-7 space-y-4`}>
-              <h2 className="text-[18px] font-[800] text-white">Informations pratiques</h2>
+          <div className={`mt-4 rounded-3xl border border-white/15 bg-gradient-to-br from-white/[0.18] to-white/[0.12] ${glassBlurClass} shadow-2xl p-6 md:p-7 space-y-4`}>
+            <h2 className="text-[18px] font-[800] text-white">Informations pratiques</h2>
             <div>
               {[
                 { icon: Car, label: "Parking", value: true },
@@ -288,33 +270,28 @@ function MosqueCreteilV8Content() {
               </div>
             </div>
           </div>
-          </ScrollReveal>
 
           {/* Volunteering Card */}
-          <ScrollReveal delay={400}>
-            <div className={`mt-4 rounded-3xl border border-white/15 bg-gradient-to-br from-white/[0.18] to-white/[0.12] ${glassBlurClass} shadow-2xl p-6 md:p-7 space-y-4`}>
-              <h2 className="text-[18px] font-[800] text-white">Bénévolat</h2>
-              <div className="w-full rounded-2xl overflow-hidden h-[230px] relative">
-                <Image src="/benevolat.png" alt="Bénévolat RAM 94" fill className="object-cover" />
-              </div>
-              <p className="text-[12.5px] text-white/80 leading-snug">Rejoignez l&apos;équipe pour soutenir l&apos;organisation des prières, Jumu&apos;a et événements.</p>
-              <div className="flex justify-end">
-                <a href="/benevolat" className="inline-flex items-center gap-2 h-10 px-4 text-gray-900 bg-white hover:bg-white/90 rounded-2xl shadow-lg transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/40">
-                  Devenir bénévole
-                </a>
-              </div>
+          <div className={`mt-4 rounded-3xl border border-white/15 bg-gradient-to-br from-white/[0.18] to-white/[0.12] ${glassBlurClass} shadow-2xl p-6 md:p-7 space-y-4`}>
+            <h2 className="text-[18px] font-[800] text-white">Bénévolat</h2>
+            <div className="w-full rounded-2xl overflow-hidden h-[230px] relative">
+              <Image src="/benevolat.png" alt="Bénévolat RAM 94" fill className="object-cover" />
             </div>
-          </ScrollReveal>
+            <p className="text-[12.5px] text-white/80 leading-snug">Rejoignez l&apos;équipe pour soutenir l&apos;organisation des prières, Jumu&apos;a et événements.</p>
+            <div className="flex justify-end">
+              <a href="/benevolat" className="inline-flex items-center gap-2 h-10 px-4 text-gray-900 bg-white hover:bg-white/90 rounded-2xl shadow-lg transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/40">
+                Devenir bénévole
+              </a>
+            </div>
+          </div>
 
           {/* About Neena Card */}
-          <ScrollReveal delay={500}>
-            <div className={`mt-4 rounded-3xl border border-white/15 bg-gradient-to-br from-white/[0.18] to-white/[0.12] ${glassBlurClass} shadow-2xl p-6 md:p-7`}>
-              <p className="text-[12.5px] text-white/80 leading-snug">
-                Neena est une association à but non lucratif. Notre mission est d&apos;assurer la transition digitale des mosquées et d&apos;aider à mieux informer leurs fidèles.
-                Nous ne prélevons aucune commission sur les dons et nous ne facturons aucun frais à la mosquée.
-              </p>
-            </div>
-          </ScrollReveal>
+          <div className={`mt-4 rounded-3xl border border-white/15 bg-gradient-to-br from-white/[0.18] to-white/[0.12] ${glassBlurClass} shadow-2xl p-6 md:p-7`}>
+            <p className="text-[12.5px] text-white/80 leading-snug">
+              Neena est une association à but non lucratif. Notre mission est d&apos;assurer la transition digitale des mosquées et d&apos;aider à mieux informer leurs fidèles.
+              Nous ne prélevons aucune commission sur les dons et nous ne facturons aucun frais à la mosquée.
+            </p>
+          </div>
 
           {/* Footer */}
           <div className="mt-6 px-4 py-6 border-t border-white/20 text-[12px] text-white/80 flex flex-col md:flex-row items-center justify-between gap-4 bg-white/10 backdrop-blur-md rounded-2xl">
