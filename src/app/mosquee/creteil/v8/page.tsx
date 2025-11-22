@@ -8,7 +8,7 @@ import { ScrollReveal } from "@/components/ScrollReveal";
 import { MapPin, Check, Car, Users, Accessibility, Info, CreditCard, User, Globe, Book } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import { useCurrentPrayer } from "@/hooks/useCurrentPrayer";
-import { PrayerInfo } from "@/components/prayer/PrayerInfo";
+import { PrayerProgressCard } from "@/components/prayer/PrayerProgressCard";
 
 const MOSQUE_NAME = "Mosquée de Créteil";
 const MOSQUE_ADDRESS = "5 Rue Jean Gabin, 94000 Créteil";
@@ -27,6 +27,7 @@ export default function MosqueCreteilV8Page() {
 function MosqueCreteilV8Content() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const params = useSearchParams();
+  const [prayerTimes, setPrayerTimes] = useState<Record<string, string> | null>(null);
 
   // Hero image (configurable via ?img=...)
   const heroImages = useMemo(() => {
@@ -135,12 +136,11 @@ function MosqueCreteilV8Content() {
           <div className="absolute inset-0 bg-black/40" />
         </div>
 
-        {/* Logo Neena et Prayer Info en haut de la page (scroll avec le contenu) */}
-        <div className="absolute top-0 left-0 z-10 p-4 space-y-3">
-          <a href="/qui-sommes-nous" className="text-[20px] font-[800] text-white tracking-[-0.2px] drop-shadow-lg hover:opacity-80 transition-opacity block">
+        {/* Logo Neena en haut de la page (scroll avec le contenu) */}
+        <div className="absolute top-0 left-0 z-10 p-4">
+          <a href="/qui-sommes-nous" className="text-[20px] font-[800] text-white tracking-[-0.2px] drop-shadow-lg hover:opacity-80 transition-opacity">
             Neena
           </a>
-          <PrayerInfo mosqueeSlug={mawaqitSlug} />
         </div>
 
         {/* Bouton Donner + Burger menu mobile en haut à droite */}
@@ -227,18 +227,18 @@ function MosqueCreteilV8Content() {
             </div>
           </div>
 
-          {/* Current Prayer Card - Temporairement désactivé */}
-          {/* <ScrollReveal delay={0}>
-            <div className={`mt-4 rounded-3xl border border-white/15 bg-gradient-to-br from-white/[0.18] to-white/[0.12] ${glassBlurClass} shadow-2xl p-6 md:p-7 space-y-4`}>
-              Prière actuelle et heure
+          {/* Prayer Progress Card */}
+          <ScrollReveal delay={0}>
+            <div className="mt-4">
+              <PrayerProgressCard mosqueeSlug={mawaqitSlug} prayerTimes={prayerTimes} />
             </div>
-          </ScrollReveal> */}
+          </ScrollReveal>
 
           {/* Prayer Times Card */}
           <ScrollReveal delay={100}>
             <div className={`mt-4 rounded-3xl border border-white/15 bg-gradient-to-br from-white/[0.18] to-white/[0.12] ${glassBlurClass} shadow-2xl p-6 md:p-7 space-y-4`}>
               <h2 className="text-[18px] font-[800] text-white">Horaires de prière</h2>
-              <PrayerTimesCard slug={mawaqitSlug} url={mawaqitUrl} />
+              <PrayerTimesCard slug={mawaqitSlug} url={mawaqitUrl} onTimesLoaded={setPrayerTimes} />
             </div>
           </ScrollReveal>
 
@@ -333,7 +333,7 @@ function MosqueCreteilV8Content() {
 }
 
 // Prayer Times Card Component (copied from original)
-function PrayerTimesCard({ slug, url }: { slug?: string; url?: string }) {
+function PrayerTimesCard({ slug, url, onTimesLoaded }: { slug?: string; url?: string; onTimesLoaded?: (times: Record<string, string>) => void }) {
   const [timings, setTimings] = useState<Record<string, unknown> | null>(null);
   const [loading, setLoading] = useState(true);
 
@@ -352,6 +352,23 @@ function PrayerTimesCard({ slug, url }: { slug?: string; url?: string }) {
         // Check if we have timings data
         if (json && json.ok && json.timings) {
           setTimings(json.timings);
+          
+          // Extract prayer times (adhan) and pass to parent
+          if (onTimesLoaded) {
+            const times: Record<string, string> = {};
+            const timingsObj = json.timings as Record<string, unknown>;
+            
+            // Extract adhan time for each prayer
+            ['fajr', 'dhuhr', 'asr', 'maghrib', 'isha'].forEach(prayer => {
+              if (timingsObj[prayer]) {
+                const prayerData = timingsObj[prayer] as Record<string, unknown>;
+                times[prayer] = prayerData.adhan ? String(prayerData.adhan).trim() : '';
+              }
+            });
+            
+            console.log('Extracted prayer times for progress card:', times);
+            onTimesLoaded(times);
+          }
         } else {
           console.warn("No timings data received:", json);
           setTimings(null);
