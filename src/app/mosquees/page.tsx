@@ -4,7 +4,6 @@ import { useState, useEffect, useMemo } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { SideMenu } from "@/components";
-import { ScrollReveal } from "@/components/ScrollReveal";
 import { Search, Filter, MapPin, Menu } from "lucide-react";
 import { useCurrentPrayer } from "@/hooks";
 
@@ -215,12 +214,14 @@ export default function MosqueesPage() {
         {/* Overlay */}
         <div className="fixed inset-0 bg-black/40" />
 
-        <main className="relative px-4 pb-24 pt-20 md:px-6 max-w-6xl mx-auto">
+        <main className="relative px-4 pb-24 pt-20 md:px-6 max-w-5xl mx-auto">
           
           {/* Initial Header - visible at top */}
           <div className="absolute top-0 left-0 right-0 z-30 px-4">
             <div className="h-14 flex items-center justify-between">
-              <div className="text-white font-bold text-[17px]">Neena</div>
+              <Link href="/qui-sommes-nous" className="text-white font-bold text-[17px] hover:opacity-80 transition-opacity">
+                Neena
+              </Link>
               <button
                 onClick={() => setIsMenuOpen(true)}
                 className="w-10 h-10 flex items-center justify-center hover:bg-white/10 transition-all rounded-lg"
@@ -230,38 +231,49 @@ export default function MosqueesPage() {
             </div>
           </div>
 
-          {/* Hero Section */}
-          <ScrollReveal delay={0}>
-            <div className="rounded-3xl border border-white/15 bg-gradient-to-br from-white/[0.18] to-white/[0.12] backdrop-blur-xl shadow-2xl p-6 md:p-8 text-center space-y-4">
-              <h1 className="text-white font-bold text-[28px] md:text-[36px] leading-tight">
-                Mosquées partenaires
-              </h1>
-              <p className="text-white/80 text-[15px] md:text-[16px] leading-relaxed max-w-2xl mx-auto">
-                Découvrez les mosquées digitalisées avec Neena. Accédez aux horaires de prière, événements et faites vos dons en ligne.
-              </p>
+          {/* Hero Section with Image */}
+          <div className="rounded-3xl border border-white/15 bg-gradient-to-br from-white/[0.18] to-white/[0.12] backdrop-blur-xl shadow-2xl overflow-hidden">
+            {/* Hero Image */}
+            <div className="relative h-[280px] w-full">
+              <Image
+                src="/hero-creteil.png"
+                alt="Mosquées partenaires"
+                fill
+                className="object-cover"
+              />
+              {/* Gradient overlay for text readability */}
+              <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/30 to-black/60" />
+              
+              {/* Hero Text */}
+              <div className="absolute inset-0 flex flex-col items-center justify-center text-center px-6 space-y-3">
+                <h1 className="text-white font-[800] text-[36px] md:text-[44px] leading-tight tracking-tight drop-shadow-2xl">
+                  Mosquées partenaires
+                </h1>
+                <p className="text-white/90 text-[15px] md:text-[16px] leading-relaxed max-w-xl font-medium drop-shadow-lg">
+                  Découvrez les mosquées digitalisées avec Neena
+                </p>
+              </div>
             </div>
-          </ScrollReveal>
 
-          {/* Search & Filter Bar */}
-          <ScrollReveal delay={100}>
-            <div className="mt-6 rounded-3xl border border-white/15 bg-gradient-to-br from-white/[0.18] to-white/[0.12] backdrop-blur-xl shadow-2xl p-4">
+            {/* Search Bar inside hero card */}
+            <div className="p-4 border-t border-white/10">
               <div className="flex items-center gap-3">
                 {/* Search Input */}
                 <div className="flex-1 relative">
-                  <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-white/60" />
+                  <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-white/50" />
                   <input
                     type="text"
                     placeholder="Rechercher une mosquée..."
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
-                    className="w-full h-12 pl-12 pr-4 rounded-2xl border border-white/10 bg-white/5 text-white placeholder-white/60 focus:outline-none focus:ring-2 focus:ring-white/30 transition-all text-[15px]"
+                    className="w-full h-11 pl-12 pr-4 rounded-xl border border-white/10 bg-white/5 text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-white/20 focus:border-white/30 transition-all text-[14px] font-medium"
                   />
                 </div>
 
                 {/* Filter Button */}
                 <button
                   onClick={() => setIsFilterOpen(!isFilterOpen)}
-                  className={`flex-shrink-0 w-12 h-12 rounded-2xl border flex items-center justify-center transition-all ${
+                  className={`flex-shrink-0 w-11 h-11 rounded-xl border flex items-center justify-center transition-all ${
                     selectedDepartment !== null
                       ? "border-white/30 bg-white/20"
                       : "border-white/10 bg-white/5 hover:bg-white/10"
@@ -273,15 +285,15 @@ export default function MosqueesPage() {
 
               {/* Filter Dropdown */}
               {isFilterOpen && (
-                <div className="mt-3 p-3 rounded-2xl border border-white/10 bg-white/5 backdrop-blur-md">
-                  <div className="text-[13px] font-semibold text-white/70 mb-2">Filtrer par département</div>
+                <div className="mt-3 p-3 rounded-xl border border-white/10 bg-white/5 backdrop-blur-md">
+                  <div className="text-[12px] font-semibold text-white/60 mb-2 uppercase tracking-wide">Département</div>
                   <div className="flex flex-wrap gap-2">
                     <button
                       onClick={() => setSelectedDepartment(null)}
-                      className={`px-3 py-1.5 rounded-xl text-[13px] font-medium transition-all ${
+                      className={`px-3 py-1.5 rounded-lg text-[13px] font-semibold transition-all ${
                         selectedDepartment === null
-                          ? "bg-white/90 text-zinc-900"
-                          : "bg-white/10 text-white hover:bg-white/15"
+                          ? "bg-white text-zinc-900"
+                          : "bg-white/10 text-white/80 hover:bg-white/15"
                       }`}
                     >
                       Tous
@@ -290,10 +302,10 @@ export default function MosqueesPage() {
                       <button
                         key={dept}
                         onClick={() => setSelectedDepartment(dept)}
-                        className={`px-3 py-1.5 rounded-xl text-[13px] font-medium transition-all ${
+                        className={`px-3 py-1.5 rounded-lg text-[13px] font-semibold transition-all ${
                           selectedDepartment === dept
-                            ? "bg-white/90 text-zinc-900"
-                            : "bg-white/10 text-white hover:bg-white/15"
+                            ? "bg-white text-zinc-900"
+                            : "bg-white/10 text-white/80 hover:bg-white/15"
                         }`}
                       >
                         {dept}
@@ -303,71 +315,50 @@ export default function MosqueesPage() {
                 </div>
               )}
             </div>
-          </ScrollReveal>
-
-          {/* Results Count */}
-          <div className="mt-4 text-white/70 text-[14px]">
-            {filteredMosquees.length} mosquée{filteredMosquees.length > 1 ? "s" : ""} trouvée{filteredMosquees.length > 1 ? "s" : ""}
           </div>
 
-          {/* Mosquees Grid */}
-          <div className="mt-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {filteredMosquees.map((mosque, idx) => (
-              <ScrollReveal key={mosque.id} delay={idx * 50}>
-                <Link href={mosque.slug}>
-                  <div className="rounded-3xl border border-white/15 bg-gradient-to-br from-white/[0.18] to-white/[0.12] backdrop-blur-xl shadow-2xl overflow-hidden hover:scale-105 transition-all duration-300 cursor-pointer">
-                    {/* Image */}
-                    <div className="relative h-[180px] w-full">
-                      <Image
-                        src={mosque.image}
-                        alt={mosque.name}
-                        fill
-                        className="object-cover"
-                      />
-                    </div>
+          {/* Results Count */}
+          <div className="mt-6 text-white/60 text-[13px] font-medium">
+            {filteredMosquees.length} mosquée{filteredMosquees.length > 1 ? "s" : ""}
+          </div>
 
-                    {/* Content */}
-                    <div className="p-5 space-y-3">
-                      <div>
-                        <h3 className="text-white font-bold text-[16px] leading-tight">
-                          {mosque.name}
-                        </h3>
-                        <p className="text-white/70 text-[13px] mt-1">
-                          {mosque.city}
-                        </p>
-                      </div>
-
-                      <div className="flex items-start gap-2">
-                        <MapPin className="w-4 h-4 text-white/60 flex-shrink-0 mt-0.5" />
-                        <p className="text-white/60 text-[12px] leading-relaxed">
-                          {mosque.address}
-                        </p>
-                      </div>
-
-                      <div className="flex items-center justify-between pt-2">
-                        <span className="inline-flex items-center px-3 py-1 rounded-full bg-white/15 backdrop-blur-md text-white text-[12px] font-medium">
-                          Département {mosque.department}
-                        </span>
-                        <button className="px-4 py-2 rounded-xl bg-white/90 hover:bg-white text-zinc-900 font-semibold text-[13px] shadow-lg transition-all">
-                          Découvrir
-                        </button>
-                      </div>
+          {/* Mosquees Simple List */}
+          <div className="mt-4 rounded-2xl border border-white/15 bg-gradient-to-br from-white/[0.15] to-white/[0.10] backdrop-blur-xl shadow-xl overflow-hidden">
+            {filteredMosquees.map((mosque, index) => (
+              <Link key={mosque.id} href={mosque.slug}>
+                <div className={`flex items-center justify-between p-4 hover:bg-white/10 transition-all cursor-pointer group ${
+                  index !== filteredMosquees.length - 1 ? "border-b border-white/10" : ""
+                }`}>
+                  <div className="flex-1">
+                    <h3 className="text-white font-[700] text-[16px] leading-tight group-hover:text-white/90 transition-colors">
+                      {mosque.name}
+                    </h3>
+                    <p className="text-white/60 text-[13px] mt-0.5 font-medium">
+                      {mosque.city} • Département {mosque.department}
+                    </p>
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <span className="hidden md:inline-block text-white/50 text-[13px] font-medium">
+                      Découvrir
+                    </span>
+                    <div className="w-8 h-8 rounded-full bg-white/10 group-hover:bg-white/20 flex items-center justify-center transition-all">
+                      <svg className="w-4 h-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                      </svg>
                     </div>
                   </div>
-                </Link>
-              </ScrollReveal>
+                </div>
+              </Link>
             ))}
           </div>
 
           {/* Empty State */}
           {filteredMosquees.length === 0 && (
-            <ScrollReveal delay={200}>
-              <div className="mt-8 rounded-3xl border border-white/15 bg-gradient-to-br from-white/[0.18] to-white/[0.12] backdrop-blur-xl shadow-2xl p-8 text-center">
-                <p className="text-white/70 text-[15px]">
-                  Aucune mosquée ne correspond à votre recherche.
-                </p>
-              </div>
-            </ScrollReveal>
+            <div className="mt-8 rounded-2xl border border-white/15 bg-gradient-to-br from-white/[0.15] to-white/[0.10] backdrop-blur-xl shadow-xl p-8 text-center">
+              <p className="text-white/60 text-[14px] font-medium">
+                Aucune mosquée ne correspond à votre recherche.
+              </p>
+            </div>
           )}
 
         </main>
