@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useMemo } from "react";
 import Image from "next/image";
-import { SideMenu } from "@/components";
+import { SideMenu, DesktopSidebar } from "@/components";
 import { ScrollReveal } from "@/components/ScrollReveal";
 import { Globe, Smartphone, Heart, CreditCard, QrCode, Zap, Check, ArrowRight } from "lucide-react";
 import { useCurrentPrayer } from "@/hooks/useCurrentPrayer";
@@ -107,8 +107,11 @@ export default function QuiSommesNousPage() {
 
   return (
     <>
-      {/* Header sticky qui apparaît au scroll */}
-      <div className={`fixed top-0 left-0 right-0 z-20 transition-transform duration-300 ${showStickyHeader ? 'translate-y-0' : '-translate-y-full'}`}>
+      {/* Desktop Sidebar */}
+      <DesktopSidebar />
+      
+      {/* Header sticky qui apparaît au scroll (mobile only) */}
+      <div className={`md:hidden fixed top-0 left-0 right-0 z-20 transition-transform duration-300 ${showStickyHeader ? 'translate-y-0' : '-translate-y-full'}`}>
         <div className="bg-gradient-to-b from-white/10 to-white/5 backdrop-blur-2xl shadow-2xl">
           <div className="mx-auto flex h-14 items-center justify-between px-4" style={{ maxWidth: 1280 }}>
             <a href="/qui-sommes-nous" className="text-[20px] font-[800] text-white tracking-[-0.2px]">
@@ -179,7 +182,9 @@ export default function QuiSommesNousPage() {
           </div>
 
         {/* Contenu principal */}
-        <main className="relative px-4 pb-24 pt-20 md:px-6 max-w-5xl mx-auto">
+        {/* Wrapper pour centrer le contenu entre le sidebar et le bord droit */}
+        <div className="lg:ml-64 lg:flex lg:justify-center lg:items-start lg:min-h-screen">
+          <main className="relative px-4 pb-24 pt-20 md:px-6 max-w-3xl w-full mx-auto">
           
           {/* Hero Card avec Image */}
           <ScrollReveal delay={0}>
@@ -317,6 +322,7 @@ export default function QuiSommesNousPage() {
           </ScrollReveal>
 
         </main>
+        </div>
       </div>
     </>
   );

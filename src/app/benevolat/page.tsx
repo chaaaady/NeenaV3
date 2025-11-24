@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useMemo } from "react";
 import Image from "next/image";
-import { SideMenu } from "@/components";
+import { SideMenu, DesktopSidebar } from "@/components";
 import { ScrollReveal } from "@/components/ScrollReveal";
 import { HeaderPrimary } from "@/components/headers/HeaderPrimary";
 import { GlassCard, GlassInput, GlassSelect, PrimaryButton } from "@/components/ds";
@@ -62,6 +62,9 @@ export default function BenevolatPage() {
 
   return (
     <>
+      {/* Desktop Sidebar */}
+      <DesktopSidebar />
+      
       <HeaderPrimary wide transparent overlay onMenuClick={() => setIsMenuOpen(true)} />
       <SideMenu isOpen={isMenuOpen} onClose={() => setIsMenuOpen(false)} />
       
@@ -89,7 +92,10 @@ export default function BenevolatPage() {
           {/* Overlay pour lisibilité */}
           <div className="absolute inset-0 bg-black/40" />
         </div>
-        <main className="relative px-4 pb-24 pt-[calc(var(--hdr-primary-h)+24px)] md:px-6 max-w-3xl mx-auto">
+        
+        {/* Wrapper pour centrer le contenu entre le sidebar et le bord droit */}
+        <div className="lg:ml-64 lg:flex lg:justify-center lg:items-start lg:min-h-screen">
+          <main className="relative px-4 pb-24 pt-[calc(var(--hdr-primary-h)+24px)] md:px-6 max-w-3xl w-full mx-auto">
           {/* Hero Card with Image */}
           <ScrollReveal delay={0}>
             <GlassCard className="space-y-6">
@@ -219,6 +225,7 @@ export default function BenevolatPage() {
           </GlassCard>
           </ScrollReveal>
         </main>
+        </div>
       </div>
     </>
   );
