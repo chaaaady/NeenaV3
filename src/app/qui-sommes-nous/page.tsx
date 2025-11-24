@@ -159,8 +159,8 @@ export default function QuiSommesNousPage() {
           <div className="absolute inset-0 bg-black/40" />
         </div>
 
-        {/* Logo Neena en haut de la page (scroll avec le contenu) */}
-        <div className="absolute top-0 left-0 z-10 p-4">
+        {/* Logo Neena en haut de la page (scroll avec le contenu) - mobile only */}
+        <div className="md:hidden absolute top-0 left-0 z-10 p-4">
           <a href="/qui-sommes-nous" className="text-[20px] font-[800] text-white tracking-[-0.2px] drop-shadow-lg hover:opacity-80 transition-opacity">
             Neena
           </a>

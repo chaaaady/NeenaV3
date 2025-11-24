@@ -121,7 +121,10 @@ export default function DuaasPage() {
       {/* Desktop Sidebar */}
       <DesktopSidebar />
       
-      <HeaderPrimary wide transparent overlay onMenuClick={() => setIsMenuOpen(true)} />
+      {/* Header mobile only */}
+      <div className="md:hidden">
+        <HeaderPrimary wide transparent overlay onMenuClick={() => setIsMenuOpen(true)} />
+      </div>
       <SideMenu isOpen={isMenuOpen} onClose={() => setIsMenuOpen(false)} />
 
       <div className="relative min-h-[100svh] w-full">

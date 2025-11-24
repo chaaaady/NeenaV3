@@ -65,7 +65,10 @@ export default function BenevolatPage() {
       {/* Desktop Sidebar */}
       <DesktopSidebar />
       
-      <HeaderPrimary wide transparent overlay onMenuClick={() => setIsMenuOpen(true)} />
+      {/* Header mobile only */}
+      <div className="md:hidden">
+        <HeaderPrimary wide transparent overlay onMenuClick={() => setIsMenuOpen(true)} />
+      </div>
       <SideMenu isOpen={isMenuOpen} onClose={() => setIsMenuOpen(false)} />
       
       <div className="relative w-full min-h-[100svh]">
