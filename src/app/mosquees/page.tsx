@@ -3,7 +3,7 @@
 import { useState, useEffect, useMemo } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { SideMenu } from "@/components";
+import { SideMenu, DesktopSidebar } from "@/components";
 import { Search, Filter, Menu } from "lucide-react";
 import { useCurrentPrayer } from "@/hooks";
 
@@ -179,11 +179,14 @@ export default function MosqueesPage() {
 
   return (
     <>
+      {/* Desktop Sidebar */}
+      <DesktopSidebar />
+      
       <SideMenu isOpen={isMenuOpen} onClose={() => setIsMenuOpen(false)} />
       
-      {/* Sticky Header - appears on scroll */}
+      {/* Sticky Header - appears on scroll (mobile only) */}
       <header
-        className={`fixed top-0 left-0 right-0 z-40 transition-transform duration-300 ${
+        className={`md:hidden fixed top-0 left-0 right-0 z-40 transition-transform duration-300 ${
           scrolled ? "translate-y-0" : "-translate-y-full"
         }`}
       >
@@ -214,10 +217,12 @@ export default function MosqueesPage() {
         {/* Overlay */}
         <div className="fixed inset-0 bg-black/40" />
 
-        <main className="relative px-4 pb-24 pt-20 md:px-6 max-w-5xl mx-auto">
+        {/* Wrapper pour centrer le contenu entre le sidebar et le bord droit */}
+        <div className="lg:ml-64 lg:flex lg:justify-center lg:items-start lg:min-h-screen">
+          <main className="relative px-4 pb-24 pt-20 md:px-6 max-w-3xl w-full mx-auto">
           
-          {/* Initial Header - visible at top */}
-          <div className="absolute top-0 left-0 right-0 z-30 px-4">
+          {/* Initial Header - visible at top (mobile only) */}
+          <div className="lg:hidden absolute top-0 left-0 right-0 z-30 px-4">
             <div className="h-14 flex items-center justify-between">
               <Link href="/qui-sommes-nous" className="text-white font-bold text-[17px] hover:opacity-80 transition-opacity">
                 Neena
@@ -362,6 +367,7 @@ export default function MosqueesPage() {
           )}
 
         </main>
+        </div>
       </div>
     </>
   );

@@ -3,7 +3,7 @@
 import { useState, useMemo, useEffect, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import Image from "next/image";
-import { SideMenu, HeaderMosquee } from "@/components";
+import { SideMenu, HeaderMosquee, DesktopSidebar } from "@/components";
 import { MapPin, Check, Car, Users, Accessibility, Info, CreditCard, User, Globe, Book } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import { useCurrentPrayer } from "@/hooks/useCurrentPrayer";
@@ -93,8 +93,11 @@ function MosqueCreteilV8Content() {
 
   return (
     <>
-      {/* Header sticky qui apparaît au scroll (desktop) */}
-      <div className={`fixed top-0 left-0 right-0 z-20 transition-transform duration-300 ${showStickyHeader ? 'translate-y-0' : '-translate-y-full'}`}>
+      {/* Desktop Sidebar - OpenAI style */}
+      <DesktopSidebar />
+
+      {/* Header sticky qui apparaît au scroll (mobile uniquement) */}
+      <div className={`md:hidden fixed top-0 left-0 right-0 z-20 transition-transform duration-300 ${showStickyHeader ? 'translate-y-0' : '-translate-y-full'}`}>
         <HeaderMosquee wide glass glassTone="light" onMenuClick={() => setIsMenuOpen(true)} mosqueeSlug="creteil" />
       </div>
 
@@ -125,8 +128,8 @@ function MosqueCreteilV8Content() {
           <div className="absolute inset-0 bg-black/40" />
         </div>
 
-        {/* Logo Neena en haut de la page (scroll avec le contenu) */}
-        <div className="absolute top-0 left-0 z-10 p-4">
+        {/* Logo Neena en haut de la page (scroll avec le contenu) - caché sur desktop car dans sidebar */}
+        <div className="absolute top-0 left-0 z-10 p-4 lg:hidden">
           <a href="/qui-sommes-nous" className="text-[20px] font-[800] text-white tracking-[-0.2px] drop-shadow-lg hover:opacity-80 transition-opacity">
             Neena
           </a>
@@ -158,7 +161,9 @@ function MosqueCreteilV8Content() {
         </button>
         </div>
         
-        <main className="relative px-4 pb-12 pt-20 md:px-6 max-w-3xl mx-auto">
+        {/* Wrapper pour centrer le contenu entre le sidebar et le bord droit */}
+        <div className="lg:ml-64 lg:flex lg:justify-center lg:items-start lg:min-h-screen">
+          <main className="relative px-4 pb-12 pt-20 md:px-6 max-w-3xl w-full mx-auto">
           {/* Hero Card */}
           <div id="hero-v8" className={`rounded-3xl border border-white/15 bg-gradient-to-br from-white/[0.18] to-white/[0.12] ${glassBlurClass} shadow-2xl p-6 md:p-7 space-y-4`}>
             {/* Hero Image Carousel */}
@@ -304,6 +309,7 @@ function MosqueCreteilV8Content() {
             </div>
           </div>
         </main>
+        </div>
       </div>
     </>
   );

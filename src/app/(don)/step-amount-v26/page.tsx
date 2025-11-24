@@ -3,7 +3,7 @@
 import { useState, useEffect, useMemo, useRef, Suspense } from "react";
 import { useFormContext } from "react-hook-form";
 import { useSearchParams } from "next/navigation";
-import { SideMenu, MosqueSelectorModal } from "@/components";
+import { SideMenu, MosqueSelectorModal, DesktopSidebar } from "@/components";
 import { formatEuro } from "@/lib/currency";
 import { DonationFormValues } from "@/lib/schema";
 import { GlassSegmented } from "@/components/ui/GlassSegmented";
@@ -470,12 +470,15 @@ function StepAmountV26Content() {
 
   return (
     <div 
-      className="h-screen w-full overflow-hidden relative bg-white"
+      className="h-screen w-full overflow-hidden relative bg-white lg:ml-64"
       style={{ 
         touchAction: 'none', // Empêche le scroll natif
         overscrollBehavior: 'none' // Empêche le bounce scroll
       }}
     >
+      {/* Desktop Sidebar */}
+      <DesktopSidebar />
+      
       <SideMenu isOpen={isMenuOpen} onClose={() => setIsMenuOpen(false)} variant="mosquee" mosqueeSlug="creteil" />
       <MosqueSelectorModal 
         isOpen={showMosqueSelector}
