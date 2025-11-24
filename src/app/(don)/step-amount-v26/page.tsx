@@ -470,7 +470,7 @@ function StepAmountV26Content() {
 
   return (
     <div 
-      className="h-screen w-full overflow-hidden relative bg-white lg:ml-64"
+      className="h-screen w-full overflow-hidden relative bg-white lg:pl-64"
       style={{ 
         touchAction: 'none', // Empêche le scroll natif
         overscrollBehavior: 'none' // Empêche le bounce scroll
@@ -511,8 +511,8 @@ function StepAmountV26Content() {
         <div className="absolute inset-0 bg-black/40" />
       </div>
 
-      {/* Header - Fixed */}
-      <div className="fixed top-0 left-0 right-0 z-30" style={{ 
+      {/* Header - Fixed (mobile only) */}
+      <div className="lg:hidden fixed top-0 left-0 right-0 z-30" style={{ 
         paddingTop: "calc(env(safe-area-inset-top) + 0.5rem)",
         paddingLeft: "env(safe-area-inset-left)",
         paddingRight: "env(safe-area-inset-right)"
@@ -524,7 +524,7 @@ function StepAmountV26Content() {
           <button 
             aria-label="Menu" 
             onClick={() => setIsMenuOpen(true)} 
-            className="md:hidden w-10 h-10 flex items-center justify-center rounded-lg hover:bg-white/10 transition-all"
+            className="w-10 h-10 flex items-center justify-center rounded-lg hover:bg-white/10 transition-all"
           >
             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-white">
               <line x1="4" x2="20" y1="12" y2="12" />

@@ -23,10 +23,21 @@ export function SnapScrollOrchestrator({ steps }: SnapScrollOrchestratorProps) {
   const [expandedIndex, setExpandedIndex] = useState(0);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const isScrollingRef = useRef(false);
+  const [isDesktop, setIsDesktop] = useState(false);
 
-  // Handle wheel scroll for snap behavior
+  // Detect desktop vs mobile
+  useState(() => {
+    const checkDesktop = () => {
+      setIsDesktop(window.innerWidth >= 1024); // lg breakpoint
+    };
+    checkDesktop();
+    window.addEventListener('resize', checkDesktop);
+    return () => window.removeEventListener('resize', checkDesktop);
+  });
+
+  // Handle wheel scroll for snap behavior (mobile only)
   const handleWheel = (e: React.WheelEvent) => {
-    if (isScrollingRef.current) return;
+    if (isDesktop || isScrollingRef.current) return;
     
     const threshold = 50;
     
@@ -48,21 +59,23 @@ export function SnapScrollOrchestrator({ steps }: SnapScrollOrchestratorProps) {
     }
   };
 
-  // Handle touch/drag for mobile
+  // Handle touch/drag for mobile only
   const [touchStart, setTouchStart] = useState(0);
   const [touchEnd, setTouchEnd] = useState(0);
 
   const handleTouchStart = (e: React.TouchEvent) => {
+    if (isDesktop) return;
     setTouchStart(e.touches[0].clientY);
     setTouchEnd(e.touches[0].clientY);
   };
 
   const handleTouchMove = (e: React.TouchEvent) => {
+    if (isDesktop) return;
     setTouchEnd(e.touches[0].clientY);
   };
 
   const handleTouchEnd = () => {
-    if (isScrollingRef.current) return;
+    if (isDesktop || isScrollingRef.current) return;
     
     const distance = touchStart - touchEnd;
     const threshold = 80;
@@ -97,6 +110,28 @@ export function SnapScrollOrchestrator({ steps }: SnapScrollOrchestratorProps) {
     baseBottomSpace = 20;
   }
 
+  // Desktop layout - simple vertical scroll
+  if (isDesktop) {
+    return (
+      <div className="h-full w-full overflow-y-auto overflow-x-hidden flex justify-center">
+        <div className="w-full max-w-xl py-12 px-6 space-y-6">
+          {steps.map((step) => (
+            <div
+              key={step.id}
+              className="rounded-3xl bg-gradient-to-br from-white/20 via-white/15 to-white/10 backdrop-blur-xl border border-white/20 shadow-2xl overflow-hidden"
+            >
+              {/* Content only - no header recap */}
+              <div className="p-6">
+                {step.content}
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    );
+  }
+
+  // Mobile layout - snap scroll behavior
   return (
     <div 
       ref={scrollContainerRef}
@@ -113,7 +148,7 @@ export function SnapScrollOrchestrator({ steps }: SnapScrollOrchestratorProps) {
       {/* --- COLLAPSED STACK (Top) --- */}
       {collapsedCardsCount > 0 && (
         <div 
-          className="fixed top-0 left-0 right-0 z-30 px-5"
+          className="fixed top-0 left-0 right-0 z-30 px-5 lg:left-1/2 lg:-translate-x-1/2 lg:max-w-2xl"
           style={{
             paddingTop: `calc(env(safe-area-inset-top) + ${HEADER_HEIGHT}px)`,
           }}
@@ -158,7 +193,7 @@ export function SnapScrollOrchestrator({ steps }: SnapScrollOrchestratorProps) {
 
       {/* --- ACTIVE CARD (Expanded) with retraction animation --- */}
       <div 
-        className="absolute left-0 right-0 px-5 z-20"
+        className="absolute left-0 right-0 px-5 z-20 lg:left-1/2 lg:-translate-x-1/2 lg:max-w-2xl"
         style={{
           top: `calc(env(safe-area-inset-top) + ${topOffset + UNIFORM_GAP}px)`,
           bottom: expandedIndex < steps.length - 1 
@@ -183,7 +218,7 @@ export function SnapScrollOrchestrator({ steps }: SnapScrollOrchestratorProps) {
       {/* --- PEEK of NEXT CARD (Bottom) --- */}
       {expandedIndex < steps.length - 1 && (
         <div 
-          className="fixed left-0 right-0 px-5 z-10"
+          className="fixed left-0 right-0 px-5 z-10 lg:left-1/2 lg:-translate-x-1/2 lg:max-w-2xl"
           style={{
             bottom: `calc(env(safe-area-inset-bottom) + 0px)`,
             height: CARD_COLLAPSED_HEIGHT,

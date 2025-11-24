@@ -2,7 +2,7 @@
 
 import { useMemo, useState, useEffect } from "react";
 import { HeaderPrimary } from "@/components/headers/HeaderPrimary";
-import { SideMenu, DesktopSidebar } from "@/components";
+import { SideMenu } from "@/components";
 import { ScrollReveal } from "@/components/ScrollReveal";
 import { GlassCard, GlassTextarea, GlassSelect, PrimaryButton } from "@/components/ds";
 import { useDuaaFeed } from "@/features/duaa/useDuaaFeed";
@@ -118,9 +118,6 @@ export default function DuaasPage() {
 
   return (
     <>
-      {/* Desktop Sidebar */}
-      <DesktopSidebar />
-      
       <HeaderPrimary wide transparent overlay onMenuClick={() => setIsMenuOpen(true)} />
       <SideMenu isOpen={isMenuOpen} onClose={() => setIsMenuOpen(false)} />
 
@@ -149,10 +146,8 @@ export default function DuaasPage() {
           <div className="absolute inset-0 bg-black/40" />
         </div>
         
-        {/* Wrapper pour centrer le contenu entre le sidebar et le bord droit */}
-        <div className="lg:ml-64 lg:flex lg:justify-center lg:items-start lg:min-h-screen">
-          <main className="px-4 pb-28 pt-[calc(var(--hdr-primary-h)+28px)] md:px-8 w-full max-w-3xl mx-auto">
-          <div className="flex w-full flex-col gap-6">
+        <main className="px-4 pb-28 pt-[calc(var(--hdr-primary-h)+28px)] md:px-8">
+          <div className="mx-auto flex w-full max-w-4xl flex-col gap-6">
             <ScrollReveal delay={0}>
               <GlassCard className="border-white/20 bg-white/12 text-white">
               <div className="space-y-4">
@@ -262,7 +257,6 @@ export default function DuaasPage() {
             </ScrollReveal>
           </div>
         </main>
-        </div>
       </div>
 
       {/* Duaa Modal */}
