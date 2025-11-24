@@ -19,6 +19,7 @@ const PRAYER_BACKGROUNDS: Record<string, { image: string; flip: boolean; statusB
 export default function QuiSommesNousPage() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [showStickyHeader, setShowStickyHeader] = useState(false);
+  const [isMobile, setIsMobile] = useState(true);
 
   // Déterminer la prière actuelle et le background correspondant
   const currentPrayer = useCurrentPrayer("mosquee-sahaba-creteil");
@@ -29,6 +30,16 @@ export default function QuiSommesNousPage() {
   );
 
   const glassBlurClass = "backdrop-blur-xl";
+
+  // Detect mobile/desktop
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
 
   // Set theme-color for iPhone notch - dynamically based on current prayer
   useEffect(() => {
@@ -160,11 +171,13 @@ export default function QuiSommesNousPage() {
         </div>
 
         {/* Logo Neena en haut de la page (scroll avec le contenu) - mobile only */}
-        <div className="md:hidden absolute top-0 left-0 z-10 p-4">
-          <a href="/qui-sommes-nous" className="text-[20px] font-[800] text-white tracking-[-0.2px] drop-shadow-lg hover:opacity-80 transition-opacity">
-            Neena
-          </a>
-        </div>
+        {isMobile && (
+          <div className="absolute top-0 left-0 z-10 p-4">
+            <a href="/qui-sommes-nous" className="text-[20px] font-[800] text-white tracking-[-0.2px] drop-shadow-lg hover:opacity-80 transition-opacity">
+              Neena
+            </a>
+          </div>
+        )}
 
         {/* Burger menu mobile en haut à droite */}
         <div className="absolute top-4 right-4 z-10">

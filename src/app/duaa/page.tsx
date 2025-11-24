@@ -19,6 +19,7 @@ export default function DuaasPage() {
   const [selectedCategory, setSelectedCategory] = useState<string>("");
   const [modalOpen, setModalOpen] = useState(false);
   const [currentDuaa, setCurrentDuaa] = useState<{ duaa: Duaa; request: Request } | null>(null);
+  const [isMobile, setIsMobile] = useState(true);
 
   // Déterminer la prière actuelle et le background correspondant
   const currentPrayer = useCurrentPrayer("mosquee-sahaba-creteil");
@@ -53,6 +54,16 @@ export default function DuaasPage() {
         console.error("Error loading categories:", error);
         setCategories([]);
       });
+  }, []);
+
+  // Detect mobile/desktop
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
   }, []);
 
   // Set theme-color for iPhone notch - dynamically based on current prayer
@@ -122,9 +133,7 @@ export default function DuaasPage() {
       <DesktopSidebar />
       
       {/* Header mobile only */}
-      <div className="md:hidden">
-        <HeaderPrimary wide transparent overlay onMenuClick={() => setIsMenuOpen(true)} />
-      </div>
+      {isMobile && <HeaderPrimary wide transparent overlay onMenuClick={() => setIsMenuOpen(true)} />}
       <SideMenu isOpen={isMenuOpen} onClose={() => setIsMenuOpen(false)} />
 
       <div className="relative min-h-[100svh] w-full">

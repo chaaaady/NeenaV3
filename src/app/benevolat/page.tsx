@@ -19,6 +19,7 @@ export default function BenevolatPage() {
   const [duration, setDuration] = useState<string>("");
   const [helpNeena, setHelpNeena] = useState(false);
   const [message, setMessage] = useState("");
+  const [isMobile, setIsMobile] = useState(true);
 
   // Déterminer la prière actuelle et le background correspondant
   const currentPrayer = useCurrentPrayer("mosquee-sahaba-creteil");
@@ -36,6 +37,16 @@ export default function BenevolatPage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [currentPrayer]
   );
+
+  // Detect mobile/desktop
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
 
   // Set theme-color for iPhone notch - dynamically based on current prayer
   useEffect(() => {
@@ -66,9 +77,7 @@ export default function BenevolatPage() {
       <DesktopSidebar />
       
       {/* Header mobile only */}
-      <div className="md:hidden">
-        <HeaderPrimary wide transparent overlay onMenuClick={() => setIsMenuOpen(true)} />
-      </div>
+      {isMobile && <HeaderPrimary wide transparent overlay onMenuClick={() => setIsMenuOpen(true)} />}
       <SideMenu isOpen={isMenuOpen} onClose={() => setIsMenuOpen(false)} />
       
       <div className="relative w-full min-h-[100svh]">
