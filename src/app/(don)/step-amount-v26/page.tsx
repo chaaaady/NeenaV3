@@ -518,7 +518,7 @@ function StepAmountV26Content() {
         paddingRight: "env(safe-area-inset-right)"
       }}>
         <div className="flex items-center justify-between px-5 h-12">
-          <a href="/qui-sommes-nous" className="text-[20px] font-[900] text-white tracking-[-0.5px]">
+          <a href="/qui-sommes-nous" className="text-[20px] font-[900] text-white" style={{ fontFamily: "'American Grotesk Black', sans-serif", letterSpacing: '0.08em' }}>
             Neena
           </a>
           <button 

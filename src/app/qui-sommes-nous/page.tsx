@@ -125,7 +125,7 @@ export default function QuiSommesNousPage() {
       <div className={`md:hidden fixed top-0 left-0 right-0 z-20 transition-transform duration-300 ${showStickyHeader ? 'translate-y-0' : '-translate-y-full'}`}>
         <div className="bg-gradient-to-b from-white/10 to-white/5 backdrop-blur-2xl shadow-2xl">
           <div className="mx-auto flex h-14 items-center justify-between px-4" style={{ maxWidth: 1280 }}>
-            <a href="/qui-sommes-nous" className="text-[20px] font-[800] text-white tracking-[-0.2px]">
+            <a href="/qui-sommes-nous" className="text-[20px] font-[900] text-white" style={{ fontFamily: "'American Grotesk Black', sans-serif", letterSpacing: '0.08em' }}>
               Neena
             </a>
             <button 
@@ -173,7 +173,7 @@ export default function QuiSommesNousPage() {
         {/* Logo Neena en haut de la page (scroll avec le contenu) - mobile only */}
         {isMobile && (
           <div className="absolute top-0 left-0 z-10 p-4">
-            <a href="/qui-sommes-nous" className="text-[20px] font-[800] text-white tracking-[-0.2px] drop-shadow-lg hover:opacity-80 transition-opacity">
+            <a href="/qui-sommes-nous" className="text-[20px] font-[900] text-white drop-shadow-lg hover:opacity-80 transition-opacity" style={{ fontFamily: "'American Grotesk Black', sans-serif", letterSpacing: '0.08em' }}>
               Neena
             </a>
           </div>

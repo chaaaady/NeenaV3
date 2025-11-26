@@ -32,7 +32,7 @@ export function DesktopSidebar() {
       <div className="relative flex flex-col h-full">
         {/* Logo */}
         <div className="h-16 flex items-center px-4">
-          <Link href="/" className="text-[20px] font-[800] text-white tracking-[-0.2px] hover:opacity-80 transition-opacity">
+          <Link href="/" className="text-[20px] font-[900] text-white hover:opacity-80 transition-opacity" style={{ fontFamily: "'American Grotesk Black', sans-serif", letterSpacing: '0.08em' }}>
             Neena
           </Link>
         </div>
