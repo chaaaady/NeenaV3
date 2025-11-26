@@ -199,7 +199,7 @@ function StepAmountV26Content() {
       ),
       content: (
         <div className="space-y-5 relative z-20">
-          <h2 className="text-[22px] font-semibold text-white text-center leading-tight">
+          <h2 className="text-[22px] font-[600] text-white text-center leading-tight" style={{ fontFamily: "'American Grotesk', sans-serif" }}>
             Quel montant souhaitez-vous donner à la mosquée de {getMosqueDisplayName(values.mosqueName)} ?
           </h2>
           
@@ -518,7 +518,7 @@ function StepAmountV26Content() {
         paddingRight: "env(safe-area-inset-right)"
       }}>
         <div className="flex items-center justify-between px-5 h-12">
-          <a href="/qui-sommes-nous" className="text-[20px] font-[900] text-white" style={{ fontFamily: "'American Grotesk Black', sans-serif" }}>
+          <a href="/qui-sommes-nous" className="text-[20px] font-[900] text-black" style={{ fontFamily: "'American Grotesk Black', sans-serif" }}>
             Neena
           </a>
           <button 
