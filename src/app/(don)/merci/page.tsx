@@ -44,8 +44,7 @@ function MerciContent() {
           setCategories(data);
         }
       })
-      .catch((error) => {
-        console.error("Error loading categories:", error);
+      .catch(() => {
         setCategories([]);
       });
   }, []);

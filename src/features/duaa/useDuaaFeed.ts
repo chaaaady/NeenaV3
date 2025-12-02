@@ -13,8 +13,7 @@ function loadFeed(): Request[] {
     if (!raw) return [];
     const parsed = JSON.parse(raw);
     return Array.isArray(parsed) ? parsed : [];
-  } catch (error) {
-    console.error("Error loading duaa feed:", error);
+  } catch {
     return [];
   }
 }
@@ -25,8 +24,8 @@ function saveFeed(feed: Request[]) {
       return;
     }
     localStorage.setItem(DUAA_STORAGE_KEY, JSON.stringify(feed));
-  } catch (error) {
-    console.error("Error saving duaa feed:", error);
+  } catch {
+    // Silent fail
   }
 }
 

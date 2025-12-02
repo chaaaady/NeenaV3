@@ -68,8 +68,7 @@ export function AddressAutocomplete({ value, onChange, placeholder, className }:
         setSuggestions([]);
         setIsOpen(false);
       }
-    } catch (error) {
-      console.error("Error fetching address suggestions:", error);
+    } catch {
       setSuggestions([]);
       setIsOpen(false);
     }

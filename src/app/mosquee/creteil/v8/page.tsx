@@ -353,11 +353,9 @@ function PrayerTimesCard({ slug, url, onTimesLoaded }: { slug?: string; url?: st
             onTimesLoaded(times);
           }
         } else {
-          console.warn("No timings data received:", json);
           setTimings(null);
         }
-      } catch (err) {
-        console.error("Error fetching prayer times:", err);
+      } catch {
         setTimings(null);
       } finally {
         setLoading(false);
@@ -436,8 +434,8 @@ function JumaaCard({ slug, url }: { slug?: string; url?: string }) {
         if (!cancelled && json.ok && json.timings?.Jumua) {
           setJumaaData(json.timings.Jumua);
         }
-      } catch (err) {
-        console.error("Error fetching Jumua times:", err);
+      } catch {
+        // Silent fail
       } finally {
         if (!cancelled) setLoading(false);
       }

@@ -21,14 +21,12 @@ export function useCurrentPrayer(mosqueeSlug?: string): string {
         const response = await fetch(`/api/mawaqit?mosque=${mosqueeSlug || "mosquee-sahaba-creteil"}`);
         
         if (!response.ok) {
-          console.warn("Impossible de récupérer les horaires de prière");
           return;
         }
 
         const data = await response.json();
         
         if (!data.calendar) {
-          console.warn("Pas de calendrier disponible");
           return;
         }
 
@@ -59,8 +57,8 @@ export function useCurrentPrayer(mosqueeSlug?: string): string {
         } else {
           setCurrentPrayer("fajr");
         }
-      } catch (error) {
-        console.error("Erreur lors de la récupération des horaires:", error);
+      } catch {
+        // Silent fail - keep current prayer
       }
     };
 

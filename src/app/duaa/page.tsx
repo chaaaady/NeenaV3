@@ -50,8 +50,7 @@ export default function DuaasPage() {
           setCategories(data);
         }
       })
-      .catch((error) => {
-        console.error("Error loading categories:", error);
+      .catch(() => {
         setCategories([]);
       });
   }, []);
@@ -107,16 +106,10 @@ export default function DuaasPage() {
   };
 
   const handleMakeDuaa = (request: Request) => {
-    try {
-      const category = categories.find((c) => c.id === request.category_id);
-      if (category && Array.isArray(category.duaas) && category.duaas.length > 0) {
-        setCurrentDuaa({ duaa: category.duaas[0], request });
-        setModalOpen(true);
-      } else {
-        console.warn("No duaa available for this category");
-      }
-    } catch (error) {
-      console.error("Error opening duaa modal:", error);
+    const category = categories.find((c) => c.id === request.category_id);
+    if (category && Array.isArray(category.duaas) && category.duaas.length > 0) {
+      setCurrentDuaa({ duaa: category.duaas[0], request });
+      setModalOpen(true);
     }
   };
 
