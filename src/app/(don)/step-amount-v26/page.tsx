@@ -199,7 +199,7 @@ function StepAmountV26Content() {
       ),
       content: (
         <div className="space-y-5 relative z-20">
-          <h2 className="text-[22px] font-[600] text-white text-center leading-tight" style={{ fontFamily: "'American Grotesk', sans-serif" }}>
+          <h2 className="text-[22px] font-[600] text-white text-center leading-tight">
             Quel montant souhaitez-vous donner à la mosquée de {getMosqueDisplayName(values.mosqueName)} ?
           </h2>
           
